@@ -96,6 +96,20 @@
         "default": "#8F0E51"
       },
       {
+        "type": "select",
+        "id": "footer_bg_gradient_direction",
+        "label": "Direção do gradiente do Footer",
+        "info": "De onde o gradiente começa",
+        "options": [
+          { "value": "diagonal", "label": "Diagonal ↘" },
+          { "value": "baixo", "label": "De cima para baixo" },
+          { "value": "cima", "label": "De baixo para cima" },
+          { "value": "direita", "label": "Da esquerda para a direita" },
+          { "value": "radial", "label": "Radial (centro para fora)" }
+        ],
+        "default": "diagonal"
+      },
+      {
         "type": "color",
         "id": "footer_text_color",
         "label": "Cor do texto do Footer",

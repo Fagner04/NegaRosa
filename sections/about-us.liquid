@@ -3,7 +3,7 @@
   Logo circular com selo verificado + título, texto e CTA
 {%- endcomment -%}
 
-<section class="about-us" style="{% if section.settings.bg_gradient %}background: linear-gradient(135deg, {{ section.settings.bg_gradient_start | default: '#FDE8F1' }}, {{ section.settings.bg_gradient_end | default: '#FFFFFF' }});{% else %}background: {{ section.settings.bg_color }};{% endif %}" data-section-id="{{ section.id }}">
+<section class="about-us" style="{% if section.settings.bg_gradient %}{% case section.settings.bg_gradient_direction %}{% when 'baixo' %}background: linear-gradient(180deg, {{ section.settings.bg_gradient_start | default: '#FDE8F1' }}, {{ section.settings.bg_gradient_end | default: '#FFFFFF' }});{% when 'cima' %}background: linear-gradient(0deg, {{ section.settings.bg_gradient_start | default: '#FDE8F1' }}, {{ section.settings.bg_gradient_end | default: '#FFFFFF' }});{% when 'direita' %}background: linear-gradient(90deg, {{ section.settings.bg_gradient_start | default: '#FDE8F1' }}, {{ section.settings.bg_gradient_end | default: '#FFFFFF' }});{% when 'radial' %}background: radial-gradient(circle, {{ section.settings.bg_gradient_start | default: '#FDE8F1' }}, {{ section.settings.bg_gradient_end | default: '#FFFFFF' }});{% else %}background: linear-gradient(135deg, {{ section.settings.bg_gradient_start | default: '#FDE8F1' }}, {{ section.settings.bg_gradient_end | default: '#FFFFFF' }});{% endcase %}{% else %}background: {{ section.settings.bg_color }};{% endif %}" data-section-id="{{ section.id }}">
   <div class="page-width">
     <div class="about-us__container">
       <!-- Logo circular com badge -->
@@ -169,6 +169,19 @@
     { "type": "checkbox", "id": "bg_gradient", "label": "Usar gradiente no fundo", "default": false },
     { "type": "color", "id": "bg_gradient_start", "label": "Gradiente - cor inicial", "default": "#FDE8F1" },
     { "type": "color", "id": "bg_gradient_end", "label": "Gradiente - cor final", "default": "#FFFFFF" },
+    {
+      "type": "select",
+      "id": "bg_gradient_direction",
+      "label": "Direção do gradiente",
+      "options": [
+        { "value": "diagonal", "label": "Diagonal ↘" },
+        { "value": "baixo", "label": "De cima para baixo" },
+        { "value": "cima", "label": "De baixo para cima" },
+        { "value": "direita", "label": "Da esquerda para a direita" },
+        { "value": "radial", "label": "Radial (centro para fora)" }
+      ],
+      "default": "diagonal"
+    },
     { "type": "image_picker", "id": "logo", "label": "Logo / imagem (circular)" },
     { "type": "checkbox", "id": "show_badge", "label": "Mostrar selo verificado", "default": true },
     { "type": "color", "id": "badge_color", "label": "Cor do selo", "default": "#22c55e" },

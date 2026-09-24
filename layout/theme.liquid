@@ -69,7 +69,7 @@
       
       /* Footer */
       --footer-bg: {{ settings.footer_bg_color | default: '#111111' }};
-      --footer-bg-image: {% if settings.footer_bg_gradient %}linear-gradient(135deg, {{ settings.footer_bg_gradient_start | default: '#D81B73' }}, {{ settings.footer_bg_gradient_end | default: '#8F0E51' }}){% else %}none{% endif %};
+      --footer-bg-image: {% if settings.footer_bg_gradient %}{% case settings.footer_bg_gradient_direction %}{% when 'baixo' %}linear-gradient(180deg, {{ settings.footer_bg_gradient_start | default: '#D81B73' }}, {{ settings.footer_bg_gradient_end | default: '#8F0E51' }}){% when 'cima' %}linear-gradient(0deg, {{ settings.footer_bg_gradient_start | default: '#D81B73' }}, {{ settings.footer_bg_gradient_end | default: '#8F0E51' }}){% when 'direita' %}linear-gradient(90deg, {{ settings.footer_bg_gradient_start | default: '#D81B73' }}, {{ settings.footer_bg_gradient_end | default: '#8F0E51' }}){% when 'radial' %}radial-gradient(circle, {{ settings.footer_bg_gradient_start | default: '#D81B73' }}, {{ settings.footer_bg_gradient_end | default: '#8F0E51' }}){% else %}linear-gradient(135deg, {{ settings.footer_bg_gradient_start | default: '#D81B73' }}, {{ settings.footer_bg_gradient_end | default: '#8F0E51' }}){% endcase %}{% else %}none{% endif %};
       --footer-text: {{ settings.footer_text_color | default: '#FFFFFF' }};
       --footer-heading: {{ settings.footer_heading_color | default: '#FFFFFF' }};
       --footer-contact-icon-bg: {{ settings.footer_contact_icon_bg | default: '#FDE8F1' }};
