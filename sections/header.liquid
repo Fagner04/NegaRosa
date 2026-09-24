@@ -430,6 +430,15 @@
 
 </nav>
 
+<style>
+  @media (max-width: 749px) {
+    .header__logo img {
+      width: {{ section.settings.logo_width_mobile | default: 120 }}px !important;
+      max-height: 36px !important;
+    }
+  }
+</style>
+
 {% schema %}
 {
   "name": "Header",
@@ -443,11 +452,21 @@
     {
       "type": "range",
       "id": "logo_width",
-      "label": "Largura da logo (px)",
+      "label": "Largura da logo no desktop (px)",
       "min": 60,
       "max": 260,
       "step": 10,
       "default": 140
+    },
+    {
+      "type": "range",
+      "id": "logo_width_mobile",
+      "label": "Largura da logo no mobile (px)",
+      "info": "O mobile usa altura máxima de 36px para não estourar o header",
+      "min": 60,
+      "max": 200,
+      "step": 10,
+      "default": 120
     },
     {
       "type": "link_list",
