@@ -19,6 +19,9 @@
     "footer_contact_icon_color": "#D81B73",
     "footer_contact_wa_bg": "#DCFCE7",
     "footer_contact_wa_color": "#16A34A",
+    "footer_news_btn_text": "#FFFFFF",
+    "footer_news_input_bg": "#BBBBBB",
+    "footer_news_input_border": "#EB76AC",
     "color_border": "#CF528C",
     "color_button_bg": "#CF528C",
     "color_button_text": "#FFFFFF",
@@ -52,7 +55,7 @@
           "text_4GJMY8": {
             "type": "text",
             "settings": {
-              "logo_width": 95,
+              "logo_width": 50,
               "title": "ATENDIMENTO AO CLIENTE",
               "subtitle": "Estamos aqui para ajudar você",
               "email": "comercial@negarosafitness.com.br",
