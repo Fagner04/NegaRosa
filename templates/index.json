@@ -16,7 +16,7 @@
           "type": "slide",
           "settings": {
             "image": "shopify://shop_images/CAPA_BANNER_SITE_2.png",
-            "image_mobile": "shopify://shop_images/MOBILE.png",
+            "image_mobile": "shopify://shop_images/MOBILE_900_x_1650_px.png",
             "tag": "Lançamento",
             "title": "CONECTE-SE AGORA",
             "subtitle": "Descubra os novos lançamentos e encontre sua próxima conquista. Performance e estilo sem limites.",
@@ -26,9 +26,9 @@
             "button_url_2": "",
             "btn1_bg": "",
             "btn1_text": "",
-            "btn2_bg": "#FFFFFF",
+            "btn2_bg": "#ffffff",
             "btn2_text": "#000000",
-            "btn2_border": "#FFFFFF",
+            "btn2_border": "#ffffff",
             "text_position": "bottom-left",
             "text_color": "light",
             "overlay_style": "dark"
@@ -86,18 +86,18 @@
         "height": "fullscreen",
         "autoplay": true,
         "autoplay_speed": 5,
-        "show_scroll_indicator": false,
-        "hide_content_mobile": true,
+        "show_scroll_indicator": true,
+        "hide_content_mobile": false,
         "show_buttons_mobile": true,
-        "mobile_ratio": "1-1",
-        "mobile_custom_height": 70,
+        "mobile_ratio": "custom",
+        "mobile_custom_height": 85,
         "btn_bg_color": "#f287b5",
         "btn_text_color": "#ffffff",
         "btn_gradient": false,
         "btn_gradient_start": "#b6b0b0",
         "btn_gradient_end": "#fda7cc",
         "btn_gradient_direction": "diagonal",
-        "btn_size": "medio"
+        "btn_size": "grande"
       }
     },
     "announcement_bar_dD4ndD": {
