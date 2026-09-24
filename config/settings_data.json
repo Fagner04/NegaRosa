@@ -10,8 +10,10 @@
 {
   "current": {
     "color_background": "#E67ABB",
-    "footer_bg_color": "#E67ABB",
-    "footer_text_color": "#E84444",
+    "color_background_secondary": "#706969",
+    "footer_bg_color": "#FFFFFF",
+    "footer_text_color": "#000000",
+    "color_button_secondary_bg": "#000000",
     "sections": {
       "header": {
         "type": "header",
