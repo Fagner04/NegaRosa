@@ -9,7 +9,7 @@
  */
 {
   "current": {
-    "color_background": "#FFFFFF",
+    "color_background": "#000000",
     "color_background_secondary": "#706969",
     "header_bg_color": "#DDDADA",
     "footer_bg_color": "#FFFFFF",
@@ -48,11 +48,11 @@
               "logo_width": 95,
               "title": "ATENDIMENTO AO CLIENTE",
               "subtitle": "Estamos aqui para ajudar você",
-              "email": "contato@sualoja.com",
-              "phone": "(62) 99999-9999",
-              "whatsapp": "5562999999999",
-              "hours": "Seg a Sex • 9h às 18h",
-              "address": "",
+              "email": "comercial@negarosafitness.com.br",
+              "phone": "(62) 99145-3008",
+              "whatsapp": "5562991453008",
+              "hours": "Seg a Sex • 8h às 18h",
+              "address": "Rua 000",
               "content": ""
             }
           },
