@@ -5,11 +5,11 @@
 
 {%- if section.blocks.size > 0 -%}
 <section
-  class="hero-banner hero-banner--{{ section.settings.height }}{% if section.settings.hide_content_mobile %} hero-banner--hide-content-mobile{% endif %} hero-banner--mobile-ratio-{{ section.settings.mobile_ratio }}"
+  class="hero-banner hero-banner--{{ section.settings.height }}{% if section.settings.hide_content_mobile %} hero-banner--hide-content-mobile{% endif %} hero-banner--mobile-ratio-{{ section.settings.mobile_ratio }}{% if section.settings.btn_bg_color != blank or section.settings.btn_text_color != blank or section.settings.btn_gradient %} hero-banner--custom-btn{% endif %}"
   id="hero-{{ section.id }}"
   data-autoplay="{{ section.settings.autoplay_speed | times: 1000 }}"
   data-autoplay-enabled="{{ section.settings.autoplay }}"
-  style="--hero-mobile-custom-height: {{ section.settings.mobile_custom_height | default: 90 }}vh;"
+  style="--hero-mobile-custom-height: {{ section.settings.mobile_custom_height | default: 90 }}vh; --hero-btn-bg: {{ section.settings.btn_bg_color }}; --hero-btn-text: {{ section.settings.btn_text_color }}; --hero-btn-image: {% if section.settings.btn_gradient %}{% case section.settings.btn_gradient_direction %}{% when 'baixo' %}linear-gradient(180deg, {{ section.settings.btn_gradient_start | default: '#D81B73' }}, {{ section.settings.btn_gradient_end | default: '#8F0E51' }}){% when 'cima' %}linear-gradient(0deg, {{ section.settings.btn_gradient_start | default: '#D81B73' }}, {{ section.settings.btn_gradient_end | default: '#8F0E51' }}){% when 'direita' %}linear-gradient(90deg, {{ section.settings.btn_gradient_start | default: '#D81B73' }}, {{ section.settings.btn_gradient_end | default: '#8F0E51' }}){% when 'radial' %}radial-gradient(circle, {{ section.settings.btn_gradient_start | default: '#D81B73' }}, {{ section.settings.btn_gradient_end | default: '#8F0E51' }}){% else %}linear-gradient(135deg, {{ section.settings.btn_gradient_start | default: '#D81B73' }}, {{ section.settings.btn_gradient_end | default: '#8F0E51' }}){% endcase %}{% else %}none{% endif %};"
   role="region"
   aria-label="Banner principal"
 >
@@ -183,6 +183,53 @@
       "step": 5,
       "unit": "vh",
       "default": 90
+    },
+    {
+      "type": "header",
+      "content": "🔘 Botões (Comprar Agora / Saiba Mais)"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg_color",
+      "label": "Cor de fundo dos botões",
+      "info": "Vazio = segue o padrão do tema"
+    },
+    {
+      "type": "color",
+      "id": "btn_text_color",
+      "label": "Cor do texto dos botões",
+      "info": "Vazio = segue o padrão do tema"
+    },
+    {
+      "type": "checkbox",
+      "id": "btn_gradient",
+      "label": "Usar gradiente nos botões",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "btn_gradient_start",
+      "label": "Gradiente - cor inicial",
+      "default": "#D81B73"
+    },
+    {
+      "type": "color",
+      "id": "btn_gradient_end",
+      "label": "Gradiente - cor final",
+      "default": "#8F0E51"
+    },
+    {
+      "type": "select",
+      "id": "btn_gradient_direction",
+      "label": "Direção do gradiente",
+      "options": [
+        { "value": "diagonal", "label": "Diagonal ↘" },
+        { "value": "baixo", "label": "De cima para baixo" },
+        { "value": "cima", "label": "De baixo para cima" },
+        { "value": "direita", "label": "Da esquerda para a direita" },
+        { "value": "radial", "label": "Radial (centro para fora)" }
+      ],
+      "default": "diagonal"
     }
   ],
   "blocks": [

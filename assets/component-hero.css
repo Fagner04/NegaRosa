@@ -233,6 +233,20 @@
   color: var(--color-text);
 }
 
+/* Custom button colors (Hero Banner > Botões) — só quando preenchido */
+.hero-banner--custom-btn .hero-banner__actions .btn-primary,
+.hero-banner--custom-btn .hero-banner__actions .btn-secondary {
+  background-color: var(--hero-btn-bg, var(--color-bg));
+  background-image: var(--hero-btn-image, none);
+  border-color: var(--hero-btn-bg, var(--color-bg));
+  color: var(--hero-btn-text, var(--color-text));
+}
+.hero-banner--custom-btn .hero-banner__actions .btn-primary:hover,
+.hero-banner--custom-btn .hero-banner__actions .btn-secondary:hover {
+  filter: brightness(0.9);
+  transform: translateY(-1px);
+}
+
 /* ---------- Navigation Arrows ---------- */
 .hero-banner__nav {
   position: absolute;
