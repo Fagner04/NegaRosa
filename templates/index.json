@@ -427,8 +427,9 @@
       "settings": {
         "bg_color": "#ffffff",
         "bg_gradient": true,
-        "bg_gradient_start": "#F287B5",
-        "bg_gradient_end": "#FFFFFF",
+        "bg_gradient_start": "#f287b5",
+        "bg_gradient_end": "#ffffff",
+        "bg_gradient_direction": "cima",
         "show_badge": true,
         "badge_color": "#eb76ac",
         "title": "Pouco De Nós",
