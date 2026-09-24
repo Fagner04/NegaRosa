@@ -1,0 +1,80 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": {
+    "color_background": "#E67ABB",
+    "footer_bg_color": "#E67ABB",
+    "footer_text_color": "#E84444",
+    "sections": {
+      "header": {
+        "type": "header",
+        "settings": {
+          "logo_width": 140,
+          "menu": "main-menu",
+          "sticky_header": true,
+          "help_label": "Ajuda",
+          "help_page": "",
+          "help_url": "",
+          "store_label": "Encontrar Loja",
+          "store_page": "",
+          "store_url": "",
+          "track_label": "Rastrear Pedido",
+          "track_page": "",
+          "track_url": "",
+          "login_label": "Entrar",
+          "login_page": "",
+          "login_url": "",
+          "account_label": "Minha Conta"
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "blocks": {
+          "text_4GJMY8": {
+            "type": "text",
+            "settings": {
+              "logo_width": 95,
+              "title": "ATENDIMENTO AO CLIENTE",
+              "subtitle": "Estamos aqui para ajudar você",
+              "email": "contato@sualoja.com",
+              "phone": "(62) 99999-9999",
+              "whatsapp": "5562999999999",
+              "hours": "Seg a Sex • 9h às 18h",
+              "address": "",
+              "content": ""
+            }
+          },
+          "footer-0": {
+            "type": "links",
+            "settings": {
+              "menu": "footer"
+            }
+          },
+          "newsletter_apNfcc": {
+            "type": "newsletter",
+            "settings": {
+              "title": "Newsletter",
+              "subheading": "Receba novidades e ofertas exclusivas"
+            }
+          }
+        },
+        "block_order": [
+          "text_4GJMY8",
+          "footer-0",
+          "newsletter_apNfcc"
+        ],
+        "settings": {
+          "show_payment_icons": true
+        }
+      }
+    },
+    "content_for_index": []
+  }
+}
