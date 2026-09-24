@@ -16,6 +16,7 @@
     "header_bg_gradient": true,
     "header_bg_gradient_start": "#F287B5",
     "header_bg_gradient_end": "#FFFFFF",
+    "header_bg_gradient_direction": "radial",
     "footer_bg_color": "#FFFFFF",
     "footer_bg_gradient": true,
     "footer_bg_gradient_start": "#F287B5",
@@ -40,7 +41,8 @@
       "header": {
         "type": "header",
         "settings": {
-          "logo_width": 140,
+          "logo": "shopify://shop_images/Design_sem_nome_1.png",
+          "logo_width": 260,
           "menu": "main-menu",
           "sticky_header": true,
           "help_label": "Ajuda",
