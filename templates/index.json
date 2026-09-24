@@ -15,6 +15,7 @@
         "slide-1": {
           "type": "slide",
           "settings": {
+            "image": "shopify://shop_images/CAPA_BANNER_SITE_2.png",
             "tag": "Lançamento",
             "title": "CONECTE-SE AGORA",
             "subtitle": "Descubra os novos lançamentos e encontre sua próxima conquista. Performance e estilo sem limites.",
