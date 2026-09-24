@@ -26,9 +26,9 @@
             "button_url_2": "",
             "btn1_bg": "",
             "btn1_text": "",
-            "btn2_bg": "",
-            "btn2_text": "",
-            "btn2_border": "",
+            "btn2_bg": "#FFFFFF",
+            "btn2_text": "#000000",
+            "btn2_border": "#FFFFFF",
             "text_position": "bottom-left",
             "text_color": "light",
             "overlay_style": "dark"
