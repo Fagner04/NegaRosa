@@ -348,17 +348,10 @@
     "trust-badges": {
       "type": "trust-badges",
       "blocks": {
-        "badge_LqGRJd": {
-          "type": "badge",
-          "settings": {
-            "icon": "shield",
-            "text": "Benefício"
-          }
-        },
         "badge_WWAXmU": {
           "type": "badge",
           "settings": {
-            "icon": "shield",
+            "icon": "gift",
             "text": "Benefício"
           }
         },
@@ -406,7 +399,6 @@
         }
       },
       "block_order": [
-        "badge_LqGRJd",
         "badge_WWAXmU",
         "b1",
         "b2",
