@@ -61,12 +61,17 @@
 
           <div class="hero-banner__actions">
             {%- if block.settings.button_text != blank -%}
-              <a href="{{ block.settings.button_url }}" class="btn btn-primary btn-lg btn-arrow btn-ripple btn-magnetic">
+              {%- assign hb_b1_bg = block.settings.btn1_bg | default: section.settings.btn_bg_color -%}
+              {%- assign hb_b1_text = block.settings.btn1_text | default: section.settings.btn_text_color -%}
+              <a href="{{ block.settings.button_url }}" class="btn btn-primary btn-lg btn-arrow btn-ripple btn-magnetic"{% if hb_b1_bg != blank or hb_b1_text != blank %} style="{% if hb_b1_bg != blank %}background-color: {{ hb_b1_bg }}; border-color: {{ hb_b1_bg }}; background-image: none;{% endif %}{% if hb_b1_text != blank %} color: {{ hb_b1_text }};{% endif %}"{% endif %}>
                 {{ block.settings.button_text }}
               </a>
             {%- endif -%}
             {%- if block.settings.button_text_2 != blank -%}
-              <a href="{{ block.settings.button_url_2 }}" class="btn btn-secondary btn-lg btn-arrow btn-ripple btn-magnetic">
+              {%- assign hb_b2_bg = block.settings.btn2_bg | default: section.settings.btn_bg_color -%}
+              {%- assign hb_b2_text = block.settings.btn2_text | default: section.settings.btn_text_color -%}
+              {%- assign hb_b2_border = block.settings.btn2_border | default: hb_b2_bg -%}
+              <a href="{{ block.settings.button_url_2 }}" class="btn btn-secondary btn-lg btn-arrow btn-ripple btn-magnetic"{% if hb_b2_bg != blank or hb_b2_text != blank or block.settings.btn2_border != blank %} style="{% if hb_b2_bg != blank %}background-color: {{ hb_b2_bg }}; background-image: none;{% endif %}{% if hb_b2_border != blank %} border-color: {{ hb_b2_border }};{% endif %}{% if hb_b2_text != blank %} color: {{ hb_b2_text }};{% endif %}"{% endif %}>
                 {{ block.settings.button_text_2 }}
               </a>
             {%- endif -%}
@@ -307,6 +312,40 @@
           "type": "url",
           "id": "button_url_2",
           "label": "Link do botão 2"
+        },
+        {
+          "type": "header",
+          "content": "🎨 Cores dos botões (este slide)"
+        },
+        {
+          "type": "color",
+          "id": "btn1_bg",
+          "label": "Botão 1 - fundo",
+          "info": "Vazio = usa a cor geral dos botões"
+        },
+        {
+          "type": "color",
+          "id": "btn1_text",
+          "label": "Botão 1 - texto",
+          "info": "Vazio = usa a cor geral dos botões"
+        },
+        {
+          "type": "color",
+          "id": "btn2_bg",
+          "label": "Botão 2 - fundo",
+          "info": "Vazio = usa a cor geral dos botões"
+        },
+        {
+          "type": "color",
+          "id": "btn2_text",
+          "label": "Botão 2 - texto",
+          "info": "Vazio = usa a cor geral dos botões"
+        },
+        {
+          "type": "color",
+          "id": "btn2_border",
+          "label": "Botão 2 - borda",
+          "info": "Vazio = igual ao fundo do botão 2"
         },
         {
           "type": "select",
