@@ -9,9 +9,13 @@
  */
 {
   "current": {
-    "color_background": "#F287B5",
+    "color_background": "#FFFFFF",
     "color_background_secondary": "#F287B5",
+    "color_bg_gradient": true,
     "header_bg_color": "#FFFFFF",
+    "header_bg_gradient": true,
+    "header_bg_gradient_start": "#F287B5",
+    "header_bg_gradient_end": "#FFFFFF",
     "footer_bg_color": "#FFFFFF",
     "footer_bg_gradient": true,
     "footer_bg_gradient_start": "#F287B5",
