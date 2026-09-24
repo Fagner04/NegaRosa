@@ -280,6 +280,12 @@
     display: none;
   }
 
+  /* Pagamento não tem sanfona: mantém o título visível */
+  .footer__column--payments .footer__title {
+    display: block;
+    margin-bottom: var(--space-3);
+  }
+
   .footer__accordion-toggle {
     display: flex;
     font-size: var(--font-size-base);
