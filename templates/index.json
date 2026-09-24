@@ -90,7 +90,7 @@
         "hide_content_mobile": false,
         "show_buttons_mobile": true,
         "mobile_ratio": "9-16",
-        "mobile_custom_height": 85,
+        "mobile_custom_height": 75,
         "btn_bg_color": "#f287b5",
         "btn_text_color": "#ffffff",
         "btn_gradient": false,
