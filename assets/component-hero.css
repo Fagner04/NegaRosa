@@ -476,4 +476,17 @@
   .hero-banner--hide-content-mobile .hero-banner__scroll-indicator {
     display: none !important;
   }
+
+  /* Keep buttons (+overlay) visible on mobile when configured */
+  .hero-banner--hide-content-mobile.hero-banner--show-buttons-mobile .hero-banner__content {
+    display: flex !important;
+  }
+  .hero-banner--hide-content-mobile.hero-banner--show-buttons-mobile .hero-banner__overlay {
+    display: block !important;
+  }
+  .hero-banner--hide-content-mobile.hero-banner--show-buttons-mobile .hero-banner__tag,
+  .hero-banner--hide-content-mobile.hero-banner--show-buttons-mobile .hero-banner__title,
+  .hero-banner--hide-content-mobile.hero-banner--show-buttons-mobile .hero-banner__subtitle {
+    display: none !important;
+  }
 }
