@@ -36,6 +36,9 @@
     "color_button_bg": "#CF528C",
     "color_button_text": "#FFFFFF",
     "color_button_secondary_bg": "#000000",
+    "social_instagram_link": "https://ok",
+    "social_facebook_link": "https://ok",
+    "social_tiktok_link": "https://ok",
     "wholesale_enabled": false,
     "sections": {
       "header": {
@@ -43,6 +46,7 @@
         "settings": {
           "logo": "shopify://shop_images/Design_sem_nome_1.png",
           "logo_width": 260,
+          "logo_width_mobile": 120,
           "menu": "main-menu",
           "sticky_header": true,
           "help_label": "Ajuda",
