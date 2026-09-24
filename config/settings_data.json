@@ -16,7 +16,7 @@
     "header_bg_gradient": true,
     "header_bg_gradient_start": "#FDA7CC",
     "header_bg_gradient_end": "#FFFFFF",
-    "header_bg_gradient_direction": "baixo",
+    "header_bg_gradient_direction": "cima",
     "footer_bg_color": "#FFFFFF",
     "footer_bg_gradient": true,
     "footer_bg_gradient_start": "#F287B5",
