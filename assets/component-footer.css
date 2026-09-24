@@ -449,13 +449,14 @@ a.footer__contact-value:hover { color: var(--footer-heading, #9D5A5A); opacity: 
   justify-content: center;
 }
 .footer__payments .footer__payment-icon {
-  width: 38px;
-  height: 24px;
+  width: 40px;
+  height: 26px;
+  flex: 0 0 auto;
   opacity: 1;
   background: #fff;
   border: 1px solid rgba(0,0,0,0.08);
   border-radius: 5px;
-  padding: 0;
+  padding: 2px;
   overflow: hidden;
   box-sizing: border-box;
   transition: transform .2s ease, box-shadow .2s ease;
@@ -464,10 +465,12 @@ a.footer__contact-value:hover { color: var(--footer-heading, #9D5A5A); opacity: 
   justify-content: center;
 }
 .footer__payments .footer__payment-icon svg,
+.footer__payments .footer__payment-icon img,
 .footer__payments .footer__payment-icon .payment-flag__svg {
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: contain;
 }
 .footer__payments .footer__payment-icon:hover {
   transform: translateY(-2px);
@@ -491,7 +494,20 @@ a.footer__contact-value:hover { color: var(--footer-heading, #9D5A5A); opacity: 
     order: 99;
     text-align: left;
   }
-  .footer__column--payments .footer__payments { justify-content: flex-start; }
+  .footer__column--payments .footer__payments {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 6px;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .footer__column--payments .footer__payments::-webkit-scrollbar { display: none; }
+  .footer__column--payments .footer__payment-icon {
+    width: 44px;
+    height: 28px;
+  }
 }
 
 
