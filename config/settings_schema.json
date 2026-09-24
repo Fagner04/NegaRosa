@@ -46,6 +46,38 @@
         "default": "#F5F5F5"
       },
       {
+        "type": "checkbox",
+        "id": "color_bg_gradient",
+        "label": "Usar gradiente no fundo do site",
+        "info": "Ative para usar gradiente em vez da cor sólida no fundo da página",
+        "default": false
+      },
+      {
+        "type": "color",
+        "id": "color_bg_gradient_start",
+        "label": "Gradiente do site - cor inicial",
+        "default": "#FDE8F1"
+      },
+      {
+        "type": "color",
+        "id": "color_bg_gradient_end",
+        "label": "Gradiente do site - cor final",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "select",
+        "id": "color_bg_gradient_direction",
+        "label": "Direção do gradiente do site",
+        "options": [
+          { "value": "diagonal", "label": "Diagonal ↘" },
+          { "value": "baixo", "label": "De cima para baixo" },
+          { "value": "cima", "label": "De baixo para cima" },
+          { "value": "direita", "label": "Da esquerda para a direita" },
+          { "value": "radial", "label": "Radial (centro para fora)" }
+        ],
+        "default": "diagonal"
+      },
+      {
         "type": "header",
         "content": "📋 Header (Cabeçalho)"
       },
@@ -53,8 +85,40 @@
         "type": "color",
         "id": "header_bg_color",
         "label": "Cor de fundo do Header",
-        "info": "Cor de fundo do cabeçalho do site",
+        "info": "Cor de fundo do cabeçalho do site (vale quando o gradiente está desligado)",
         "default": "#FFFFFF"
+      },
+      {
+        "type": "checkbox",
+        "id": "header_bg_gradient",
+        "label": "Usar gradiente no fundo do Header",
+        "info": "Ative para usar gradiente em vez da cor sólida",
+        "default": false
+      },
+      {
+        "type": "color",
+        "id": "header_bg_gradient_start",
+        "label": "Gradiente do Header - cor inicial",
+        "default": "#D81B73"
+      },
+      {
+        "type": "color",
+        "id": "header_bg_gradient_end",
+        "label": "Gradiente do Header - cor final",
+        "default": "#8F0E51"
+      },
+      {
+        "type": "select",
+        "id": "header_bg_gradient_direction",
+        "label": "Direção do gradiente do Header",
+        "options": [
+          { "value": "diagonal", "label": "Diagonal ↘" },
+          { "value": "baixo", "label": "De cima para baixo" },
+          { "value": "cima", "label": "De baixo para cima" },
+          { "value": "direita", "label": "Da esquerda para a direita" },
+          { "value": "radial", "label": "Radial (centro para fora)" }
+        ],
+        "default": "diagonal"
       },
       {
         "type": "color",

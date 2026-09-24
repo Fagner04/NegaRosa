@@ -55,6 +55,7 @@
       --color-accent: {{ settings.color_accent | default: '#FF0000' }};
       --color-bg: {{ settings.color_background | default: '#FFFFFF' }};
       --color-bg-secondary: {{ settings.color_background_secondary | default: '#F5F5F5' }};
+      --color-bg-image: {% if settings.color_bg_gradient %}{% case settings.color_bg_gradient_direction %}{% when 'baixo' %}linear-gradient(180deg, {{ settings.color_bg_gradient_start | default: '#FDE8F1' }}, {{ settings.color_bg_gradient_end | default: '#FFFFFF' }}){% when 'cima' %}linear-gradient(0deg, {{ settings.color_bg_gradient_start | default: '#FDE8F1' }}, {{ settings.color_bg_gradient_end | default: '#FFFFFF' }}){% when 'direita' %}linear-gradient(90deg, {{ settings.color_bg_gradient_start | default: '#FDE8F1' }}, {{ settings.color_bg_gradient_end | default: '#FFFFFF' }}){% when 'radial' %}radial-gradient(circle, {{ settings.color_bg_gradient_start | default: '#FDE8F1' }}, {{ settings.color_bg_gradient_end | default: '#FFFFFF' }}){% else %}linear-gradient(135deg, {{ settings.color_bg_gradient_start | default: '#FDE8F1' }}, {{ settings.color_bg_gradient_end | default: '#FFFFFF' }}){% endcase %}{% else %}none{% endif %};
       --color-bg-dark: {{ settings.footer_bg_color | default: '#111111' }};
       --color-text: {{ settings.color_text | default: '#111111' }};
       --color-text-light: {{ settings.color_text_light | default: '#757575' }};
@@ -66,6 +67,7 @@
       /* Header */
       --header-bg: {{ settings.header_bg_color | default: '#FFFFFF' }};
       --header-text: {{ settings.header_text_color | default: '#111111' }};
+      --header-bg-image: {% if settings.header_bg_gradient %}{% case settings.header_bg_gradient_direction %}{% when 'baixo' %}linear-gradient(180deg, {{ settings.header_bg_gradient_start | default: '#D81B73' }}, {{ settings.header_bg_gradient_end | default: '#8F0E51' }}){% when 'cima' %}linear-gradient(0deg, {{ settings.header_bg_gradient_start | default: '#D81B73' }}, {{ settings.header_bg_gradient_end | default: '#8F0E51' }}){% when 'direita' %}linear-gradient(90deg, {{ settings.header_bg_gradient_start | default: '#D81B73' }}, {{ settings.header_bg_gradient_end | default: '#8F0E51' }}){% when 'radial' %}radial-gradient(circle, {{ settings.header_bg_gradient_start | default: '#D81B73' }}, {{ settings.header_bg_gradient_end | default: '#8F0E51' }}){% else %}linear-gradient(135deg, {{ settings.header_bg_gradient_start | default: '#D81B73' }}, {{ settings.header_bg_gradient_end | default: '#8F0E51' }}){% endcase %}{% else %}none{% endif %};
       
       /* Footer */
       --footer-bg: {{ settings.footer_bg_color | default: '#111111' }};

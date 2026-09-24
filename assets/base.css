@@ -5,18 +5,12 @@
 
 /* ---------- CSS Custom Properties ---------- */
 :root {
-  /* Colors */
-  --color-primary: #111111;
-  --color-secondary: #757575;
-  --color-accent: #FF0000;
+  /* Colors — NOTA: as cores do tema (primary, secondary, accent, bg,
+     text, border, header, footer, botões) são definidas em
+     layout/theme.liquid a partir da engrenagem Configurações do tema.
+     NÃO redeclare aqui, pois este arquivo carrega DEPOIS e
+     sobrescreveria as escolhas do lojista. */
   --color-accent-hover: #CC0000;
-  --color-bg: #FFFFFF;
-  --color-bg-secondary: #F5F5F5;
-  --color-bg-dark: #111111;
-  --color-text: #111111;
-  --color-text-light: #757575;
-  --color-text-inverse: #FFFFFF;
-  --color-border: #E5E5E5;
   --color-border-dark: #CACACB;
   --color-success: #128A09;
   --color-warning: #FF6600;
@@ -135,6 +129,7 @@ body {
   line-height: var(--line-height-normal);
   color: var(--color-text);
   background-color: var(--color-bg);
+  background-image: var(--color-bg-image, none);
   overflow-x: hidden;
   min-height: 100vh;
 }

@@ -6,6 +6,7 @@
 /* ---------- Top Utility Bar (search + quick links) ---------- */
 .top-bar {
   background-color: var(--header-bg, var(--color-bg));
+  background-image: var(--header-bg-image, none);
   border-bottom: 1px solid var(--color-border);
   padding: 12px 0;
 }
@@ -136,6 +137,7 @@
 
 .header {
   background-color: var(--header-bg, var(--color-bg));
+  background-image: var(--header-bg-image, none);
   height: var(--header-height);
   border-bottom: 1px solid transparent;
   transition: background-color var(--transition-base),
@@ -145,6 +147,7 @@
 
 .header.scrolled {
   background-color: var(--header-bg, rgba(255, 255, 255, 0.95));
+  background-image: var(--header-bg-image, none);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom-color: var(--color-border);
