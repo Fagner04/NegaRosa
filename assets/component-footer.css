@@ -493,12 +493,14 @@ a.footer__contact-value:hover { color: var(--footer-heading, #9D5A5A); opacity: 
     flex: 1 1 100%;
     order: 99;
     text-align: left;
+    margin-top: 20px;
   }
   .footer__column--payments .footer__payments {
     justify-content: flex-start;
     flex-wrap: nowrap;
     overflow-x: auto;
-    gap: 6px;
+    gap: 8px;
+    padding-top: 4px;
     padding-bottom: 4px;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
