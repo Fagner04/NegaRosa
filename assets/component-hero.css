@@ -247,6 +247,16 @@
   transform: translateY(-1px);
 }
 
+/* Button sizes (Hero Banner > Tamanho dos botões) */
+.hero-banner--btn-pequeno .hero-banner__actions .btn {
+  padding: 10px 22px;
+  font-size: 13px;
+}
+.hero-banner--btn-grande .hero-banner__actions .btn {
+  padding: 18px 46px;
+  font-size: 17px;
+}
+
 /* ---------- Navigation Arrows ---------- */
 .hero-banner__nav {
   position: absolute;

@@ -5,7 +5,7 @@
 
 {%- if section.blocks.size > 0 -%}
 <section
-  class="hero-banner hero-banner--{{ section.settings.height }}{% if section.settings.hide_content_mobile %} hero-banner--hide-content-mobile{% endif %} hero-banner--mobile-ratio-{{ section.settings.mobile_ratio }}{% if section.settings.btn_bg_color != blank or section.settings.btn_text_color != blank or section.settings.btn_gradient %} hero-banner--custom-btn{% endif %}"
+  class="hero-banner hero-banner--{{ section.settings.height }}{% if section.settings.hide_content_mobile %} hero-banner--hide-content-mobile{% endif %} hero-banner--mobile-ratio-{{ section.settings.mobile_ratio }}{% if section.settings.btn_bg_color != blank or section.settings.btn_text_color != blank or section.settings.btn_gradient %} hero-banner--custom-btn{% endif %} hero-banner--btn-{{ section.settings.btn_size | default: 'medio' }}"
   id="hero-{{ section.id }}"
   data-autoplay="{{ section.settings.autoplay_speed | times: 1000 }}"
   data-autoplay-enabled="{{ section.settings.autoplay }}"
@@ -230,6 +230,18 @@
         { "value": "radial", "label": "Radial (centro para fora)" }
       ],
       "default": "diagonal"
+    },
+    {
+      "type": "select",
+      "id": "btn_size",
+      "label": "Tamanho dos botões",
+      "info": "No mobile os botões ocupam a largura total sozinhos",
+      "options": [
+        { "value": "pequeno", "label": "Pequeno" },
+        { "value": "medio", "label": "Médio (padrão)" },
+        { "value": "grande", "label": "Grande" }
+      ],
+      "default": "medio"
     }
   ],
   "blocks": [
