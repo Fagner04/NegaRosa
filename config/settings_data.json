@@ -14,7 +14,9 @@
     "header_bg_color": "#DDDADA",
     "footer_bg_color": "#FFFFFF",
     "footer_text_color": "#000000",
-    "footer_heading_color": "#000000",
+    "footer_heading_color": "#CF528C",
+    "color_border": "#CF528C",
+    "color_button_bg": "#CF528C",
     "color_button_text": "#CF528C",
     "color_button_secondary_bg": "#000000",
     "sections": {
