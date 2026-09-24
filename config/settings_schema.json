@@ -118,6 +118,45 @@
       },
       {
         "type": "header",
+        "content": "📧 Newsletter do Footer"
+      },
+      {
+        "type": "color",
+        "id": "footer_news_btn_bg",
+        "label": "Cor de fundo do botão Cadastrar",
+        "info": "Fundo do botão da newsletter no rodapé",
+        "default": "#D81B73"
+      },
+      {
+        "type": "color",
+        "id": "footer_news_btn_text",
+        "label": "Cor do texto do botão Cadastrar",
+        "info": "Texto dentro do botão da newsletter",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "footer_news_input_bg",
+        "label": "Cor de fundo do campo de e-mail",
+        "info": "Fundo do campo Seu e-mail",
+        "default": "#F5F5F5"
+      },
+      {
+        "type": "color",
+        "id": "footer_news_input_text",
+        "label": "Cor do texto do campo de e-mail",
+        "info": "Texto digitado e placeholder do campo",
+        "default": "#111111"
+      },
+      {
+        "type": "color",
+        "id": "footer_news_input_border",
+        "label": "Cor da borda do campo de e-mail",
+        "info": "Borda do campo Seu e-mail",
+        "default": "#E5E5E5"
+      },
+      {
+        "type": "header",
         "content": "✏️ Texto"
       },
       {

@@ -154,28 +154,30 @@
 .footer__newsletter-input {
   flex: 1;
   padding: var(--space-3) var(--space-4);
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: var(--footer-news-input-bg, #F5F5F5);
+  border: 1px solid var(--footer-news-input-border, #E5E5E5);
   border-radius: var(--border-radius-full);
-  color: var(--footer-text, var(--color-text-inverse));
+  color: var(--footer-news-input-text, #111111);
   font-size: var(--font-size-sm);
   outline: none;
   transition: all var(--transition-fast);
 }
 
 .footer__newsletter-input::placeholder {
-  color: var(--footer-text, rgba(255, 255, 255, 0.5));
+  color: var(--footer-news-input-text, #111111);
+  opacity: 0.55;
 }
 
 .footer__newsletter-input:focus {
-  border-color: var(--footer-text, rgba(255, 255, 255, 0.5));
-  background-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--footer-contact-icon-color, #D81B73);
+  background-color: var(--footer-news-input-bg, #F5F5F5);
+  filter: brightness(0.98);
 }
 
 .footer__newsletter-btn {
   padding: var(--space-3) var(--space-6);
-  background-color: var(--footer-text, var(--color-text-inverse));
-  color: var(--footer-bg, var(--color-bg-dark));
+  background-color: var(--footer-news-btn-bg, #D81B73);
+  color: var(--footer-news-btn-text, #FFFFFF);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
   border-radius: var(--border-radius-full);
@@ -186,7 +188,7 @@
 }
 
 .footer__newsletter-btn:hover {
-  background-color: var(--color-bg-secondary);
+  filter: brightness(0.9);
   transform: translateY(-1px);
 }
 
