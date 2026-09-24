@@ -71,8 +71,29 @@
         "type": "color",
         "id": "footer_bg_color",
         "label": "Cor de fundo do Footer",
-        "info": "Cor de fundo do rodapé do site",
+        "info": "Cor de fundo do rodapé do site (vale quando o gradiente está desligado)",
         "default": "#111111"
+      },
+      {
+        "type": "checkbox",
+        "id": "footer_bg_gradient",
+        "label": "Usar gradiente no fundo do Footer",
+        "info": "Ative para usar gradiente em vez da cor sólida",
+        "default": false
+      },
+      {
+        "type": "color",
+        "id": "footer_bg_gradient_start",
+        "label": "Gradiente do Footer - cor inicial",
+        "info": "Lado esquerdo do gradiente",
+        "default": "#D81B73"
+      },
+      {
+        "type": "color",
+        "id": "footer_bg_gradient_end",
+        "label": "Gradiente do Footer - cor final",
+        "info": "Lado direito do gradiente",
+        "default": "#8F0E51"
       },
       {
         "type": "color",

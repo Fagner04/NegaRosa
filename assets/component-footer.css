@@ -5,6 +5,7 @@
 /* ---------- Footer ---------- */
 .footer {
   background-color: var(--footer-bg, var(--color-bg-dark));
+  background-image: var(--footer-bg-image, none);
   color: var(--footer-text, var(--color-text-inverse));
   padding-top: var(--space-12);
 }
