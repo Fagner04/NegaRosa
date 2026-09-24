@@ -83,7 +83,7 @@
         "slide-3"
       ],
       "settings": {
-        "height": "large",
+        "height": "fullscreen",
         "autoplay": true,
         "autoplay_speed": 5,
         "show_scroll_indicator": false,
