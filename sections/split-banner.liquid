@@ -1,0 +1,141 @@
+{%- comment -%}
+  Section: Split Banner
+  Two side-by-side promotional banners with hover effects
+{%- endcomment -%}
+
+<section class="section-spacing" id="split-{{ section.id }}">
+  <div class="page-width">
+    <div class="split-banner reveal">
+      {%- for block in section.blocks -%}
+        <a href="{{ block.settings.link | default: '#' }}" class="split-banner__item img-zoom card-hover" {{ block.shopify_attributes }}>
+          <div class="split-banner__image-wrapper image-reveal" data-parallax="0.2">
+            {%- if block.settings.image != blank -%}
+              <img
+                class="split-banner__image"
+                src="{{ block.settings.image | image_url: width: 960 }}"
+                alt="{{ block.settings.title | escape }}"
+                width="960"
+                height="600"
+                loading="lazy"
+              >
+            {%- else -%}
+              <div class="split-banner__image" style="background: linear-gradient(135deg, #{{ block.settings.bg_color | default: '222' }} 0%, #{{ block.settings.bg_color_2 | default: '444' }} 100%);"></div>
+            {%- endif -%}
+          </div>
+
+          <div class="split-banner__overlay"></div>
+
+          <div class="split-banner__content">
+            {%- if block.settings.tag != blank -%}
+              <span class="split-banner__tag">{{ block.settings.tag }}</span>
+            {%- endif -%}
+
+            {%- if block.settings.title != blank -%}
+              <h3 class="split-banner__title">{{ block.settings.title }}</h3>
+            {%- endif -%}
+
+            {%- if block.settings.subtitle != blank -%}
+              <p class="split-banner__subtitle">{{ block.settings.subtitle }}</p>
+            {%- endif -%}
+
+            {%- if block.settings.button_text != blank -%}
+              <span class="btn btn-primary btn-arrow btn-ripple">{{ block.settings.button_text }}</span>
+            {%- endif -%}
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Banner Dividido",
+  "class": "split-banner-section",
+  "max_blocks": 2,
+  "settings": [],
+  "blocks": [
+    {
+      "type": "banner",
+      "name": "Banner",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagem"
+        },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Tag",
+          "default": "Masculino"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título",
+          "default": "NOVOS ESTILOS"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtítulo",
+          "default": "Descubra as últimas tendências"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Texto do botão",
+          "default": "Comprar"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "bg_color",
+          "label": "Cor de fundo 1 (hex sem #)",
+          "default": "1a1a1a"
+        },
+        {
+          "type": "text",
+          "id": "bg_color_2",
+          "label": "Cor de fundo 2 (hex sem #)",
+          "default": "333333"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Banner Dividido",
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "tag": "Masculino",
+            "title": "NOVOS ESTILOS",
+            "subtitle": "Performance e estilo para o seu treino",
+            "button_text": "Comprar",
+            "bg_color": "0d1b2a",
+            "bg_color_2": "1b263b"
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "tag": "Feminino",
+            "title": "COLEÇÃO VERÃO",
+            "subtitle": "Peças leves e confortáveis para o dia a dia",
+            "button_text": "Comprar",
+            "bg_color": "2d1b2e",
+            "bg_color_2": "4a2d4b"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,234 @@
+{% comment %}
+  Wishlist Drawer - Renderiza favoritos salvos no localStorage.
+  Abre ao clicar em [data-wishlist-open]. Não depende de página no admin.
+{% endcomment %}
+
+<div class="wishlist-drawer" id="WishlistDrawer" aria-hidden="true" role="dialog" aria-label="Meus Favoritos" hidden style="display:none">
+  <div class="wishlist-drawer__overlay" data-wishlist-close></div>
+  <aside class="wishlist-drawer__panel" role="document">
+    <header class="wishlist-drawer__header">
+      <h2 class="wishlist-drawer__title">Meus Favoritos <span id="WishlistDrawerCount">(0)</span></h2>
+      <button type="button" class="wishlist-drawer__close" data-wishlist-close aria-label="Fechar">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </header>
+    <div class="wishlist-drawer__body" id="WishlistDrawerBody">
+      <div class="wishlist-drawer__empty" id="WishlistDrawerEmpty">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <p>Você ainda não tem favoritos.</p>
+        <span>Toque no coração ♥ dos produtos para salvá-los aqui.</span>
+      </div>
+      <ul class="wishlist-drawer__list" id="WishlistDrawerList"></ul>
+    </div>
+  </aside>
+</div>
+
+<style>
+  #WishlistDrawer.wishlist-drawer{position:fixed;inset:0;z-index:10050;display:none!important;visibility:hidden;pointer-events:none}
+  #WishlistDrawer.wishlist-drawer.is-open{display:block!important;visibility:visible;pointer-events:auto}
+  .wishlist-drawer__overlay{position:absolute;inset:0;background:rgba(15,15,15,.45);backdrop-filter:blur(3px);opacity:0;transition:opacity .25s ease}
+  .wishlist-drawer.is-open .wishlist-drawer__overlay{opacity:1}
+  .wishlist-drawer__panel{position:absolute;top:0;right:0;height:100%;width:min(420px,92vw);max-width:100vw;background:#fff;box-shadow:-10px 0 40px rgba(0,0,0,.15);display:flex;flex-direction:column;transform:translateX(110%);transition:transform .3s cubic-bezier(.22,1,.36,1);will-change:transform}
+  #WishlistDrawer.wishlist-drawer:not(.is-open) .wishlist-drawer__panel{transform:translateX(110%)!important}
+  .wishlist-drawer.is-open .wishlist-drawer__panel{transform:translateX(0)}
+  .wishlist-drawer__header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid #eee}
+  .wishlist-drawer__title{font-size:16px;font-weight:600;margin:0;letter-spacing:.02em}
+  .wishlist-drawer__close{background:transparent;border:0;cursor:pointer;padding:6px;border-radius:50%;display:flex;color:#111}
+  .wishlist-drawer__close:hover{background:#f4f4f4}
+  .wishlist-drawer__body{flex:1;overflow-y:auto;padding:16px 18px}
+  .wishlist-drawer__empty{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#666;padding:60px 20px;gap:10px}
+  .wishlist-drawer__empty p{margin:0;font-weight:600;color:#111}
+  .wishlist-drawer__empty span{font-size:13px}
+  .wishlist-drawer__list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+  .wishlist-drawer__item{display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:center;padding:10px;border:1px solid #eee;border-radius:12px;background:#fff;transition:box-shadow .2s}
+  .wishlist-drawer__item:hover{box-shadow:0 4px 14px rgba(0,0,0,.06)}
+  .wishlist-drawer__item img{width:72px;height:72px;object-fit:cover;border-radius:8px;background:#f6f6f6}
+  .wishlist-drawer__item a{color:#111;text-decoration:none;font-size:14px;font-weight:600;line-height:1.3;display:block}
+  .wishlist-drawer__item small{color:#888;font-size:12px}
+  .wishlist-drawer__item .wl-price{display:block;margin-top:4px;font-size:13px;color:#111;font-weight:600}
+  .wishlist-drawer__item .wl-remove{background:transparent;border:0;cursor:pointer;color:#999;padding:6px;border-radius:50%}
+  .wishlist-drawer__item .wl-remove:hover{color:#c00;background:#fff0f0}
+  .header__wishlist-count{position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:#e11d48;color:#fff;font-size:10px;line-height:16px;text-align:center;font-weight:700}
+  .header__action-btn{position:relative}
+</style>
+
+<script>
+(function(){
+  var STORAGE_PREFIX = 'wishlist_';
+  var META_KEY = 'wishlist_meta_v1';
+
+  function getMeta(){
+    try { return JSON.parse(localStorage.getItem(META_KEY) || '{}'); } catch(e){ return {}; }
+  }
+  function saveMeta(m){ try { localStorage.setItem(META_KEY, JSON.stringify(m)); } catch(e){} }
+
+  function getIds(){
+    var ids = [];
+    for (var i=0;i<localStorage.length;i++){
+      var k = localStorage.key(i);
+      if (k && k.indexOf(STORAGE_PREFIX)===0 && k !== META_KEY){
+        if (localStorage.getItem(k)==='true' || localStorage.getItem(k)==='1'){
+          ids.push(k.replace(STORAGE_PREFIX,''));
+        }
+      }
+    }
+    return ids;
+  }
+
+  function updateCount(){
+    var n = getIds().length;
+    var badge = document.getElementById('WishlistCount');
+    var drawerCount = document.getElementById('WishlistDrawerCount');
+    if (badge){ badge.textContent = n; badge.style.display = n>0 ? '' : 'none'; }
+    if (drawerCount){ drawerCount.textContent = '('+n+')'; }
+  }
+
+  function render(){
+    var list = document.getElementById('WishlistDrawerList');
+    var empty = document.getElementById('WishlistDrawerEmpty');
+    if (!list) return;
+    var ids = getIds();
+    var meta = getMeta();
+    list.innerHTML = '';
+    if (!ids.length){ empty.style.display=''; return; }
+    empty.style.display='none';
+    ids.forEach(function(id){
+      var m = meta[id] || {};
+      var li = document.createElement('li');
+      li.className = 'wishlist-drawer__item';
+      li.innerHTML =
+        '<img src="'+(m.image||'')+'" alt="" onerror="this.style.opacity=.3">'+
+        '<div><a href="'+(m.url||'#')+'">'+(m.title||('Produto #'+id))+'</a>'+
+        (m.price?'<span class="wl-price">'+m.price+'</span>':'')+'</div>'+
+        '<button type="button" class="wl-remove" aria-label="Remover" data-remove="'+id+'">'+
+        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>';
+      list.appendChild(li);
+    });
+  }
+
+  function open(){
+    var d = document.getElementById('WishlistDrawer');
+    if (!d) return;
+    render();
+    // display:block first, then next frame add .is-open so transition runs
+    d.hidden = false;
+    d.style.display = 'block';
+    requestAnimationFrame(function(){
+      d.classList.add('is-open');
+      d.setAttribute('aria-hidden','false');
+    });
+    document.body.style.overflow='hidden';
+  }
+  function close(){
+    var d = document.getElementById('WishlistDrawer');
+    if (!d) return;
+    d.classList.remove('is-open');
+    d.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+    setTimeout(function(){
+      if(!d.classList.contains('is-open')){
+        d.style.display='none';
+        d.hidden = true;
+      }
+    }, 320);
+  }
+
+  document.addEventListener('click', function(e){
+    var openBtn = e.target.closest('[data-wishlist-open]');
+    if (openBtn){ e.preventDefault(); open(); return; }
+    var closeBtn = e.target.closest('[data-wishlist-close]');
+    if (closeBtn){ e.preventDefault(); close(); return; }
+    var rem = e.target.closest('[data-remove]');
+    if (rem){
+      var id = rem.getAttribute('data-remove');
+      localStorage.removeItem(STORAGE_PREFIX+id);
+      var meta = getMeta(); delete meta[id]; saveMeta(meta);
+      updateCount(); render();
+      document.dispatchEvent(new CustomEvent('wishlist:changed'));
+    }
+  });
+
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
+
+  // Expose helper so product cards/pages can save meta
+  window.WishlistStore = {
+    save: function(id, data){
+      localStorage.setItem(STORAGE_PREFIX+id,'true');
+      var meta = getMeta(); meta[id] = Object.assign(meta[id]||{}, data||{}); saveMeta(meta);
+      updateCount();
+      document.dispatchEvent(new CustomEvent('wishlist:changed'));
+    },
+    remove: function(id){
+      localStorage.removeItem(STORAGE_PREFIX+id);
+      var meta = getMeta(); delete meta[id]; saveMeta(meta);
+      updateCount();
+      document.dispatchEvent(new CustomEvent('wishlist:changed'));
+    },
+    has: function(id){ return localStorage.getItem(STORAGE_PREFIX+id)==='true'; }
+  };
+
+  document.addEventListener('wishlist:changed', updateCount);
+  document.addEventListener('DOMContentLoaded', function(){
+    var d = document.getElementById('WishlistDrawer');
+    if (d && !d.classList.contains('is-open')) {
+      d.style.display = 'none';
+      d.hidden = true;
+      d.setAttribute('aria-hidden','true');
+    }
+    updateCount();
+    // Sincroniza estado visual dos botões de coração dos cards
+    document.querySelectorAll('.product-card__wishlist').forEach(function(btn){
+      var id = btn.getAttribute('data-product-id');
+      if (id && window.WishlistStore.has(id)) btn.classList.add('is-active');
+    });
+  });
+
+  // Injeta elementos de efeito (partículas + anel) uma vez por botão
+  function ensureBurstFx(btn){
+    if (btn.querySelector('.heart-burst')) return;
+    var burst = document.createElement('span');
+    burst.className = 'heart-burst';
+    burst.innerHTML = '<span></span><span></span><span></span><span></span><span></span><span></span>';
+    var ring = document.createElement('span');
+    ring.className = 'heart-ring';
+    btn.appendChild(ring);
+    btn.appendChild(burst);
+  }
+
+  // Delegação: clique no coração dos cards
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('.product-card__wishlist');
+    if (!btn) return;
+    e.preventDefault(); e.stopPropagation();
+    var id = btn.getAttribute('data-product-id');
+    if (!id) return;
+    ensureBurstFx(btn);
+    var wasActive = window.WishlistStore.has(id);
+
+    // limpa animações anteriores para permitir replay
+    btn.classList.remove('is-bursting', 'is-unbursting');
+    void btn.offsetWidth;
+
+    if (wasActive){
+      window.WishlistStore.remove(id);
+      btn.classList.remove('is-active');
+      btn.classList.add('is-unbursting');
+    } else {
+      window.WishlistStore.save(id, {
+        title: btn.getAttribute('data-product-title'),
+        url: btn.getAttribute('data-product-url'),
+        image: btn.getAttribute('data-product-image'),
+        price: btn.getAttribute('data-product-price')
+      });
+      btn.classList.add('is-active', 'is-bursting');
+      // vibração sutil em dispositivos que suportam
+      if (navigator.vibrate) { try { navigator.vibrate(15); } catch(_){} }
+    }
+    setTimeout(function(){
+      btn.classList.remove('is-bursting', 'is-unbursting');
+    }, 750);
+  });
+
+  updateCount();
+})();
+</script>

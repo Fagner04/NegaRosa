@@ -1,0 +1,424 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero_banner_DgppF7": {
+      "type": "hero-banner",
+      "blocks": {
+        "slide_HEXNCt": {
+          "type": "slide",
+          "settings": {
+            "tag": "Lançamento",
+            "title": "CONECTE-SE AGORA",
+            "subtitle": "Descubra os novos lançamentos e encontre sua próxima conquista.",
+            "button_text": "Comprar Agora",
+            "button_url": "",
+            "button_text_2": "Saiba Mais",
+            "button_url_2": "",
+            "text_position": "left",
+            "text_color": "light",
+            "overlay_style": "dark"
+          }
+        },
+        "slide_CUUzT8": {
+          "type": "slide",
+          "settings": {
+            "tag": "Lançamento",
+            "title": "CONECTE-SE AGORA",
+            "subtitle": "Descubra os novos lançamentos e encontre sua próxima conquista.",
+            "button_text": "Comprar Agora",
+            "button_url": "",
+            "button_text_2": "Saiba Mais",
+            "button_url_2": "",
+            "text_position": "center",
+            "text_color": "light",
+            "overlay_style": "dark"
+          }
+        },
+        "slide_gpKTii": {
+          "type": "slide",
+          "disabled": true,
+          "settings": {
+            "tag": "Lançamento",
+            "title": "CONECTE-SE AGORA",
+            "subtitle": "Descubra os novos lançamentos e encontre sua próxima conquista.",
+            "button_text": "Comprar Agora",
+            "button_url": "",
+            "button_text_2": "Saiba Mais",
+            "button_url_2": "",
+            "text_position": "bottom-left",
+            "text_color": "light",
+            "overlay_style": "dark"
+          }
+        },
+        "slide_3XFJhA": {
+          "type": "slide",
+          "disabled": true,
+          "settings": {
+            "tag": "ProConnect",
+            "title": "PROCONNECT MAX",
+            "subtitle": "Uma nova era de amortecimento. Experimente o futuro do conforto.",
+            "button_text": "Explorar",
+            "button_url": "",
+            "button_text_2": "Saiba Mais",
+            "button_url_2": "",
+            "text_position": "center",
+            "text_color": "light",
+            "overlay_style": "dark"
+          }
+        }
+      },
+      "block_order": [
+        "slide_HEXNCt",
+        "slide_CUUzT8",
+        "slide_gpKTii",
+        "slide_3XFJhA"
+      ],
+      "name": "Hero Banner",
+      "settings": {
+        "height": "fullscreen",
+        "autoplay": true,
+        "autoplay_speed": 5,
+        "show_scroll_indicator": false,
+        "hide_content_mobile": true,
+        "mobile_ratio": "custom",
+        "mobile_custom_height": 80
+      }
+    },
+    "announcement_bar_bpgEJH": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement_nrzi8F": {
+          "type": "announcement",
+          "settings": {
+            "text": "FRETE GRÁTIS acima de R$299",
+            "link": ""
+          }
+        },
+        "announcement_piwbdy": {
+          "type": "announcement",
+          "settings": {
+            "text": "PARCELE EM ATÉ 10X SEM JUROS",
+            "link": ""
+          }
+        },
+        "announcement_8CLeQE": {
+          "type": "announcement",
+          "settings": {
+            "text": "TROCA FÁCIL EM 7 DIAS",
+            "link": ""
+          }
+        },
+        "announcement_Lgrkt8": {
+          "type": "announcement",
+          "settings": {
+            "text": "NOVA COLEÇÃO DISPONÍVEL",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "announcement_nrzi8F",
+        "announcement_piwbdy",
+        "announcement_8CLeQE",
+        "announcement_Lgrkt8"
+      ],
+      "name": "Barra de Anúncios",
+      "settings": {
+        "speed": 40,
+        "background_color": "#111111",
+        "text_color": "#ffffff"
+      }
+    },
+    "category_grid_aBL67h": {
+      "type": "category-grid",
+      "blocks": {
+        "category_3axMKq": {
+          "type": "category",
+          "settings": {
+            "title": "Calçados",
+            "image": "shopify://shop_images/30.png",
+            "link": "",
+            "cta_text": "Comprar",
+            "placeholder_color": "1a1a2e",
+            "placeholder_color_2": "16213e"
+          }
+        },
+        "category_YkHCzz": {
+          "type": "category",
+          "settings": {
+            "title": "Vestuário",
+            "image": "shopify://shop_images/23.png",
+            "link": "",
+            "cta_text": "Comprar",
+            "placeholder_color": "2d2d2d",
+            "placeholder_color_2": "4a4a4a"
+          }
+        },
+        "category_M4FpbR": {
+          "type": "category",
+          "settings": {
+            "title": "Acessórios",
+            "image": "shopify://shop_images/49.png",
+            "link": "",
+            "cta_text": "Comprar",
+            "placeholder_color": "3d1a1a",
+            "placeholder_color_2": "5a2d2d"
+          }
+        }
+      },
+      "block_order": [
+        "category_3axMKq",
+        "category_YkHCzz",
+        "category_M4FpbR"
+      ],
+      "name": "Grid de Categorias",
+      "settings": {
+        "title": "Explore por Categoria",
+        "layout": "3"
+      }
+    },
+    "trust_badges_8bRTwn": {
+      "type": "trust-badges",
+      "blocks": {
+        "badge_EXcNHm": {
+          "type": "badge",
+          "settings": {
+            "icon": "shield",
+            "text": "Compra Segura"
+          }
+        },
+        "badge_qg6fxh": {
+          "type": "badge",
+          "settings": {
+            "icon": "truck",
+            "text": "Entrega Rápida"
+          }
+        },
+        "badge_hrBLnU": {
+          "type": "badge",
+          "settings": {
+            "icon": "refresh",
+            "text": "Troca em 7 dias"
+          }
+        },
+        "badge_RrgPNA": {
+          "type": "badge",
+          "settings": {
+            "icon": "chat",
+            "text": "Suporte das 09h às 18h"
+          }
+        },
+        "badge_fbYaAG": {
+          "type": "badge",
+          "settings": {
+            "icon": "heart",
+            "text": "Produtos Originais"
+          }
+        },
+        "badge_8GVgYP": {
+          "type": "badge",
+          "settings": {
+            "icon": "card",
+            "text": "Parcele em até 6x sem juros"
+          }
+        }
+      },
+      "block_order": [
+        "badge_EXcNHm",
+        "badge_qg6fxh",
+        "badge_hrBLnU",
+        "badge_RrgPNA",
+        "badge_fbYaAG",
+        "badge_8GVgYP"
+      ],
+      "name": "Barra de Benefícios",
+      "settings": {
+        "background_color": "#ffffff",
+        "text_color": "#1a1a1a",
+        "divider_color": "#ffffff"
+      }
+    },
+    "featured_collection_MHyrfr": {
+      "type": "featured-collection",
+      "name": "Coleção em Destaque",
+      "settings": {
+        "title": "Lançamentos",
+        "subtitle": "",
+        "collection": "beachwear",
+        "products_to_show": 4,
+        "columns": "4",
+        "layout": "carousel",
+        "show_secondary_image": true,
+        "show_quick_add": true,
+        "show_category": true
+      }
+    },
+    "lookbook_X3pWkB": {
+      "type": "lookbook",
+      "blocks": {
+        "video_AUh6Ye": {
+          "type": "video",
+          "settings": {
+            "image": "shopify://shop_images/61.png",
+            "video_type": "mp4",
+            "video_id": "404 – Não Encontrado – ConectwhatsTeste",
+            "product_title": "Estilo Urbano",
+            "tag": "Em alta",
+            "link": ""
+          }
+        },
+        "video_4eqPVW": {
+          "type": "video",
+          "settings": {
+            "image": "shopify://shop_images/2_4c02c4ac-866c-4566-b0db-7f99baff74cb.png",
+            "video_type": "tiktok",
+            "video_id": "404 – Não Encontrado – ConectwhatsTeste",
+            "product_title": "Clássico Moderno",
+            "tag": "Coleção Verão",
+            "link": ""
+          }
+        },
+        "video_t9eVDD": {
+          "type": "video",
+          "settings": {
+            "image": "shopify://shop_images/22.png",
+            "video_type": "tiktok",
+            "video_id": "404 – Não Encontrado – ConectwhatsTeste",
+            "product_title": "Esportivo Chic",
+            "tag": "Novo",
+            "link": ""
+          }
+        },
+        "video_HVtWke": {
+          "type": "video",
+          "settings": {
+            "image": "shopify://shop_images/30.png",
+            "video_type": "tiktok",
+            "video_id": "404 – Não Encontrado – ConectwhatsTeste",
+            "product_title": "Minimalista",
+            "tag": "Essencial",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "video_AUh6Ye",
+        "video_4eqPVW",
+        "video_t9eVDD",
+        "video_HVtWke"
+      ],
+      "name": "Reels / Vídeos",
+      "settings": {
+        "title": "Reels",
+        "subtitle": "Inspire-se com nossos vídeos",
+        "columns": 4,
+        "cta_text": "",
+        "cta_url": ""
+      }
+    },
+    "trending_now_ULpdtU": {
+      "type": "trending-now",
+      "name": "Em Alta Agora",
+      "settings": {
+        "title": "Em Alta Agora",
+        "subtitle": "Os produtos mais desejados do momento",
+        "collection": "colecoes",
+        "products_to_show": 16
+      }
+    },
+    "drops_section_9bcLcU": {
+      "type": "drops-section",
+      "blocks": {
+        "release_XAGwQB": {
+          "type": "release",
+          "settings": {
+            "name": "ConectWhats Elite Edition 'Chicago'",
+            "image": "shopify://shop_images/50.png",
+            "price": "R$ 1.299,99",
+            "launch_date": "01 Jul 2026",
+            "countdown_date": "2026-07-01T10:00:00",
+            "status": "upcoming",
+            "product_link": ""
+          }
+        },
+        "release_fzxVTe": {
+          "type": "release",
+          "settings": {
+            "name": "ConectWhats ProConnect 'Midnight Navy'",
+            "image": "shopify://shop_images/49.png",
+            "price": "R$ 999,99",
+            "launch_date": "25 Jun 2026",
+            "countdown_date": "2026-07-01T10:00:00",
+            "status": "available",
+            "product_link": ""
+          }
+        },
+        "release_Gqe8RB": {
+          "type": "release",
+          "settings": {
+            "name": "ConectWhats Classic 'Panda'",
+            "image": "shopify://shop_images/51.png",
+            "price": "R$ 799,99",
+            "launch_date": "Esgotado",
+            "countdown_date": "2026-07-01T10:00:00",
+            "status": "sold-out",
+            "product_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "release_XAGwQB",
+        "release_fzxVTe",
+        "release_Gqe8RB"
+      ],
+      "disabled": true,
+      "name": "DROPS",
+      "settings": {
+        "bg_color": "#fff",
+        "card_bg_color": "#fefefe",
+        "text_color": "#000000",
+        "heading_color": "#0b0b0b",
+        "accent_color": "#d4af37",
+        "btn_bg_color": "#ffffff",
+        "btn_text_color": "#0a0a0a",
+        "title": "DROPS",
+        "label": "Lançamentos Exclusivos",
+        "link": ""
+      }
+    },
+    "about_us_wPt8D3": {
+      "type": "about-us",
+      "name": "Sobre Nós",
+      "settings": {
+        "bg_color": "#f5f5f5",
+        "show_badge": true,
+        "badge_color": "#22c55e",
+        "title": "Pouco De Nós",
+        "description": "<p>Desenvolvidos para atender suas necessidades e prezar pela satisfação e segurança entregando produtos da mais alta qualidade da melhor forma possível!</p>",
+        "subtitle": "Quer saber mais sobre nós e nossa equipe?",
+        "cta_helper": "Clique no botão abaixo",
+        "button_label": "Saber mais sobre nós",
+        "button_url": ""
+      }
+    }
+  },
+  "order": [
+    "hero_banner_DgppF7",
+    "announcement_bar_bpgEJH",
+    "category_grid_aBL67h",
+    "trust_badges_8bRTwn",
+    "featured_collection_MHyrfr",
+    "lookbook_X3pWkB",
+    "trending_now_ULpdtU",
+    "drops_section_9bcLcU",
+    "about_us_wPt8D3"
+  ]
+}

@@ -1,0 +1,253 @@
+{%- comment -%}
+  Snippet: frete-calculator
+  Cálculo de frete via Google Apps Script + API dos Correios.
+  Uso: {% render 'frete-calculator', product: product %}
+       {% render 'frete-calculator', cart: cart %}
+{%- endcomment -%}
+
+{%- if settings.frete_ativo and settings.frete_api_url != blank -%}
+
+{%- if cart -%}
+  {%- assign produto_peso = cart.total_weight | divided_by: 1000.0 -%}
+  {%- assign produto_valor = cart.total_price | divided_by: 100.0 -%}
+{%- elsif product -%}
+  {%- assign produto_peso = product.selected_or_first_available_variant.weight | default: 300 | divided_by: 1000.0 -%}
+  {%- assign produto_valor = product.selected_or_first_available_variant.price | divided_by: 100.0 -%}
+{%- else -%}
+  {%- assign produto_peso = 1 -%}
+  {%- assign produto_valor = 0 -%}
+{%- endif -%}
+
+<div class="frete-calc">
+  <div class="frete-calc__header">
+    <svg class="frete-calc__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18">
+      <rect x="1" y="3" width="15" height="13" rx="1"></rect>
+      <polygon points="16,8 20,10 20,16 16,16"></polygon>
+      <circle cx="5.5" cy="18.5" r="2.5"></circle>
+      <circle cx="18.5" cy="18.5" r="2.5"></circle>
+    </svg>
+    <span class="frete-calc__title">{{ settings.frete_titulo | default: 'Calcular Frete' }}</span>
+  </div>
+
+  <div class="frete-calc__form">
+    <div class="frete-calc__input-group">
+      <input
+        type="text"
+        class="frete-calc__input frete-cep-input"
+        placeholder="{{ settings.frete_placeholder_cep | default: 'Digite seu CEP' }}"
+        maxlength="9"
+        inputmode="numeric"
+        aria-label="CEP para cálculo de frete"
+        autocomplete="postal-code"
+      >
+      {%- if settings.frete_badge_ativo and settings.frete_badge_texto != blank -%}
+        <div class="frete-calc__badge">
+          {%- case settings.frete_badge_icone -%}
+            {%- when 'frete' -%}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="1" y="3" width="15" height="13" rx="1"></rect><polygon points="16,8 20,10 20,16 16,16"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+            {%- when 'desconto' -%}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
+            {%- when 'seguro' -%}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            {%- when 'estrela' -%}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"></polygon></svg>
+            {%- else -%}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="1,4 1,10 7,10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+          {%- endcase -%}
+          <span>{{ settings.frete_badge_texto }}</span>
+        </div>
+      {%- endif -%}
+    </div>
+    <div class="frete-calc__endereco frete-endereco-div" style="display:none;"></div>
+    <a href="https://buscacepinter.correios.com.br/" target="_blank" rel="noopener noreferrer" class="frete-calc__nao-sei-cep">
+      Não sei meu CEP
+    </a>
+  </div>
+
+  <div class="frete-calc__resultado frete-resultado-div" aria-live="polite" style="display:none;"></div>
+</div>
+
+<script>
+(function() {
+  // Variáveis injetadas pelo Liquid — exatamente como funciona nos outros sites
+  var SHEETS_API_URL = {{ settings.frete_api_url | json }};
+  var PRODUTO_PESO   = {{ produto_peso | json }};
+  var MOSTRAR_PRAZO  = {{ settings.frete_mostrar_prazo | json }};
+
+  // Pega os elementos do widget mais próximo deste script
+  var scripts     = document.querySelectorAll('script');
+  var thisScript  = scripts[scripts.length - 1];
+  var container   = thisScript.previousElementSibling;
+
+  // Sobe até encontrar o .frete-calc
+  while (container && !container.classList.contains('frete-calc')) {
+    container = container.previousElementSibling;
+  }
+  if (!container) return;
+
+  var cepInput    = container.querySelector('.frete-cep-input');
+  var calcularBtn = container.querySelector('.frete-calcular-btn'); // pode ser null (badge mode)
+  var resultsDiv  = container.querySelector('.frete-resultado-div');
+  var enderecoDiv = container.querySelector('.frete-endereco-div');
+
+  if (!cepInput || !resultsDiv) return;
+
+  // ── Debounce para busca do endereço
+  var viacepTimer = null;
+
+  // Máscara CEP + busca automática de endereço
+  cepInput.addEventListener('input', function() {
+    var value = cepInput.value.replace(/\D/g, '');
+    if (value.length > 5) {
+      value = value.slice(0, 5) + '-' + value.slice(5, 8);
+    }
+    cepInput.value = value;
+
+    var digits = value.replace(/\D/g, '');
+
+    // Limpa endereço se CEP incompleto
+    if (digits.length < 8) {
+      enderecoDiv.style.display = 'none';
+      enderecoDiv.innerHTML = '';
+      return;
+    }
+
+    // Busca endereço com debounce de 400ms
+    clearTimeout(viacepTimer);
+    viacepTimer = setTimeout(function() {
+      buscarEndereco(digits);
+    }, 400);
+  });
+
+  // Enter ainda funciona
+  cepInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      var cep = cepInput.value.replace(/\D/g, '');
+      if (cep.length === 8) calcularFrete(cep);
+    }
+  });
+
+  function buscarEndereco(cep) {
+    enderecoDiv.innerHTML = '<span class="frete-calc__endereco-loading">Buscando endereço...</span>';
+    enderecoDiv.style.display = 'block';
+
+    fetch('https://viacep.com.br/ws/' + cep + '/json/')
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (data.erro) {
+          enderecoDiv.innerHTML = '<span class="frete-calc__endereco-erro">CEP não encontrado.</span>';
+          return;
+        }
+        var partes = [];
+        if (data.logradouro) partes.push(data.logradouro);
+        if (data.bairro)     partes.push(data.bairro);
+        var linha2 = [];
+        if (data.localidade) linha2.push(data.localidade);
+        if (data.uf)         linha2.push(data.uf);
+
+        enderecoDiv.innerHTML =
+          '<div class="frete-calc__endereco-info">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13">' +
+              '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>' +
+              '<circle cx="12" cy="10" r="3"></circle>' +
+            '</svg>' +
+            '<div class="frete-calc__endereco-texto">' +
+              (partes.length ? '<span class="frete-calc__endereco-rua">' + partes.join(', ') + '</span>' : '') +
+              (linha2.length ? '<span class="frete-calc__endereco-cidade">' + linha2.join(' — ') + '</span>' : '') +
+            '</div>' +
+          '</div>';
+        enderecoDiv.style.display = 'block';
+
+        // Dispara o cálculo automaticamente após encontrar o endereço
+        calcularFrete(cep);
+      })
+      .catch(function() {
+        enderecoDiv.style.display = 'none';
+      });
+  }
+
+  function calcularFrete(cep) {
+    if (calcularBtn) { calcularBtn.disabled = true; calcularBtn.textContent = 'Calculando...'; }
+
+    resultsDiv.innerHTML   = '<div class="frete-calc__loading"><span class="frete-calc__spinner"></span><span>Calculando...</span></div>';
+    resultsDiv.style.display = 'block';
+
+    // URL exatamente igual ao padrão que funciona
+    var url = SHEETS_API_URL + '?destination_cep=' + cep;
+    if (PRODUTO_PESO > 0) {
+      url += '&cart_weight=' + PRODUTO_PESO;
+    }
+
+    fetch(url)
+      .then(function(response) { return response.json(); })
+      .then(function(data) {
+        if (data.error) {
+          mostrarErro(data.error);
+        } else if (data.success && data.options && data.options.length > 0) {
+          mostrarOpcoes(data.options);
+        } else {
+          mostrarErro('Nenhuma opção de frete disponível para este CEP.');
+        }
+      })
+      .catch(function(error) {
+        console.error('[Frete] Erro:', error);
+        mostrarErro('Erro ao consultar frete. Tente novamente.');
+      })
+      .finally(function() {
+        if (calcularBtn) { calcularBtn.disabled = false; calcularBtn.textContent = btnTexto; }
+      });
+  }
+
+  function mostrarOpcoes(opcoes) {
+    var html = '<ul class="frete-calc__lista">';
+    opcoes.forEach(function(opcao) {
+      var prazoHtml = (MOSTRAR_PRAZO && opcao.estimated_days)
+        ? '<span class="frete-calc__prazo">' + opcao.estimated_days + '</span>'
+        : '';
+
+      var precoNum = parseFloat(opcao.price);
+      var precoHtml = (isNaN(precoNum) || precoNum === 0)
+        ? '<strong class="frete-calc__preco frete-calc__preco--gratis">Grátis</strong>'
+        : '<strong class="frete-calc__preco">R$ ' + precoNum.toFixed(2).replace('.', ',') + '</strong>';
+
+      html +=
+        '<li class="frete-calc__item">' +
+          '<span class="frete-calc__servico">' + (opcao.name || 'Entrega') + '</span>' +
+          '<div class="frete-calc__item-right">' + prazoHtml + precoHtml + '</div>' +
+        '</li>';
+    });
+    html += '</ul>';
+    resultsDiv.innerHTML     = html;
+    resultsDiv.style.display = 'block';
+  }
+
+  function mostrarErro(mensagem) {
+    resultsDiv.innerHTML =
+      '<p class="frete-calc__erro">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">' +
+      '<circle cx="12" cy="12" r="10"></circle>' +
+      '<line x1="12" y1="8" x2="12" y2="12"></line>' +
+      '<line x1="12" y1="16" x2="12.01" y2="16"></line>' +
+      '</svg> ' + mensagem + '</p>';
+    resultsDiv.style.display = 'block';
+  }
+
+})();
+</script>
+
+{%- if settings.frete_frete_gratis -%}
+  {%- assign valor_minimo_centavos = settings.frete_valor_minimo | default: '39990' | plus: 0 -%}
+  {%- if cart -%}{%- assign valor_atual = cart.total_price -%}
+  {%- elsif product -%}{%- assign valor_atual = product.selected_or_first_available_variant.price -%}
+  {%- endif -%}
+  {%- if valor_atual >= valor_minimo_centavos -%}
+    <p class="frete-calc__gratis-aviso">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+        <polyline points="20,6 9,17 4,12"></polyline>
+      </svg>
+      Este pedido tem <strong>frete grátis!</strong>
+    </p>
+  {%- endif -%}
+{%- endif -%}
+
+{%- endif -%}

@@ -1,0 +1,73 @@
+{%- comment -%}
+  Section: Main Page Content
+  A basic premium container for rendering static Shopify pages (e.g. About Us, Terms).
+{%- endcomment -%}
+
+<style>
+  .page-section {
+    padding-top: var(--space-12);
+    padding-bottom: var(--space-16);
+  }
+
+  .page-content-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .page-title {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-extrabold);
+    text-transform: uppercase;
+    margin-bottom: var(--space-8);
+    text-align: center;
+  }
+
+  .rte {
+    line-height: var(--line-height-relaxed);
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+  }
+
+  .rte p {
+    margin-bottom: var(--space-4);
+  }
+
+  .rte h2, .rte h3 {
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-3);
+    text-transform: uppercase;
+  }
+
+  .rte ul, .rte ol {
+    margin-bottom: var(--space-4);
+    padding-left: var(--space-6);
+  }
+
+  .rte ul {
+    list-style-type: disc;
+  }
+
+  .rte ol {
+    list-style-type: decimal;
+  }
+</style>
+
+<section class="page-section">
+  <div class="page-width">
+    <div class="page-content-wrapper">
+      <h1 class="page-title">{{ page.title }}</h1>
+      <div class="rte">
+        {{ page.content }}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Main Page Content",
+  "tag": "section",
+  "class": "section",
+  "settings": []
+}
+{% endschema %}

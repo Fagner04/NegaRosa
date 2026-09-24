@@ -1,0 +1,34 @@
+{%- comment -%}
+  Snippet: price
+  Renders formatted price with compare-at price and discount badge.
+  
+  Usage:
+    {% render 'price', product: product %}
+  
+  Variables:
+    product {Object} - Shopify product object
+    variant {Object} - Specific variant (optional, uses first available if not set)
+{%- endcomment -%}
+
+{%- liquid
+  if variant
+    assign target = variant
+  else
+    assign target = product.selected_or_first_available_variant | default: product
+  endif
+-%}
+
+<div class="price-wrapper">
+  {%- if target.compare_at_price > target.price -%}
+    <span class="price price--sale">{{ target.price | money }}</span>
+    <span class="price price--compare">{{ target.compare_at_price | money }}</span>
+    {%- assign discount_pct = target.compare_at_price | minus: target.price | times: 100.0 | divided_by: target.compare_at_price | round -%}
+    <span class="price price--discount">-{{ discount_pct }}%</span>
+  {%- else -%}
+    <span class="price">{{ target.price | money }}</span>
+  {%- endif -%}
+
+  {%- if target.price == 0 -%}
+    <span class="price price--free">Grátis</span>
+  {%- endif -%}
+</div>

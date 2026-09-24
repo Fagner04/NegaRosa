@@ -1,0 +1,33 @@
+{%- comment -%}
+  Payment flags — official SVG assets served locally.
+  Uses the aaronfagan/svg-credit-card-payment-icons library (flat set) for
+  Visa/Mastercard/Amex/Elo/Hipercard and an official Pix mark.
+{%- endcomment -%}
+{%- liquid
+  assign brand_handle = brand | downcase | strip
+  case brand_handle
+    when 'master'
+      assign brand_handle = 'mastercard'
+    when 'american_express'
+      assign brand_handle = 'amex'
+  endcase
+  assign payment_title = brand_handle | capitalize
+  case brand_handle
+    when 'mastercard'
+      assign payment_title = 'Mastercard'
+    when 'amex'
+      assign payment_title = 'American Express'
+    when 'visa'
+      assign payment_title = 'Visa'
+    when 'elo'
+      assign payment_title = 'Elo'
+    when 'hipercard'
+      assign payment_title = 'Hipercard'
+    when 'pix'
+      assign payment_title = 'Pix'
+  endcase
+  assign asset_name = 'payment-' | append: brand_handle | append: '.svg'
+-%}
+<span class="footer__payment-icon footer__payment-icon--{{ brand_handle }}" title="{{ payment_title }}" aria-label="{{ payment_title }}">
+  <img class="payment-flag__svg" src="{{ asset_name | asset_url }}" alt="{{ payment_title }}" loading="lazy" width="60" height="38">
+</span>

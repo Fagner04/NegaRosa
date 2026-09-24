@@ -1,0 +1,456 @@
+{%- comment -%}
+  Section: Reels / Vídeos
+  Vertical video grid with cards, supports YouTube / Vimeo / MP4
+{%- endcomment -%}
+
+{{ 'section-lookbook.css' | asset_url | stylesheet_tag }}
+
+<section class="reels section-spacing" id="reels-{{ section.id }}">
+  <div class="page-width">
+    {%- if section.settings.title != blank -%}
+      <div class="section-header reveal">
+        <h2 class="section-header__title">{{ section.settings.title }}</h2>
+        {%- if section.settings.subtitle != blank -%}
+          <p class="section-header__text">{{ section.settings.subtitle }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="reels__grid reels__grid--cols-{{ section.settings.columns }}" data-stagger-container>
+      {%- for block in section.blocks -%}
+        {%- assign card_id = 'reels-' | append: section.id | append: '-' | append: forloop.index -%}
+        <div
+          class="reels__card"
+          {{ block.shopify_attributes }}
+          data-reels-id="{{ card_id }}"
+          data-video-type="{{ block.settings.video_type }}"
+          data-video-id="{{ block.settings.video_id | escape }}"
+          data-video-url="{{ block.settings.video_url | escape }}"
+        >
+          <div class="reels__media" data-reels-media>
+            {%- if block.settings.image != blank -%}
+              <img
+                class="reels__image"
+                src="{{ block.settings.image | image_url: width: 400 }}"
+                alt="{{ block.settings.product_title | escape | default: block.settings.image.alt | escape }}"
+                width="400"
+                height="712"
+                loading="lazy"
+              >
+            {%- else -%}
+              <div class="reels__placeholder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="40" height="40">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <path d="M21 15l-5-5L5 21"/>
+                </svg>
+              </div>
+            {%- endif -%}
+
+            {%- if block.settings.product_title != blank -%}
+              <div class="reels__overlay">
+                <span class="reels__product-title">{{ block.settings.product_title }}</span>
+                {%- if block.settings.tag != blank -%}
+                  <span class="reels__tag">{{ block.settings.tag }}</span>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+            {%- if block.settings.video_id != blank or block.settings.video_url != blank -%}
+              <div class="reels__play" data-reels-play>
+                <svg viewBox="0 0 24 24" fill="currentColor" width="32" height="32">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+            {%- endif -%}
+          </div>
+
+          <div class="reels__info">
+            {%- if block.settings.product_title != blank -%}
+              <span class="reels__name">{{ block.settings.product_title }}</span>
+            {%- endif -%}
+            {%- if block.settings.tag != blank -%}
+              <span class="reels__tag-label">{{ block.settings.tag }}</span>
+            {%- endif -%}
+            {%- if block.settings.link != blank -%}
+              <a href="{{ block.settings.link }}" class="reels__link btn btn-primary btn-sm">Ver Produto</a>
+            {%- endif -%}
+          </div>
+
+          <!-- Social Bar -->
+          <div class="reels__social" data-reels-social>
+            <button type="button" class="reels__action reels__action--like" data-reels-like aria-label="Curtir">
+              <svg class="reels__heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+              <span class="reels__count" data-reels-like-count>0</span>
+            </button>
+
+            <button type="button" class="reels__action reels__action--comment" data-reels-comment-toggle aria-label="Comentar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              <span class="reels__count" data-reels-comment-count>0</span>
+            </button>
+          </div>
+
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.cta_text != blank -%}
+      <div class="reels__footer reveal">
+        <a href="{{ section.settings.cta_url }}" class="btn btn-primary btn-arrow btn-ripple">
+          {{ section.settings.cta_text }}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<!-- Video Lightbox -->
+<div class="reels-modal" id="ReelsModal-{{ section.id }}" data-reels-modal>
+  <div class="reels-modal__content">
+    <button type="button" class="reels-modal__close" data-reels-close aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="18" height="18">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+    <div data-reels-player></div>
+  </div>
+</div>
+
+<!-- Comments Modal (popup separado) -->
+<div class="reels-cmodal" id="ReelsCModal-{{ section.id }}" data-reels-cmodal>
+  <div class="reels-cmodal__sheet">
+    <div class="reels-cmodal__header">
+      <span class="reels-cmodal__title">Comentários</span>
+      <button type="button" class="reels-cmodal__close" data-reels-cmodal-close aria-label="Fechar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="18" height="18">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="reels-cmodal__list" data-reels-cmodal-list>
+      <p class="reels-cmodal__empty" data-reels-cmodal-empty>Seja o primeiro a comentar.</p>
+    </div>
+    <div class="reels-cmodal__input-row">
+      <input type="text" class="reels-cmodal__input" data-reels-cmodal-input placeholder="Adicione um comentário..." maxlength="200">
+      <button type="button" class="reels-cmodal__send" data-reels-cmodal-send aria-label="Enviar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var section = document.getElementById('reels-{{ section.id }}');
+    var modal = document.getElementById('ReelsModal-{{ section.id }}');
+    var player = modal.querySelector('[data-reels-player]');
+    var closeBtn = modal.querySelector('[data-reels-close]');
+    var cards = section.querySelectorAll('.reels__card');
+
+    function closeModal() {
+      modal.classList.remove('open');
+      player.innerHTML = '';
+      document.body.style.overflow = '';
+    }
+
+    /* ---------- Video Modal ---------- */
+    cards.forEach(function(card) {
+      var media = card.querySelector('[data-reels-media]');
+      if (!media) return;
+      media.addEventListener('click', function(e) {
+        if (e.target.closest('[data-reels-social]')) return;
+        var type = card.dataset.videoType;
+        var id = card.dataset.videoId;
+        if (!id) return;
+
+        var html = '';
+        if (type === 'youtube' && id) {
+          html = '<iframe class="reels-modal__iframe" src="https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>';
+        } else if (type === 'vimeo' && id) {
+          html = '<iframe class="reels-modal__iframe" src="https://player.vimeo.com/video/' + id + '?autoplay=1" allow="autoplay" allowfullscreen loading="lazy"></iframe>';
+        } else if (type === 'tiktok' && id) {
+          var tiktokId = id;
+          var tiktokMatch = id.match(/\/video\/(\d+)/);
+          if (tiktokMatch) tiktokId = tiktokMatch[1];
+          html = '<iframe class="reels-modal__iframe" src="https://www.tiktok.com/embed/v2/' + tiktokId + '" allow="autoplay" allowfullscreen loading="lazy"></iframe>';
+        } else if (type === 'mp4' && id) {
+          html = '<video class="reels-modal__video" src="' + id + '" autoplay loop playsinline controls></video>';
+        }
+
+        if (html) {
+          player.innerHTML = html;
+          modal.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        }
+      });
+    });
+
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', function(e) { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+
+    /* ---------- Social Interactions ---------- */
+    var STORAGE_KEY = 'reels_social_{{ section.id }}';
+    var cmodal      = document.getElementById('ReelsCModal-{{ section.id }}');
+    var cmodalList  = cmodal.querySelector('[data-reels-cmodal-list]');
+    var cmodalEmpty = cmodal.querySelector('[data-reels-cmodal-empty]');
+    var cmodalInput = cmodal.querySelector('[data-reels-cmodal-input]');
+    var cmodalSend  = cmodal.querySelector('[data-reels-cmodal-send]');
+    var cmodalClose = cmodal.querySelector('[data-reels-cmodal-close]');
+    var activeCardCtx = null;
+
+    function getStorage() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e) { return {}; }
+    }
+    function setStorage(data) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
+    }
+    function escapeHtml(str) {
+      var div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+    function timeAgo(ts) {
+      var diff = Date.now() - ts;
+      if (diff < 60000) return 'agora';
+      if (diff < 3600000) return Math.floor(diff / 60000) + 'm';
+      if (diff < 86400000) return Math.floor(diff / 3600000) + 'h';
+      return Math.floor(diff / 86400000) + 'd';
+    }
+
+    function renderCModal() {
+      if (!activeCardCtx) return;
+      var data = activeCardCtx.cardData;
+      cmodalList.innerHTML = '';
+      if (data.comments.length === 0) {
+        cmodalList.appendChild(cmodalEmpty);
+        cmodalEmpty.style.display = '';
+      } else {
+        data.comments.slice().reverse().forEach(function(c) {
+          var item = document.createElement('div');
+          item.className = 'reels-cmodal__item';
+          item.innerHTML = '<div class="reels-cmodal__avatar">V</div>' +
+                           '<div class="reels-cmodal__body">' +
+                             '<span class="reels-cmodal__author">Você <span class="reels-cmodal__time">· ' + timeAgo(c.time) + '</span></span>' +
+                             '<span class="reels-cmodal__text">' + escapeHtml(c.text) + '</span>' +
+                           '</div>';
+          cmodalList.appendChild(item);
+        });
+      }
+      activeCardCtx.countEl.textContent = data.comments.length;
+    }
+
+    function openCModal(ctx) {
+      activeCardCtx = ctx;
+      cmodal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      renderCModal();
+      setTimeout(function(){ cmodalInput.focus(); }, 50);
+    }
+    function closeCModal() {
+      cmodal.classList.remove('open');
+      document.body.style.overflow = '';
+      activeCardCtx = null;
+      cmodalInput.value = '';
+    }
+    cmodalClose.addEventListener('click', closeCModal);
+    cmodal.addEventListener('click', function(e) { if (e.target === cmodal) closeCModal(); });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && cmodal.classList.contains('open')) closeCModal(); });
+
+    cmodalSend.addEventListener('click', function() {
+      if (!activeCardCtx) return;
+      var text = cmodalInput.value.trim();
+      if (!text) return;
+      activeCardCtx.cardData.comments.push({ text: text, time: Date.now() });
+      var st = getStorage();
+      st[activeCardCtx.cardId] = activeCardCtx.cardData;
+      setStorage(st);
+      cmodalInput.value = '';
+      renderCModal();
+    });
+    cmodalInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); cmodalSend.click(); }
+    });
+
+    cards.forEach(function(card) {
+      var cardId = card.dataset.reelsId;
+      var likeBtn = card.querySelector('[data-reels-like]');
+      var likeCount = card.querySelector('[data-reels-like-count]');
+      var commentToggle = card.querySelector('[data-reels-comment-toggle]');
+      var commentCountEl = commentToggle ? commentToggle.querySelector('[data-reels-comment-count]') : null;
+      var media = card.querySelector('[data-reels-media]');
+
+      var storage = getStorage();
+      var cardData = storage[cardId] || { liked: false, likes: 0, comments: [] };
+
+      function updateLikeUI() {
+        if (cardData.liked) likeBtn.classList.add('liked');
+        else likeBtn.classList.remove('liked');
+        likeCount.textContent = cardData.likes;
+      }
+
+      if (likeBtn) {
+        updateLikeUI();
+        likeBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          cardData.liked = !cardData.liked;
+          cardData.likes += cardData.liked ? 1 : -1;
+          if (cardData.likes < 0) cardData.likes = 0;
+          var st = getStorage(); st[cardId] = cardData; setStorage(st);
+          updateLikeUI();
+        });
+      }
+
+      if (media) {
+        var lastTap = 0;
+        media.addEventListener('click', function(e) {
+          var now = Date.now();
+          var timeSince = now - lastTap;
+          if (timeSince < 400 && timeSince > 0) {
+            if (!cardData.liked) {
+              cardData.liked = true;
+              cardData.likes += 1;
+              var st = getStorage(); st[cardId] = cardData; setStorage(st);
+              updateLikeUI();
+
+              var heart = document.createElement('div');
+              heart.className = 'reels__float-heart';
+              heart.innerHTML = '<svg viewBox="0 0 24 24" width="80" height="80"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
+              media.appendChild(heart);
+              setTimeout(function() { heart.remove(); }, 900);
+            }
+          }
+          lastTap = now;
+        });
+      }
+
+      if (commentCountEl) commentCountEl.textContent = cardData.comments.length;
+
+      if (commentToggle) {
+        commentToggle.addEventListener('click', function(e) {
+          e.stopPropagation();
+          openCModal({ cardId: cardId, cardData: cardData, countEl: commentCountEl });
+        });
+      }
+    });
+  });
+</script>
+
+
+{% schema %}
+{
+  "name": "Reels / Vídeos",
+  "class": "reels-section",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Reels"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtítulo",
+      "default": "Inspire-se com nossos vídeos"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Colunas",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "header",
+      "content": "Rodapé"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Texto do CTA",
+      "info": "Deixe vazio para ocultar"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Link do CTA"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "video",
+      "name": "Vídeo / Foto",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Capa",
+          "info": "Recomendado: vertical 9:16"
+        },
+        {
+          "type": "select",
+          "id": "video_type",
+          "label": "Tipo de vídeo",
+          "options": [
+            { "value": "tiktok", "label": "TikTok" },
+            { "value": "youtube", "label": "YouTube" },
+            { "value": "mp4", "label": "MP4 direto" }
+          ],
+          "default": "tiktok",
+          "info": "Selecione o tipo e cole o link abaixo"
+        },
+        {
+          "type": "text",
+          "id": "video_id",
+          "label": "Link do vídeo",
+          "info": "TikTok: cole a URL completa (ex: https://www.tiktok.com/@user/video/123). YouTube: cole o ID. MP4: URL direta .mp4"
+        },
+        {
+          "type": "text",
+          "id": "product_title",
+          "label": "Nome do produto / Look"
+        },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Tag",
+          "info": "Ex: Novo, Em alta, Coleção X"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link do produto"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reels / Vídeos",
+      "settings": {
+        "title": "Reels",
+        "subtitle": "Inspire-se com nossos vídeos",
+        "columns": 3
+      },
+      "blocks": [
+        { "type": "video", "settings": { "product_title": "Olhar Conectado", "tag": "Lançamento" } },
+        { "type": "video", "settings": { "product_title": "Estilo Urbano", "tag": "Em alta" } },
+        { "type": "video", "settings": { "product_title": "Clássico Moderno", "tag": "Coleção Verão" } },
+        { "type": "video", "settings": { "product_title": "Esportivo Chic", "tag": "Novo" } },
+        { "type": "video", "settings": { "product_title": "Minimalista", "tag": "Essencial" } },
+        { "type": "video", "settings": { "product_title": "Statement", "tag": "Edição Limitada" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "dev": "npx --yes http-server . -p 8080 -c-1 --silent",
+    "build": "echo 'Shopify theme - no build step'",
+    "build:dev": "echo 'Shopify theme - no build step'"
+  },
+  "dependencies": {
+    "framer-motion": "^12.41.0"
+  }
+}

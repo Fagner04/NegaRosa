@@ -1,0 +1,795 @@
+[
+  {
+    "name": "Cores",
+    "settings": [
+      {
+        "type": "header",
+        "content": "🎨 Cores Principais"
+      },
+      {
+        "type": "color",
+        "id": "color_primary",
+        "label": "Cor principal",
+        "info": "Usada em: Botões primários, links, ícones de navegação",
+        "default": "#111111"
+      },
+      {
+        "type": "color",
+        "id": "color_secondary",
+        "label": "Cor secundária",
+        "info": "Usada em: Textos auxiliares, ícones secundários",
+        "default": "#757575"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Cor destaque",
+        "info": "Usada em: Tags de promoção, badges, destaques visuais",
+        "default": "#FF0000"
+      },
+      {
+        "type": "header",
+        "content": "🖌️ Fundo"
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Cor de fundo geral",
+        "info": "Usada em: Fundo da página, fundo de cards, seções brancas",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "color_background_secondary",
+        "label": "Cor de fundo alternativa",
+        "info": "Usada em: Fundo de seções alternadas, fundo de categorias, badges de frete",
+        "default": "#F5F5F5"
+      },
+      {
+        "type": "header",
+        "content": "📋 Header (Cabeçalho)"
+      },
+      {
+        "type": "color",
+        "id": "header_bg_color",
+        "label": "Cor de fundo do Header",
+        "info": "Cor de fundo do cabeçalho do site",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "header_text_color",
+        "label": "Cor do texto do Header",
+        "info": "Cor dos links e textos do cabeçalho",
+        "default": "#111111"
+      },
+      {
+        "type": "header",
+        "content": "📄 Footer (Rodapé)"
+      },
+      {
+        "type": "color",
+        "id": "footer_bg_color",
+        "label": "Cor de fundo do Footer",
+        "info": "Cor de fundo do rodapé do site",
+        "default": "#111111"
+      },
+      {
+        "type": "color",
+        "id": "footer_text_color",
+        "label": "Cor do texto do Footer",
+        "info": "Cor dos links e textos do rodapé",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "footer_heading_color",
+        "label": "Cor dos títulos do Footer",
+        "info": "Cor dos títulos das colunas (Ajuda, Sobre, etc)",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "header",
+        "content": "✏️ Texto"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Cor do texto principal",
+        "info": "Usada em: Títulos, parágrafos, descrições de produtos",
+        "default": "#111111"
+      },
+      {
+        "type": "color",
+        "id": "color_text_light",
+        "label": "Cor do texto suave",
+        "info": "Usada em: Subtítulos, preços antigos, textos auxiliares",
+        "default": "#757575"
+      },
+      {
+        "type": "color",
+        "id": "color_border",
+        "label": "Cor das bordas",
+        "info": "Usada em: Bordas de cards, inputs, separadores",
+        "default": "#E5E5E5"
+      },
+      {
+        "type": "header",
+        "content": "🔘 Botões"
+      },
+      {
+        "type": "color",
+        "id": "color_button_bg",
+        "label": "Fundo do botão primário",
+        "info": "Usada em: Botão 'Comprar', 'Adicionar ao carrinho', 'Finalizar'",
+        "default": "#111111"
+      },
+      {
+        "type": "color",
+        "id": "color_button_text",
+        "label": "Texto do botão primário",
+        "info": "Cor do texto dentro do botão primário",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "color_button_secondary_bg",
+        "label": "Fundo do botão secundário",
+        "info": "Usada em: Botão 'Continuar comprando', 'Voltar'",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "color_button_secondary_text",
+        "label": "Texto do botão secundário",
+        "info": "Cor do texto dentro do botão secundário",
+        "default": "#111111"
+      }
+    ]
+  },
+  {
+    "name": "Tipografia",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "font_heading",
+        "label": "Fonte dos títulos",
+        "default": "inter_n7"
+      },
+      {
+        "type": "font_picker",
+        "id": "font_body",
+        "label": "Fonte do corpo",
+        "default": "inter_n4"
+      },
+      {
+        "type": "range",
+        "id": "font_size_base",
+        "label": "Tamanho da fonte base (px)",
+        "min": 12,
+        "max": 24,
+        "step": 1,
+        "default": 16,
+        "unit": "px"
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "range",
+        "id": "page_width",
+        "label": "Largura máxima da página (px)",
+        "min": 960,
+        "max": 1600,
+        "step": 20,
+        "default": 1400,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "section_spacing",
+        "label": "Espaçamento entre seções (px)",
+        "min": 20,
+        "max": 120,
+        "step": 5,
+        "default": 60,
+        "unit": "px"
+      }
+    ]
+  },
+  {
+    "name": "Frete",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "frete_ativo",
+        "label": "Ativar calculadora de frete",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "frete_api_url",
+        "label": "URL da API de frete (Google Apps Script)",
+        "default": "https://script.google.com/macros/s/AKfycbzR/exec"
+      },
+      {
+        "type": "text",
+        "id": "frete_titulo",
+        "label": "Título da calculadora",
+        "default": "Calcular Frete"
+      },
+      {
+        "type": "text",
+        "id": "frete_placeholder_cep",
+        "label": "Placeholder do campo CEP",
+        "default": "Digite seu CEP"
+      },
+      {
+        "type": "text",
+        "id": "frete_btn_texto",
+        "label": "Texto do botão calcular",
+        "default": "Calcular"
+      },
+      {
+        "type": "checkbox",
+        "id": "frete_mostrar_prazo",
+        "label": "Mostrar prazo de entrega",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "frete_frete_gratis",
+        "label": "Ativar frete grátis",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "frete_valor_minimo",
+        "label": "Valor mínimo para frete grátis (em centavos)",
+        "default": "39990"
+      },
+      {
+        "type": "checkbox",
+        "id": "frete_badge_ativo",
+        "label": "Ativar badge de frete",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "frete_badge_icone",
+        "label": "Ícone do badge",
+        "options": [
+          { "value": "troca", "label": "Troca" },
+          { "value": "frete", "label": "Frete" },
+          { "value": "seguro", "label": "Seguro" }
+        ],
+        "default": "troca"
+      },
+      {
+        "type": "text",
+        "id": "frete_badge_texto",
+        "label": "Texto do badge",
+        "default": "Primeira troca grátis"
+      }
+    ]
+  },
+  {
+    "name": "WhatsApp / Atendimento",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "addzap",
+        "label": "Ativar widget WhatsApp",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "numberzap",
+        "label": "Número WhatsApp (com código do país, ex: 5562999999999)",
+        "default": "5562999999999"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_online_icon",
+        "label": "Mostrar indicador online",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "titlezap",
+        "label": "Título do atendimento",
+        "default": "Atendimento"
+      },
+      {
+        "type": "text",
+        "id": "txtzap",
+        "label": "Saudação",
+        "default": "Olá! Como podemos ajudar?"
+      },
+      {
+        "type": "color",
+        "id": "colorzap",
+        "label": "Cor do WhatsApp",
+        "default": "#25D366"
+      },
+      {
+        "type": "textarea",
+        "id": "chatzap",
+        "label": "Mensagem de boas-vindas",
+        "default": "Olá! Estou aqui para te ajudar com o que precisar."
+      },
+      {
+        "type": "text",
+        "id": "digizap",
+        "label": "Placeholder da mensagem",
+        "default": "Digite sua mensagem..."
+      },
+      {
+        "type": "checkbox",
+        "id": "whatsapp_show_tracking",
+        "label": "Mostrar opção Rastrear Pedido",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "whatsapp_show_shipping",
+        "label": "Mostrar opção Calcular Frete",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Horário de funcionamento"
+      },
+      {
+        "type": "checkbox",
+        "id": "whatsapp_schedule_enabled",
+        "label": "Ativar verificação de horário",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_timezone",
+        "label": "Fuso horário (ex: -3 para Brasil)",
+        "default": "-3"
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_weekday_start",
+        "label": "Horário início (segunda a sexta)",
+        "default": "09:00"
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_weekday_end",
+        "label": "Horário fim (segunda a sexta)",
+        "default": "18:00"
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_saturday_start",
+        "label": "Horário início sábado",
+        "default": "09:00"
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_saturday_end",
+        "label": "Horário fim sábado",
+        "default": "13:00"
+      },
+      {
+        "type": "checkbox",
+        "id": "whatsapp_sunday_enabled",
+        "label": "Atender domingo",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_sunday_start",
+        "label": "Horário início domingo",
+        "default": "09:00"
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_sunday_end",
+        "label": "Horário fim domingo",
+        "default": "13:00"
+      },
+      {
+        "type": "textarea",
+        "id": "whatsapp_offline_message",
+        "label": "Mensagem quando offline",
+        "default": "No momento estamos offline. Deixe sua mensagem!"
+      },
+      {
+        "type": "header",
+        "content": "Mensagens automáticas"
+      },
+      {
+        "type": "checkbox",
+        "id": "whatsapp_auto_messages_enabled",
+        "label": "Ativar mensagens automáticas",
+        "default": false
+      },
+      {
+        "type": "range",
+        "id": "whatsapp_auto_message_interval",
+        "label": "Intervalo entre mensagens (segundos)",
+        "min": 3,
+        "max": 30,
+        "step": 1,
+        "default": 5,
+        "unit": "s"
+      },
+      {
+        "type": "range",
+        "id": "whatsapp_auto_message_pause",
+        "label": "Pausa após interação (minutos)",
+        "min": 5,
+        "max": 60,
+        "step": 5,
+        "default": 20,
+        "unit": "min"
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_auto_message_1",
+        "label": "Mensagem automática 1"
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_auto_message_2",
+        "label": "Mensagem automática 2"
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_auto_message_3",
+        "label": "Mensagem automática 3"
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_auto_message_4",
+        "label": "Mensagem automática 4"
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_auto_message_5",
+        "label": "Mensagem automática 5"
+      }
+    ]
+  },
+  {
+    "name": "Vendedores",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "whatsapp_vendors_enabled",
+        "label": "Ativar aba de vendedores",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_vendors_title",
+        "label": "Título da aba vendedores",
+        "default": "Fale com um vendedor"
+      },
+      {
+        "type": "header",
+        "content": "Vendedor 1"
+      },
+      {
+        "type": "text",
+        "id": "vendor1_name",
+        "label": "Nome"
+      },
+      {
+        "type": "text",
+        "id": "vendor1_role",
+        "label": "Cargo/Função"
+      },
+      {
+        "type": "text",
+        "id": "vendor1_number",
+        "label": "Número WhatsApp (com código do país)"
+      },
+      {
+        "type": "image_picker",
+        "id": "vendor1_photo",
+        "label": "Foto"
+      },
+      {
+        "type": "checkbox",
+        "id": "vendor1_online",
+        "label": "Marcar como online",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Vendedor 2"
+      },
+      {
+        "type": "text",
+        "id": "vendor2_name",
+        "label": "Nome"
+      },
+      {
+        "type": "text",
+        "id": "vendor2_role",
+        "label": "Cargo/Função"
+      },
+      {
+        "type": "text",
+        "id": "vendor2_number",
+        "label": "Número WhatsApp (com código do país)"
+      },
+      {
+        "type": "image_picker",
+        "id": "vendor2_photo",
+        "label": "Foto"
+      },
+      {
+        "type": "checkbox",
+        "id": "vendor2_online",
+        "label": "Marcar como online",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Vendedor 3"
+      },
+      {
+        "type": "text",
+        "id": "vendor3_name",
+        "label": "Nome"
+      },
+      {
+        "type": "text",
+        "id": "vendor3_role",
+        "label": "Cargo/Função"
+      },
+      {
+        "type": "text",
+        "id": "vendor3_number",
+        "label": "Número WhatsApp (com código do país)"
+      },
+      {
+        "type": "image_picker",
+        "id": "vendor3_photo",
+        "label": "Foto"
+      },
+      {
+        "type": "checkbox",
+        "id": "vendor3_online",
+        "label": "Marcar como online",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Vendedor 4"
+      },
+      {
+        "type": "text",
+        "id": "vendor4_name",
+        "label": "Nome"
+      },
+      {
+        "type": "text",
+        "id": "vendor4_role",
+        "label": "Cargo/Função"
+      },
+      {
+        "type": "text",
+        "id": "vendor4_number",
+        "label": "Número WhatsApp (com código do país)"
+      },
+      {
+        "type": "image_picker",
+        "id": "vendor4_photo",
+        "label": "Foto"
+      },
+      {
+        "type": "checkbox",
+        "id": "vendor4_online",
+        "label": "Marcar como online",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Vendedor 5"
+      },
+      {
+        "type": "text",
+        "id": "vendor5_name",
+        "label": "Nome"
+      },
+      {
+        "type": "text",
+        "id": "vendor5_role",
+        "label": "Cargo/Função"
+      },
+      {
+        "type": "text",
+        "id": "vendor5_number",
+        "label": "Número WhatsApp (com código do país)"
+      },
+      {
+        "type": "image_picker",
+        "id": "vendor5_photo",
+        "label": "Foto"
+      },
+      {
+        "type": "checkbox",
+        "id": "vendor5_online",
+        "label": "Marcar como online",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Cupom de Desconto",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "coupon_enabled",
+        "label": "Ativar widget de cupom",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "coupon_code",
+        "label": "Código do cupom"
+      },
+      {
+        "type": "text",
+        "id": "coupon_discount_label",
+        "label": "Label de desconto (ex: 10% OFF)"
+      },
+      {
+        "type": "text",
+        "id": "coupon_headline",
+        "label": "Título principal"
+      },
+      {
+        "type": "text",
+        "id": "coupon_validity",
+        "label": "Data de validade"
+      },
+      {
+        "type": "color",
+        "id": "tab_bg_color",
+        "label": "Cor de fundo da aba",
+        "default": "#DF3DA4"
+      },
+      {
+        "type": "color",
+        "id": "tab_text_color",
+        "label": "Cor do texto da aba",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "card_bg_color",
+        "label": "Cor de fundo do cartão",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "card_text_color",
+        "label": "Cor do texto do cartão",
+        "default": "#111111"
+      },
+      {
+        "type": "color",
+        "id": "accent_color",
+        "label": "Cor de destaque",
+        "default": "#111111"
+      }
+    ]
+  },
+  {
+    "name": "Redes Sociais",
+    "settings": [
+      {
+        "type": "text",
+        "id": "social_instagram_link",
+        "label": "Instagram"
+      },
+      {
+        "type": "text",
+        "id": "social_facebook_link",
+        "label": "Facebook"
+      },
+      {
+        "type": "text",
+        "id": "social_twitter_link",
+        "label": "X / Twitter"
+      },
+      {
+        "type": "text",
+        "id": "social_youtube_link",
+        "label": "YouTube"
+      },
+      {
+        "type": "text",
+        "id": "social_tiktok_link",
+        "label": "TikTok"
+      }
+    ]
+  },
+  {
+    "name": "Prova Social",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "social_proof_enabled",
+        "label": "Ativar notificações de prova social",
+        "default": false
+      },
+      {
+        "type": "collection",
+        "id": "social_proof_collection",
+        "label": "Coleção para buscar produtos"
+      },
+      {
+        "type": "text",
+        "id": "social_proof_names",
+        "label": "Nomes (separados por vírgula)",
+        "default": "Maria,João,Ana,Pedro,Juliana,Carlos,Beatriz,Lucas,Fernanda,Rafael,Camila,Bruno,Larissa,Thiago,Patricia,Gustavo,Amanda,Felipe,Mariana,Rodrigo"
+      },
+      {
+        "type": "text",
+        "id": "social_proof_cities",
+        "label": "Cidades (separadas por vírgula)",
+        "default": "São Paulo - SP,Rio de Janeiro - RJ,Belo Horizonte - MG,Curitiba - PR,Porto Alegre - RS,Salvador - BA,Fortaleza - CE,Brasília - DF,Recife - PE,Goiânia - GO"
+      },
+      {
+        "type": "range",
+        "id": "social_proof_initial_delay",
+        "label": "Atraso inicial (segundos)",
+        "min": 5,
+        "max": 60,
+        "step": 5,
+        "default": 10,
+        "unit": "s"
+      },
+      {
+        "type": "range",
+        "id": "social_proof_interval",
+        "label": "Intervalo entre notificações (segundos)",
+        "min": 30,
+        "max": 300,
+        "step": 10,
+        "default": 60,
+        "unit": "s"
+      },
+      {
+        "type": "range",
+        "id": "social_proof_duration",
+        "label": "Duração da notificação (segundos)",
+        "min": 3,
+        "max": 15,
+        "step": 1,
+        "default": 6,
+        "unit": "s"
+      },
+      {
+        "type": "text",
+        "id": "social_proof_verb",
+        "label": "Verbo da ação",
+        "default": "acabou de comprar"
+      }
+    ]
+  },
+  {
+    "name": "Atacado",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "wholesale_enabled",
+        "label": "Ativar modo atacado",
+        "default": false
+      }
+    ]
+  }
+]

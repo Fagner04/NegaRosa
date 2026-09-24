@@ -1,0 +1,425 @@
+/* Fitting Room - Bolinhas + Modal Stories */
+
+@keyframes fr-bar-fill {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+@keyframes fr-bubble-pulse {
+  0%, 100% { box-shadow: 0 0 0 1.5px rgba(255,255,255,0.5); }
+  50%       { box-shadow: 0 0 0 2px rgba(255,255,255,0.7); }
+}
+
+@keyframes fr-modal-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+@keyframes fr-modal-out {
+  from { opacity: 1; transform: translateY(0)    scale(1); }
+  to   { opacity: 0; transform: translateY(16px) scale(0.96); }
+}
+
+/* Bolinhas */
+.fr-bubbles {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fr-bubble {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1.5px solid rgba(255,255,255,0.75);
+  padding: 0;
+  background: #000;
+  animation: fr-bubble-pulse 2.6s ease-in-out infinite;
+  transition: transform 0.2s;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.fr-bubble:hover {
+  transform: scale(1.1);
+  animation: none;
+  box-shadow: 0 0 0 1.5px #fff, 0 4px 16px rgba(0,0,0,0.35);
+}
+
+.fr-bubble > video {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+
+.fr-bubble__ring {
+  display: none;
+}
+
+.fr-bubble__ring-track {
+  fill: none;
+  stroke: rgba(255,255,255,0.25);
+  stroke-width: 3;
+}
+
+.fr-bubble__ring-fill {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 3;
+  stroke-linecap: round;
+  transform-origin: center;
+  transform: rotate(-90deg);
+  transition: stroke-dashoffset 0.12s linear;
+}
+
+.fr-bubble__play {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.28);
+  transition: opacity 0.2s;
+}
+
+.fr-bubble:hover .fr-bubble__play { opacity: 0; }
+
+/* Modal - backdrop cobre TUDO incluindo header */
+.fr-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.fr-modal[hidden] { display: none !important; }
+
+.fr-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+}
+
+/* Wrap proporcional ao viewport - proporcao 9/16 */
+.fr-modal__wrap {
+  position: relative;
+  z-index: 1;
+  width: min(320px, calc((100vh - 32px) * 0.5625));
+  height: min(calc(100vh - 32px), calc(320px * 1.7778));
+  background: #000;
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+  animation: fr-modal-in 0.32s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+.fr-modal__wrap.closing {
+  animation: fr-modal-out 0.22s ease both;
+}
+
+/* Barras de progresso */
+.fr-modal__bars {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  z-index: 5;
+  display: flex;
+  gap: 4px;
+}
+
+.fr-modal__bar {
+  flex: 1;
+  height: 3px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.fr-modal__bar-fill {
+  height: 100%;
+  background: #fff;
+  transform: scaleX(0);
+  transform-origin: left;
+  border-radius: 2px;
+}
+
+.fr-modal__bar-fill.playing {
+  animation: fr-bar-fill var(--fr-duration, 10s) linear forwards;
+}
+
+.fr-modal__bar-fill.done { transform: scaleX(1); }
+
+/* Header interno */
+.fr-modal__top {
+  position: absolute;
+  top: 22px;
+  left: 12px;
+  right: 12px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fr-modal__brand { display: flex; align-items: center; gap: 8px; }
+
+.fr-modal__brand-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.7);
+  object-fit: cover;
+}
+
+.fr-modal__brand-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+}
+
+.fr-modal__top-actions { display: flex; gap: 8px; }
+
+.fr-modal__mute,
+.fr-modal__close {
+  background: rgba(255,255,255,0.15);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  backdrop-filter: blur(4px);
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.fr-modal__mute:hover,
+.fr-modal__close:hover { background: rgba(255,255,255,0.3); }
+
+/* Video ocupa todo espaco - rodape flutua por cima */
+.fr-modal__video-wrap {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background: #111;
+  overflow: hidden;
+}
+
+.fr-modal__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.fr-modal__tap-prev,
+.fr-modal__tap-next {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 35%;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.fr-modal__tap-prev { left: 0; }
+.fr-modal__tap-next { right: 0; }
+
+/* Rodape com cards lado a lado - flutuando sobre o video */
+.fr-modal__footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  padding: 10px 10px 14px;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+}
+
+.fr-modal__footer-cards {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  padding: 0 4px;
+}
+
+.fr-modal__footer-cards::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.fr-modal__footer-card {
+  flex: 0 0 84%;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 10px;
+  text-decoration: none;
+  transition: background 0.25s, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease, border-color 0.4s ease;
+  min-width: 0;
+  border: 1px solid rgba(255,255,255,0.08);
+  opacity: 0.55;
+  transform: scale(0.93);
+}
+
+.fr-modal__footer-card.is-active {
+  opacity: 1;
+  transform: scale(1);
+  border-color: rgba(38, 211, 150, 0.45);
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.fr-modal__footer-card:hover {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.fr-modal__footer-card.is-active:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.fr-modal__footer-card-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.fr-modal__footer-card-media {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.fr-modal__footer-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.fr-modal__footer-card-monogram {
+  width: 100%;
+  height: 100%;
+  background: #eaeaea;
+  color: #7d7d7d;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
+.fr-modal__footer-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.fr-modal__footer-card-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.fr-modal__footer-card-price {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  display: block;
+}
+
+.fr-modal__footer-card-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding: 0 12px;
+  height: 36px;
+  background: #26d396;
+  color: #000;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 8px;
+  letter-spacing: 0.02em;
+  transition: background 0.2s;
+}
+
+.fr-modal__footer-card-cta:hover {
+  background: #20b882;
+}
+
+.fr-modal__footer-card-cta-text {
+  color: #000;
+}
+
+.fr-modal__footer-card-cta-icon {
+  flex-shrink: 0;
+  color: #000;
+}
+
+/* Mobile - tela cheia */
+@media (max-width: 600px) {
+  .fr-modal { padding: 0; }
+  .fr-modal__wrap {
+    width: 100vw;
+    height: 100dvh;
+    border-radius: 0;
+  }
+  .fr-bubble { width: 50px; height: 50px; }
+  .fr-bubble > video { width: 50px; height: 50px; }
+}
+
+/* Desktop - modal centralizado */
+@media (min-width: 601px) {
+  .fr-modal {
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+
+  .fr-modal__wrap {
+    width: 320px;
+    height: min(calc(100vh - 32px), calc(320px * 1.7778));
+    max-height: 600px;
+  }
+}
+

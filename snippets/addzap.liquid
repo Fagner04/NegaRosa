@@ -1,0 +1,1339 @@
+{%- comment -%}
+  WhatsApp Chat Widget — Estilo Yampi
+  Nav bar com abas: Início / Vendedores / Mensagem
+  Rastrear e Calcular como itens de lista inline
+{%- endcomment -%}
+
+<style>
+:root {
+  --zap-primary: {{ settings.colorzap | default: '#25D366' }};
+  --zap-primary-dark: color-mix(in srgb, var(--zap-primary) 80%, #000);
+  --zap-primary-light: color-mix(in srgb, var(--zap-primary) 15%, #fff);
+  --zap-radius: 20px;
+}
+
+/* ── Widget wrapper ── */
+.zap-widget {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ── Balão externo (mensagem automática) ── */
+.zap-bubble {
+  position: absolute;
+  bottom: 0;
+  right: 74px;
+  background: #fff;
+  border-radius: 18px;
+  padding: 11px 15px;
+  max-width: 280px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.14);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(12px);
+  transition: all 0.35s ease-out;
+  white-space: nowrap;
+}
+.zap-bubble.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+}
+.zap-bubble::after {
+  content: '';
+  position: absolute;
+  right: -7px;
+  bottom: 16px;
+  border-left: 9px solid #fff;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+}
+.zap-bubble-text {
+  font-size: 13px;
+  color: #374151;
+}
+.zap-bubble-time {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-left: 6px;
+}
+.zap-bubble-close {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  background: none;
+  border: none;
+  font-size: 15px;
+  color: #9ca3af;
+  cursor: pointer;
+  line-height: 1;
+  padding: 2px 5px;
+}
+
+/* ── Indicador de digitação externo ── */
+.zap-ext-typing {
+  position: absolute;
+  bottom: 0;
+  right: 74px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 11px 18px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.14);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(12px);
+  transition: all 0.35s ease-out;
+  display: none;
+}
+.zap-ext-typing.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+  display: block;
+}
+.zap-ext-typing::after {
+  content: '';
+  position: absolute;
+  right: -7px;
+  bottom: 14px;
+  border-left: 9px solid #fff;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+}
+
+/* ── Botão flutuante ── */
+.zap-fab {
+  width: 58px;
+  height: 58px;
+  background: var(--zap-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.22);
+  transition: transform 0.25s, box-shadow 0.25s;
+  position: relative;
+}
+.zap-fab:hover {
+  transform: scale(1.06);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.28);
+}
+.zap-fab svg {
+  width: 30px;
+  height: 30px;
+  fill: #fff;
+  flex-shrink: 0;
+  transition: transform 0.25s;
+}
+.zap-fab .zap-icon-open  { display: block; }
+.zap-fab .zap-icon-close { display: none;  }
+.zap-fab.open .zap-icon-open  { display: none;  }
+.zap-fab.open .zap-icon-close { display: block; }
+.zap-fab.open { background: #6b7280; }
+
+.zap-online-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 15px;
+  height: 15px;
+  background: #10b981;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  animation: zapPulse 2s infinite;
+}
+@keyframes zapPulse {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
+/* ── Chat Box ── */
+.zap-box {
+  position: absolute;
+  bottom: 72px;
+  right: 0;
+  width: 360px;
+  height: 560px;
+  background: #fff;
+  border-radius: var(--zap-radius);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.22);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(16px) scale(0.97);
+  transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.zap-box.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+/* ── Header — compacto ── */
+.zap-header {
+  background: var(--zap-primary);
+  padding: 14px 16px 44px;
+  color: #fff;
+  position: relative;
+  flex-shrink: 0;
+  border-radius: var(--zap-radius) var(--zap-radius) 0 0;
+}
+.zap-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.zap-header-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.zap-header-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.5);
+  object-fit: cover;
+  background: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.zap-header-avatar svg {
+  width: 20px;
+  height: 20px;
+  fill: #fff;
+}
+.zap-header-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.zap-header-name {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.zap-header-status {
+  font-size: 11px;
+  opacity: 0.85;
+}
+.zap-header-close {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: #fff;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.zap-header-close:hover { background: rgba(255,255,255,0.35); }
+
+.zap-header-greeting {
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+.zap-header-sub {
+  font-size: 12px;
+  opacity: 0.9;
+  margin-top: 3px;
+}
+/* ── Painéis sobrepostos (abas) ── */
+.zap-panels {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  margin-top: -28px;
+}
+.zap-panel {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  padding: 0 12px 12px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.2s, transform 0.2s;
+  padding-top: 1px;
+  background: #fff;
+  border-radius: 20px 20px 0 0;
+}
+.zap-panel.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.zap-panel::-webkit-scrollbar { width: 4px; }
+.zap-panel::-webkit-scrollbar-track { background: transparent; }
+.zap-panel::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 3px; }
+
+/* ── Painel Início ── */
+
+/* Card branco flutuante */
+.zap-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.10), 0 1px 3px rgba(0,0,0,0.06);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+/* Item de lista (Rastrear, Calcular) */
+.zap-list-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.15s;
+  border-bottom: 1px solid #f3f4f6;
+}
+.zap-list-item:last-child { border-bottom: none; }
+.zap-list-item:hover { background: #f9fafb; }
+
+/* Item de vendedor — sem card, sem borda */
+.zap-vendor-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 6px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: background 0.15s;
+  margin-bottom: 2px;
+}
+.zap-vendor-item:hover { background: #f3f4f6; }
+
+.zap-vendors-list {
+  background: transparent;
+  padding: 0;
+}
+
+/* Ícone de serviço (Rastrear/Calcular) */
+.zap-list-icon {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  min-height: 42px;
+  border-radius: 12px;
+  background: var(--zap-primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.zap-list-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--zap-primary);
+  flex-shrink: 0;
+}
+
+/* Tag online/offline ao lado do nome */
+.zap-vendor-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 20px;
+  margin-left: 6px;
+  vertical-align: middle;
+  transition: background 0.3s, color 0.3s;
+}
+.zap-vendor-tag.online {
+  background: #d1fae5;
+  color: #065f46;
+}
+.zap-vendor-tag.online::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #10b981;
+  flex-shrink: 0;
+}
+.zap-vendor-tag.offline {
+  background: #f3f4f6;
+  color: #9ca3af;
+}
+.zap-vendor-tag.offline::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #d1d5db;
+  flex-shrink: 0;
+}
+.zap-vendor-avatar {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--zap-primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+}
+.zap-vendor-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.zap-vendor-avatar svg {
+  width: 22px;
+  height: 22px;
+  fill: var(--zap-primary);
+  flex-shrink: 0;
+}
+.zap-list-body { flex: 1; min-width: 0; }
+.zap-list-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.zap-list-sub {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.zap-list-arrow {
+  width: 18px;
+  height: 18px;
+  fill: #d1d5db;
+  flex-shrink: 0;
+}
+.zap-list-item:hover .zap-list-arrow { fill: var(--zap-primary); }
+
+/* Seção de título */
+.zap-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: #6b7280;
+  padding: 8px 4px 8px;
+  margin: 0;
+}
+
+/* Mensagem de boas-vindas */
+.zap-welcome-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.10), 0 1px 3px rgba(0,0,0,0.06);
+  margin-bottom: 10px;
+  position: relative;
+}
+.zap-welcome-text {
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.5;
+  margin: 0 0 6px;
+  padding-left: 28px;
+}
+.zap-welcome-text::before {
+  content: '👋';
+  position: absolute;
+  left: 16px;
+  top: 14px;
+  font-size: 16px;
+}
+.zap-welcome-time {
+  font-size: 11px;
+  color: #9ca3af;
+  text-align: right;
+  display: block;
+}
+
+/* Status badge */
+.zap-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+.zap-status-badge.online {
+  background: #d1fae5;
+  color: #065f46;
+}
+.zap-status-badge.offline {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+.zap-status-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* ── Painel inline Rastrear / Calcular ── */
+.zap-inline-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 2px 12px;
+}
+.zap-inline-back {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+.zap-inline-back:hover { color: var(--zap-primary); }
+.zap-inline-back svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+.zap-inline-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.zap-inline-form {
+  padding: 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.zap-inline-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  display: block;
+  margin-bottom: 5px;
+}
+.zap-inline-input {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+  font-family: inherit;
+  background: #fff;
+  -webkit-text-size-adjust: 100%;
+}
+.zap-inline-input:focus { border-color: var(--zap-primary); }
+.zap-inline-btn {
+  background: var(--zap-primary);
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  font-family: inherit;
+  width: 100%;
+}
+.zap-inline-btn:hover { opacity: 0.88; }
+.zap-inline-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.zap-inline-loading {
+  text-align: center;
+  padding: 18px;
+  display: none;
+}
+.zap-inline-loading.show { display: block; }
+.zap-inline-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e5e7eb;
+  border-top-color: var(--zap-primary);
+  border-radius: 50%;
+  animation: zapSpin 1s linear infinite;
+  margin: 0 auto 8px;
+}
+.zap-inline-result { margin-top: 12px; display: none; }
+.zap-inline-result.show { display: block; }
+.zap-inline-error {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  margin-top: 10px;
+  display: none;
+}
+.zap-inline-error.show { display: block; }
+
+/* Resultados frete */
+.zap-shipping-option {
+  background: #f9fafb;
+  border-radius: 10px;
+  padding: 11px 12px;
+  margin-bottom: 7px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.zap-shipping-name { font-weight: 700; font-size: 13px; color: #111827; }
+.zap-shipping-time { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+.zap-shipping-price { font-size: 14px; font-weight: 800; color: var(--zap-primary); white-space: nowrap; }
+
+/* Rastreio */
+.zap-tracking-status {
+  background: #f9fafb;
+  border-radius: 10px;
+  padding: 11px 12px;
+  margin-bottom: 7px;
+}
+.zap-tracking-date { font-size: 11px; color: #9ca3af; margin-bottom: 4px; }
+.zap-tracking-text { font-size: 13px; color: #374151; line-height: 1.5; }
+
+/* ── Painel Mensagem ── */
+.zap-msg-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 12px 0;
+}
+.zap-msg-bubble {
+  background: #fff;
+  border-radius: 0 14px 14px 14px;
+  padding: 11px 14px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.5;
+  display: none;
+}
+.zap-msg-bubble.show { display: block; }
+.zap-msg-time {
+  font-size: 11px;
+  color: #9ca3af;
+  text-align: right;
+  margin-top: 5px;
+  display: block;
+}
+.zap-msg-typing {
+  background: #fff;
+  border-radius: 0 12px 12px 12px;
+  padding: 11px 16px;
+  margin-bottom: 10px;
+  width: fit-content;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+  display: none;
+}
+.zap-msg-typing-dots {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.zap-msg-typing-dots span {
+  width: 7px;
+  height: 7px;
+  background: #9ca3af;
+  border-radius: 50%;
+  animation: zapTyping 1.4s infinite;
+}
+.zap-msg-typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.zap-msg-typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes zapTyping {
+  0%,60%,100% { transform: translateY(0); opacity: 0.7; }
+  30%          { transform: translateY(-8px); opacity: 1; }
+}
+
+.zap-msg-auto {
+  background: #fff;
+  border-radius: 0 14px 14px 14px;
+  padding: 11px 14px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+  animation: zapSlideIn 0.3s ease-out;
+  display: none;
+}
+.zap-msg-auto.show { display: block; }
+.zap-msg-auto p { margin: 0; font-size: 13px; color: #374151; line-height: 1.5; }
+@keyframes zapSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.zap-msg-input-area {
+  padding: 10px 12px 14px;
+  border-top: 1px solid #f3f4f6;
+  background: #fff;
+  flex-shrink: 0;
+}
+.zap-msg-form { display: flex; gap: 8px; }
+.zap-msg-input {
+  flex: 1;
+  padding: 11px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: inherit;
+  -webkit-text-size-adjust: 100%;
+}
+.zap-msg-input:focus { border-color: var(--zap-primary); }
+.zap-msg-send {
+  width: 42px;
+  height: 42px;
+  background: var(--zap-primary);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.zap-msg-send:hover { transform: scale(1.08); }
+.zap-msg-send svg { width: 18px; height: 18px; fill: #fff; }
+
+/* ── Nav Bar ── */
+.zap-nav {
+  display: flex;
+  border-top: 1px solid #f3f4f6;
+  background: #fff;
+  flex-shrink: 0;
+  border-radius: 0 0 var(--zap-radius) var(--zap-radius);
+  overflow: hidden;
+}
+.zap-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 10px 6px 12px;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+  font-family: inherit;
+  transition: color 0.2s;
+  position: relative;
+}
+.zap-nav-item:hover { color: var(--zap-primary); }
+.zap-nav-item.active { color: var(--zap-primary); }
+.zap-nav-item.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: var(--zap-primary);
+  border-radius: 0 0 3px 3px;
+}
+.zap-nav-icon {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+.zap-nav-label { font-size: 11px; font-weight: 600; white-space: nowrap; }
+
+/* Footer text */
+.zap-footer-text {
+  font-size: 11px;
+  color: #9ca3af;
+  text-align: center;
+  padding: 6px 16px 10px;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .zap-widget { bottom: 12px; right: 12px; }
+  .zap-box {
+    width: calc(100vw - 24px);
+    max-width: 360px;
+    height: calc(100vh - 100px);
+    max-height: 560px;
+    bottom: 66px;
+    right: 0;
+  }
+  .zap-fab { width: 52px; height: 52px; }
+  .zap-fab svg { width: 26px; height: 26px; }
+  .zap-inline-form { padding: 0 12px; }
+  .zap-inline-header { padding: 14px 12px 10px; }
+}
+
+@keyframes zapSpin { to { transform: rotate(360deg); } }
+</style>
+
+<div class="zap-widget">
+
+  <!-- Indicador externo de digitação -->
+  <div class="zap-ext-typing" id="zap-ext-typing">
+    <div class="zap-msg-typing-dots">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <!-- Balão externo (mensagem automática) -->
+  <div class="zap-bubble" id="zap-bubble">
+    <button class="zap-bubble-close" id="zap-bubble-close">×</button>
+    <span class="zap-bubble-text" id="zap-bubble-text"></span>
+    <span class="zap-bubble-time" id="zap-bubble-time"></span>
+  </div>
+
+  <!-- Botão flutuante -->
+  <div class="zap-fab" id="zap-fab">
+    {% if settings.show_online_icon %}<div class="zap-online-dot"></div>{% endif %}
+    <!-- ícone WhatsApp -->
+    <svg class="zap-icon-open" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    <!-- ícone fechar -->
+    <svg class="zap-icon-close" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+  </div>
+
+  <!-- Chat Box -->
+  <div class="zap-box" id="zap-box">
+
+    <!-- Header -->
+    <div class="zap-header">
+      <div class="zap-header-top">
+        <div class="zap-header-brand">
+          <div class="zap-header-avatar">
+            {% if settings.zap_img_type == 'img' and settings.zap_img %}
+              <img src="{{ settings.zap_img | image_url: width: 100 }}" alt="Avatar">
+            {% else %}
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+            {% endif %}
+          </div>
+          <div>
+            <div class="zap-header-name">{{ settings.titlezap | default: 'Atendimento' }}</div>
+            <div class="zap-header-status" id="zap-header-status">● Online</div>
+          </div>
+        </div>
+        <button class="zap-header-close" id="zap-close">×</button>
+      </div>
+      <div class="zap-header-greeting">{{ settings.txtzap | default: 'Olá! Como podemos ajudar?' }}</div>
+    </div>
+
+    <!-- Painéis -->
+    <div class="zap-panels">
+
+      <!-- ── ABA INÍCIO ── -->
+      <div class="zap-panel active" id="zap-panel-home">
+
+        <!-- Mensagem de boas-vindas -->
+        <div class="zap-welcome-card" style="margin-top:12px;">
+          <p class="zap-welcome-text">{{ settings.chatzap | default: 'Olá! Estou aqui para te ajudar com o que precisar.' }}</p>
+          <span class="zap-welcome-time" id="zap-welcome-time"></span>
+        </div>
+
+        <!-- Mensagens automáticas (container) -->
+        <div id="zap-auto-msgs"></div>
+
+        {%- comment -%} Vendedores aparecem apenas na aba "Vendedores" (zap-panel-vendors) {%- endcomment -%}
+
+        {% if settings.whatsapp_show_tracking or settings.whatsapp_show_shipping %}
+          <p class="zap-section-title">Serviços</p>
+          <div class="zap-card">
+            {% if settings.whatsapp_show_tracking %}
+            <button class="zap-list-item" id="zap-goto-tracking">
+              <div class="zap-list-icon">
+                <svg viewBox="0 0 24 24"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+              </div>
+              <div class="zap-list-body">
+                <p class="zap-list-title">Rastrear pedido</p>
+                <p class="zap-list-sub">Acompanhe sua entrega</p>
+              </div>
+              <svg class="zap-list-arrow" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+            </button>
+            {% endif %}
+            {% if settings.whatsapp_show_shipping %}
+            <button class="zap-list-item" id="zap-goto-shipping">
+              <div class="zap-list-icon">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+              </div>
+              <div class="zap-list-body">
+                <p class="zap-list-title">Calcular frete</p>
+                <p class="zap-list-sub">Consulte o custo de envio</p>
+              </div>
+              <svg class="zap-list-arrow" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+            </button>
+            {% endif %}
+          </div>
+        {% endif %}
+
+      </div><!-- /panel-home -->
+
+      <!-- ── ABA RASTREIO ── -->
+      <div class="zap-panel" id="zap-panel-tracking">
+        <div class="zap-inline-header">
+          <button class="zap-inline-back" id="zap-back-tracking">
+            <svg viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+          </button>
+          <p class="zap-inline-title">Rastrear pedido</p>
+        </div>
+        <div class="zap-inline-form">
+          <div>
+            <label class="zap-inline-label">Código de rastreio</label>
+            <input type="text" class="zap-inline-input" id="zap-tracking-code" placeholder="Ex: AA123456789BR" maxlength="15">
+          </div>
+          <button class="zap-inline-btn" id="zap-tracking-submit">Rastrear</button>
+        </div>
+        <div style="padding:0 14px 14px;">
+          <div class="zap-inline-loading" id="zap-tracking-loading"><div class="zap-inline-spinner"></div><p style="font-size:13px;color:#6b7280;">Buscando informações...</p></div>
+          <div class="zap-inline-result" id="zap-tracking-result"></div>
+          <div class="zap-inline-error" id="zap-tracking-error"></div>
+        </div>
+      </div><!-- /panel-tracking -->
+
+      <!-- ── ABA CALCULAR FRETE ── -->
+      <div class="zap-panel" id="zap-panel-shipping">
+        <div class="zap-inline-header">
+          <button class="zap-inline-back" id="zap-back-shipping">
+            <svg viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+          </button>
+          <p class="zap-inline-title">Calcular frete</p>
+        </div>
+        <div class="zap-inline-form">
+          <div>
+            <label class="zap-inline-label">CEP de destino</label>
+            <input type="text" class="zap-inline-input" id="zap-shipping-cep" placeholder="00000-000" maxlength="9">
+          </div>
+          <button class="zap-inline-btn" id="zap-shipping-submit">Calcular</button>
+        </div>
+        <div style="padding:0 14px 14px;">
+          <div class="zap-inline-loading" id="zap-shipping-loading"><div class="zap-inline-spinner"></div><p style="font-size:13px;color:#6b7280;">Calculando frete...</p></div>
+          <div class="zap-inline-result" id="zap-shipping-result"></div>
+          <div class="zap-inline-error" id="zap-shipping-error"></div>
+        </div>
+      </div><!-- /panel-shipping -->
+
+      <!-- ── ABA VENDEDORES ── -->
+      <div class="zap-panel" id="zap-panel-vendors">
+        {% assign has_vendor = false %}
+        {% if settings.vendor1_name != blank and settings.vendor1_number != blank %}{% assign has_vendor = true %}{% endif %}
+        {% if settings.vendor2_name != blank and settings.vendor2_number != blank %}{% assign has_vendor = true %}{% endif %}
+        {% if settings.vendor3_name != blank and settings.vendor3_number != blank %}{% assign has_vendor = true %}{% endif %}
+        {% if settings.vendor4_name != blank and settings.vendor4_number != blank %}{% assign has_vendor = true %}{% endif %}
+        {% if settings.vendor5_name != blank and settings.vendor5_number != blank %}{% assign has_vendor = true %}{% endif %}
+
+        {% if has_vendor %}
+          <p class="zap-section-title" style="margin-top:14px;">{{ settings.whatsapp_vendors_title | default: 'Fale com um vendedor' }}</p>
+          <div class="zap-vendors-list">
+            {%- for i in (1..5) -%}
+              {%- assign vname   = 'vendor' | append: i | append: '_name' -%}
+              {%- assign vnum    = 'vendor' | append: i | append: '_number' -%}
+              {%- assign vrole   = 'vendor' | append: i | append: '_role' -%}
+              {%- assign vphoto  = 'vendor' | append: i | append: '_photo' -%}
+              {%- assign vonline = 'vendor' | append: i | append: '_online' -%}
+              {%- assign vname_val   = settings[vname] -%}
+              {%- assign vnum_val    = settings[vnum] -%}
+              {%- assign vrole_val   = settings[vrole] -%}
+              {%- assign vphoto_val  = settings[vphoto] -%}
+              {%- assign vonline_val = settings[vonline] -%}
+              {%- if vname_val != blank and vnum_val != blank -%}
+                {%- assign vnum_clean = vnum_val | remove: '+' | remove: ' ' | remove: '-' | remove: '(' | remove: ')' -%}
+                {%- unless vnum_val contains 'http' -%}{%- assign vlink = 'https://wa.me/' | append: vnum_clean -%}{%- else -%}{%- assign vlink = vnum_val -%}{%- endunless -%}
+                <a href="{{ vlink }}" class="zap-vendor-item" target="_blank" rel="noopener">
+                  <div class="zap-vendor-avatar">
+                    {%- if vphoto_val -%}<img src="{{ vphoto_val | image_url: width: 90 }}" alt="{{ vname_val }}">{%- else -%}<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>{%- endif -%}
+                  </div>
+                  <div class="zap-list-body">
+                    <p class="zap-list-title">{{ vname_val }}<span class="zap-vendor-tag online">Online</span></p>
+                    {%- if vrole_val != blank -%}<p class="zap-list-sub">{{ vrole_val }}</p>{%- endif -%}
+                  </div>
+                </a>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {% else %}
+          <div style="text-align:center;padding:40px 20px;color:#9ca3af;">
+            <svg viewBox="0 0 24 24" style="width:48px;height:48px;fill:#e5e7eb;margin:0 auto 12px;display:block;"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            <p style="font-size:13px;margin:0;">Nenhum vendedor cadastrado.<br>Configure na engrenagem do tema.</p>
+          </div>
+        {% endif %}
+      </div><!-- /panel-vendors -->
+
+      <!-- ── ABA MENSAGEM ── -->
+      <div class="zap-panel" id="zap-panel-msg" style="padding:0;display:flex;flex-direction:column;">
+        <div class="zap-msg-body" id="zap-msg-body" style="background:#ece5dd;padding-top:1px;">
+          <div class="zap-msg-bubble show" id="zap-msg-welcome">
+            {{ settings.chatzap | default: 'Olá! Como posso te ajudar hoje?' }}
+            <span class="zap-msg-time" id="zap-msg-time"></span>
+          </div>
+          <div class="zap-msg-typing" id="zap-msg-typing">
+            <div class="zap-msg-typing-dots"><span></span><span></span><span></span></div>
+          </div>
+          <div id="zap-auto-msgs-msg"></div>
+        </div>
+        <div class="zap-msg-input-area">
+          <form class="zap-msg-form" id="zap-msg-form">
+            <input type="text" class="zap-msg-input" id="zap-msg-input" placeholder="{{ settings.digizap | default: 'Digite sua mensagem...' }}">
+            <button type="submit" class="zap-msg-send">
+              <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            </button>
+          </form>
+        </div>
+      </div><!-- /panel-msg -->
+
+    </div><!-- /panels -->
+
+    <!-- Footer horário -->
+    <div class="zap-footer-text" id="zap-footer-text">Resposta em até 2 horas durante horário comercial</div>
+
+    <!-- Nav Bar -->
+    <div class="zap-nav">
+      <button class="zap-nav-item active" data-panel="home" id="zap-nav-home">
+        <svg class="zap-nav-icon" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        <span class="zap-nav-label">Início</span>
+      </button>
+      <button class="zap-nav-item" data-panel="msg" id="zap-nav-msg">
+        <svg class="zap-nav-icon" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+        <span class="zap-nav-label">Mensagem</span>
+      </button>
+      <button class="zap-nav-item" data-panel="vendors" id="zap-nav-vendors">
+        <svg class="zap-nav-icon" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        <span class="zap-nav-label">Vendedores</span>
+      </button>
+    </div>
+
+  </div><!-- /zap-box -->
+</div><!-- /zap-widget -->
+
+<script>
+(function() {
+  'use strict';
+
+  var fab     = document.getElementById('zap-fab');
+  var box     = document.getElementById('zap-box');
+  var closeBtn= document.getElementById('zap-close');
+  var statusEl= document.getElementById('zap-header-status');
+  var welcomeTimeEl = document.getElementById('zap-welcome-time');
+  var msgTimeEl     = document.getElementById('zap-msg-time');
+  var footerEl      = document.getElementById('zap-footer-text');
+
+  // ── Número principal ──
+  var zapRaw = '{{ settings.numberzap }}';
+  var zapUrl = zapRaw;
+  if (zapRaw && !zapRaw.startsWith('http')) {
+    zapUrl = 'https://wa.me/' + zapRaw.replace(/\D/g,'');
+  }
+
+  // ── Mensagens automáticas ──
+  var autoMsgs = [];
+  {% if settings.whatsapp_auto_message_1 != blank %}autoMsgs.push('{{ settings.whatsapp_auto_message_1 | escape }}');{% endif %}
+  {% if settings.whatsapp_auto_message_2 != blank %}autoMsgs.push('{{ settings.whatsapp_auto_message_2 | escape }}');{% endif %}
+  {% if settings.whatsapp_auto_message_3 != blank %}autoMsgs.push('{{ settings.whatsapp_auto_message_3 | escape }}');{% endif %}
+  {% if settings.whatsapp_auto_message_4 != blank %}autoMsgs.push('{{ settings.whatsapp_auto_message_4 | escape }}');{% endif %}
+  {% if settings.whatsapp_auto_message_5 != blank %}autoMsgs.push('{{ settings.whatsapp_auto_message_5 | escape }}');{% endif %}
+
+  var autoMsgCfg = {
+    enabled:  {{ settings.whatsapp_auto_messages_enabled | default: false | json }},
+    interval: {{ settings.whatsapp_auto_message_interval | default: 5 | json }} * 1000,
+    pause:    {{ settings.whatsapp_auto_message_pause    | default: 20 | json }} * 60000,
+    typing:   2000
+  };
+
+  // ── Horário de atendimento ──
+  var sched = {
+    enabled:  {{ settings.whatsapp_schedule_enabled | default: false | json }},
+    tz:       {{ settings.whatsapp_timezone | default: -3 | json }},
+    wdStart:  '{{ settings.whatsapp_weekday_start  | default: "09:00" }}',
+    wdEnd:    '{{ settings.whatsapp_weekday_end    | default: "18:00" }}',
+    satStart: '{{ settings.whatsapp_saturday_start | default: "09:00" }}',
+    satEnd:   '{{ settings.whatsapp_saturday_end   | default: "13:00" }}',
+    sunOn:    {{ settings.whatsapp_sunday_enabled | default: false | json }},
+    sunStart: '{{ settings.whatsapp_sunday_start | default: "09:00" }}',
+    sunEnd:   '{{ settings.whatsapp_sunday_end   | default: "13:00" }}',
+    offline:  '{{ settings.whatsapp_offline_message | default: "No momento estamos offline. Deixe sua mensagem!" | escape }}'
+  };
+
+  function localNow() {
+    var now = new Date();
+    return new Date(now.getTime() + (now.getTimezoneOffset()*60000) + (3600000*sched.tz));
+  }
+  function toMin(t) { var p=t.split(':'); return +p[0]*60+ +p[1]; }
+  function isOnline() {
+    if (!sched.enabled) return true;
+    var n=localNow(), day=n.getDay(), cur=n.getHours()*60+n.getMinutes(), s,e;
+    if (day===0){ if(!sched.sunOn) return false; s=toMin(sched.sunStart); e=toMin(sched.sunEnd); }
+    else if (day===6){ s=toMin(sched.satStart); e=toMin(sched.satEnd); }
+    else { s=toMin(sched.wdStart); e=toMin(sched.wdEnd); }
+    return cur>=s && cur<=e;
+  }
+  function greeting() {
+    var h=localNow().getHours();
+    if(h>=6&&h<12)  return 'Bom dia ☀️';
+    if(h>=12&&h<18) return 'Boa tarde 🌤️';
+    return 'Boa noite 🌙';
+  }
+  function scheduleText() {
+    if (!sched.enabled) return 'Resposta em até 2 horas durante horário comercial';
+    var day=localNow().getDay();
+    if(day===0&&!sched.sunOn) return 'Fechado aos domingos. Retornamos na segunda às '+sched.wdStart;
+    if(day===0) return 'Horário de domingo: '+sched.sunStart+' às '+sched.sunEnd;
+    if(day===6) return 'Horário de sábado: '+sched.satStart+' às '+sched.satEnd;
+    return 'Horário: '+sched.wdStart+' às '+sched.wdEnd+', Seg–Sex';
+  }
+  function nowStr() {
+    var n=localNow();
+    return n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0');
+  }
+
+  function updateStatus() {
+    var on=isOnline();
+    if(statusEl)  statusEl.textContent = on ? '● Online' : '○ Offline';
+    if(footerEl)  footerEl.textContent = scheduleText();
+    if(welcomeTimeEl) welcomeTimeEl.textContent = greeting();
+    if(msgTimeEl)     msgTimeEl.textContent = nowStr();
+    var dot = fab.querySelector('.zap-online-dot');
+    if(dot) dot.style.display = on ? 'block' : 'none';
+
+    // Atualiza tag online/offline de todos os vendedores
+    document.querySelectorAll('.zap-vendor-tag').forEach(function(tag) {
+      if (!on) {
+        tag.className = 'zap-vendor-tag offline';
+        tag.textContent = 'Offline';
+      } else {
+        tag.className = 'zap-vendor-tag online';
+        tag.textContent = 'Online';
+      }
+    });
+  }
+  updateStatus();
+  setInterval(updateStatus, 60000);
+
+  // ── Tabs ──
+  var panels = { home:'zap-panel-home', vendors:'zap-panel-vendors', msg:'zap-panel-msg', tracking:'zap-panel-tracking', shipping:'zap-panel-shipping' };
+  var navItems = document.querySelectorAll('.zap-nav-item');
+
+  function showPanel(name) {
+    Object.keys(panels).forEach(function(k){
+      var p = document.getElementById(panels[k]);
+      if(p) { p.classList.toggle('active', k===name); }
+    });
+    navItems.forEach(function(btn){
+      btn.classList.toggle('active', btn.dataset.panel===name);
+    });
+  }
+
+  navItems.forEach(function(btn){
+    btn.addEventListener('click', function(){ showPanel(btn.dataset.panel); });
+  });
+
+  // Rastrear / Calcular → sub-painel
+  var gotoTracking = document.getElementById('zap-goto-tracking');
+  var gotoShipping = document.getElementById('zap-goto-shipping');
+  var backTracking  = document.getElementById('zap-back-tracking');
+  var backShipping  = document.getElementById('zap-back-shipping');
+
+  if(gotoTracking) gotoTracking.addEventListener('click', function(){ showPanel('tracking'); });
+  if(gotoShipping) gotoShipping.addEventListener('click', function(){ showPanel('shipping'); });
+  if(backTracking)  backTracking.addEventListener('click', function(){ showPanel('home'); });
+  if(backShipping)  backShipping.addEventListener('click', function(){ showPanel('home'); });
+
+  // ── FAB toggle ──
+  fab.addEventListener('click', function(){
+    var open = box.classList.toggle('open');
+    fab.classList.toggle('open', open);
+    if(open){ updateStatus(); hideExternal(); }
+  });
+  if(closeBtn) closeBtn.addEventListener('click', function(){
+    box.classList.remove('open');
+    fab.classList.remove('open');
+  });
+
+  // ── Enviar mensagem ──
+  var msgForm  = document.getElementById('zap-msg-form');
+  var msgInput = document.getElementById('zap-msg-input');
+  if(msgForm) msgForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    var txt = msgInput.value.trim();
+    if(txt){ window.open(zapUrl+'?text='+encodeURIComponent(txt),'_blank'); msgInput.value=''; }
+  });
+
+  // ── Rastreamento ──
+  var trackBtn = document.getElementById('zap-tracking-submit');
+  if(trackBtn) trackBtn.addEventListener('click', function(){
+    var code   = document.getElementById('zap-tracking-code').value.trim().toUpperCase();
+    var loading= document.getElementById('zap-tracking-loading');
+    var result = document.getElementById('zap-tracking-result');
+    var error  = document.getElementById('zap-tracking-error');
+    result.classList.remove('show'); error.classList.remove('show');
+    result.innerHTML=''; error.textContent='';
+    loading.classList.add('show');
+    var api = '{{ settings.sheets_frete_url }}';
+    if(!api){ loading.classList.remove('show'); error.textContent='API não configurada.'; error.classList.add('show'); return; }
+    fetch(api+'?codigo='+encodeURIComponent(code))
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        loading.classList.remove('show');
+        if(d.success===false||d.error){ error.textContent=d.error||'Código não encontrado.'; error.classList.add('show'); return; }
+        if(!d.eventos||!d.eventos.length){ error.textContent='Sem dados de rastreamento.'; error.classList.add('show'); return; }
+        var html='<p style="font-weight:700;font-size:13px;color:#111827;margin:0 0 10px;">Status do pedido</p>';
+        d.eventos.forEach(function(ev){
+          html+='<div class="zap-tracking-status"><div class="zap-tracking-date">'+ev.data+' '+ev.hora+'</div><div class="zap-tracking-text">'+ev.status+'</div></div>';
+        });
+        result.innerHTML=html; result.classList.add('show');
+      })
+      .catch(function(){ loading.classList.remove('show'); error.textContent='Erro ao rastrear. Tente novamente.'; error.classList.add('show'); });
+  });
+
+  // ── Calcular Frete ──
+  var cepInput = document.getElementById('zap-shipping-cep');
+  if(cepInput) cepInput.addEventListener('input', function(){
+    var v=this.value.replace(/\D/g,'');
+    this.value = v.length>5 ? v.slice(0,5)+'-'+v.slice(5,8) : v;
+  });
+  var shipBtn = document.getElementById('zap-shipping-submit');
+  if(shipBtn) shipBtn.addEventListener('click', function(){
+    var cep    = (document.getElementById('zap-shipping-cep').value||'').replace(/\D/g,'');
+    var loading= document.getElementById('zap-shipping-loading');
+    var result = document.getElementById('zap-shipping-result');
+    var error  = document.getElementById('zap-shipping-error');
+    if(cep.length!==8){ error.textContent='CEP inválido.'; error.classList.add('show'); return; }
+    result.classList.remove('show'); error.classList.remove('show');
+    result.innerHTML=''; error.textContent='';
+    loading.classList.add('show');
+    var api = '{{ settings.sheets_frete_url }}';
+    var orig= '{{ settings.correios_cep_origem | default: "74550050" }}'.replace(/\D/g,'');
+    if(!api){ loading.classList.remove('show'); error.textContent='API de frete não configurada.'; error.classList.add('show'); return; }
+    fetch(api+'?cep='+cep+'&cep_origem='+orig+'&peso=0.5')
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        loading.classList.remove('show');
+        if(d.success===false||d.error){ error.textContent=d.error||'Não foi possível calcular.'; error.classList.add('show'); return; }
+        if(!d.options||!d.options.length){ error.textContent='Nenhum serviço disponível.'; error.classList.add('show'); return; }
+        var html='<p style="font-weight:700;font-size:13px;color:#111827;margin:0 0 10px;">Opções de frete</p>';
+        d.options.forEach(function(op){
+          html+='<div class="zap-shipping-option"><div><div class="zap-shipping-name">'+(op.name||'Correios')+'</div><div class="zap-shipping-time">'+(op.estimated_days||'—')+'</div></div><div class="zap-shipping-price">R$ '+parseFloat(op.price||0).toFixed(2).replace('.',',')+'</div></div>';
+        });
+        result.innerHTML=html; result.classList.add('show');
+      })
+      .catch(function(){ loading.classList.remove('show'); error.textContent='Erro ao calcular frete.'; error.classList.add('show'); });
+  });
+
+  // ── Mensagens automáticas ──
+  var extTyping = document.getElementById('zap-ext-typing');
+  var bubble    = document.getElementById('zap-bubble');
+  var bubbleText= document.getElementById('zap-bubble-text');
+  var bubbleTime= document.getElementById('zap-bubble-time');
+  var bubbleClose=document.getElementById('zap-bubble-close');
+  var internalTyping = document.getElementById('zap-msg-typing');
+  var autoMsgsHome = document.getElementById('zap-auto-msgs');
+  var autoMsgsMsg  = document.getElementById('zap-auto-msgs-msg');
+
+  if(bubbleClose) bubbleClose.addEventListener('click', function(e){ e.stopPropagation(); hideExternal(); });
+
+  function hideExternal(){ bubble&&bubble.classList.remove('show'); extTyping&&extTyping.classList.remove('show'); }
+
+  var msgIdx=0, hasFinished=false, cycTmr=null, msgTmr=null;
+  var savedState = localStorage.getItem('zap_cycle');
+  if(savedState){
+    try{
+      var st=JSON.parse(savedState), elapsed=Date.now()-st.ts;
+      if(st.done){ if(elapsed<autoMsgCfg.pause){ hasFinished=true; } else { localStorage.removeItem('zap_cycle'); } }
+      else { msgIdx=st.idx+1; }
+    }catch(e){ localStorage.removeItem('zap_cycle'); }
+  }
+
+  function saveState(idx,done){ localStorage.setItem('zap_cycle',JSON.stringify({idx:idx,done:done,ts:Date.now()})); }
+  function addMsgBubble(text, container){
+    var d=document.createElement('div'); d.className='zap-msg-auto show';
+    d.innerHTML='<p>'+text+'</p><span class="zap-msg-time">'+nowStr()+'</span>';
+    container.appendChild(d);
+    var body=document.getElementById('zap-msg-body');
+    if(body) setTimeout(function(){ body.scrollTop=body.scrollHeight; },100);
+  }
+
+  function nextMsg(){
+    if(!autoMsgCfg.enabled||!autoMsgs.length) return;
+    if(msgIdx>=autoMsgs.length){
+      hasFinished=true; msgIdx=0; saveState(0,true);
+      cycTmr=setTimeout(function(){ localStorage.removeItem('zap_cycle'); hasFinished=false; startCycle(); }, autoMsgCfg.pause);
+      return;
+    }
+    saveState(msgIdx,false);
+    var isOpen=box.classList.contains('open');
+    var curMsg=autoMsgs[msgIdx];
+    if(isOpen){
+      if(internalTyping) internalTyping.style.display='block';
+      msgTmr=setTimeout(function(){
+        if(internalTyping) internalTyping.style.display='none';
+        addMsgBubble(curMsg, autoMsgsMsg);
+        msgIdx++;
+        msgTmr=setTimeout(nextMsg, autoMsgCfg.interval);
+      }, autoMsgCfg.typing);
+    } else {
+      hideExternal();
+      if(extTyping){ extTyping.style.display='block'; extTyping.classList.add('show'); }
+      msgTmr=setTimeout(function(){
+        if(extTyping){ extTyping.classList.remove('show'); setTimeout(function(){ extTyping.style.display='none'; },350); }
+        if(bubbleText) bubbleText.textContent=curMsg;
+        if(bubbleTime) bubbleTime.textContent=nowStr();
+        if(bubble) bubble.classList.add('show');
+        msgIdx++;
+        msgTmr=setTimeout(function(){ hideExternal(); setTimeout(nextMsg,800); }, autoMsgCfg.interval);
+      }, autoMsgCfg.typing);
+    }
+  }
+
+  function startCycle(){ msgIdx=0; if(autoMsgsHome) autoMsgsHome.innerHTML=''; if(autoMsgsMsg) autoMsgsMsg.innerHTML=''; nextMsg(); }
+
+  if(autoMsgCfg.enabled&&autoMsgs.length&&!hasFinished){
+    var delay=msgIdx===0?3000:800;
+    setTimeout(nextMsg,delay);
+  }
+
+})();
+</script>

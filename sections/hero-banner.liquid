@@ -1,0 +1,319 @@
+{%- comment -%}
+  Section: Hero Banner
+  Fullwidth carousel with multiple slides, autoplay, progress dots, and parallax
+{%- endcomment -%}
+
+{%- if section.blocks.size > 0 -%}
+<section
+  class="hero-banner hero-banner--{{ section.settings.height }}{% if section.settings.hide_content_mobile %} hero-banner--hide-content-mobile{% endif %} hero-banner--mobile-ratio-{{ section.settings.mobile_ratio }}"
+  id="hero-{{ section.id }}"
+  data-autoplay="{{ section.settings.autoplay_speed | times: 1000 }}"
+  data-autoplay-enabled="{{ section.settings.autoplay }}"
+  style="--hero-mobile-custom-height: {{ section.settings.mobile_custom_height | default: 90 }}vh;"
+  role="region"
+  aria-label="Banner principal"
+>
+  <div class="hero-banner__slides">
+    {%- for block in section.blocks -%}
+      <div class="hero-banner__slide{% if forloop.first %} active{% endif %}" {{ block.shopify_attributes }}>
+        <!-- Image -->
+        <div class="hero-banner__image-wrapper">
+          {%- if block.settings.image != blank or block.settings.image_mobile != blank -%}
+            <picture>
+              {%- if block.settings.image_mobile != blank -%}
+                <source media="(max-width: 749px)" srcset="{{ block.settings.image_mobile | image_url: width: 900 }}">
+              {%- endif -%}
+              <img
+                class="hero-banner__image"
+                src="{{ block.settings.image | default: block.settings.image_mobile | image_url: width: 1920 }}"
+                alt="{{ block.settings.image.alt | escape | default: block.settings.title }}"
+                width="1920"
+                height="900"
+                {%- if forloop.first -%}
+                  loading="eager"
+                  fetchpriority="high"
+                {%- else -%}
+                  loading="lazy"
+                {%- endif -%}
+              >
+            </picture>
+          {%- else -%}
+            <div class="hero-banner__image" style="width:100%;height:100%;background: linear-gradient(135deg, #111 0%, #333 50%, #555 100%);"></div>
+          {%- endif -%}
+        </div>
+
+        <!-- Overlay -->
+        <div class="hero-banner__overlay hero-banner__overlay--{{ block.settings.overlay_style | default: 'dark' }}"></div>
+
+        <!-- Content -->
+        <div class="hero-banner__content hero-banner__content--{{ block.settings.text_position | default: 'bottom-left' }} hero-banner__content--{{ block.settings.text_color | default: 'light' }}">
+          {%- if block.settings.tag != blank -%}
+            <span class="hero-banner__tag">{{ block.settings.tag }}</span>
+          {%- endif -%}
+
+          {%- if block.settings.title != blank -%}
+            <h1 class="hero-banner__title">{{ block.settings.title }}</h1>
+          {%- endif -%}
+
+          {%- if block.settings.subtitle != blank -%}
+            <p class="hero-banner__subtitle">{{ block.settings.subtitle }}</p>
+          {%- endif -%}
+
+          <div class="hero-banner__actions">
+            {%- if block.settings.button_text != blank -%}
+              <a href="{{ block.settings.button_url }}" class="btn btn-primary btn-lg btn-arrow btn-ripple btn-magnetic">
+                {{ block.settings.button_text }}
+              </a>
+            {%- endif -%}
+            {%- if block.settings.button_text_2 != blank -%}
+              <a href="{{ block.settings.button_url_2 }}" class="btn btn-secondary btn-lg btn-arrow btn-ripple btn-magnetic">
+                {{ block.settings.button_text_2 }}
+              </a>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+
+  {%- if section.blocks.size > 1 -%}
+    <!-- Navigation Arrows -->
+    <button class="hero-banner__nav hero-banner__nav--prev" aria-label="Slide anterior">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="15,18 9,12 15,6"></polyline>
+      </svg>
+    </button>
+    <button class="hero-banner__nav hero-banner__nav--next" aria-label="Próximo slide">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="9,18 15,12 9,6"></polyline>
+      </svg>
+    </button>
+
+    <!-- Progress Dots -->
+    <div class="hero-banner__progress-dots">
+      {%- for block in section.blocks -%}
+        <button class="hero-banner__progress-dot{% if forloop.first %} active{% endif %}" aria-label="Ir para slide {{ forloop.index }}">
+          <div class="hero-banner__progress-dot-fill"></div>
+        </button>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  <!-- Scroll Indicator -->
+  {%- if section.settings.show_scroll_indicator -%}
+    <div class="hero-banner__scroll-indicator">
+      <span>Scroll</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="6,9 12,15 18,9"></polyline>
+      </svg>
+    </div>
+  {%- endif -%}
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Hero Banner",
+  "class": "hero-banner-section",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Altura do banner",
+      "options": [
+        { "value": "fullscreen", "label": "Tela cheia" },
+        { "value": "large", "label": "Grande (75vh)" },
+        { "value": "medium", "label": "Médio (60vh)" }
+      ],
+      "default": "large"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Velocidade do autoplay (segundos)",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "unit": "s"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_scroll_indicator",
+      "label": "Mostrar indicador de scroll",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_content_mobile",
+      "label": "Ocultar textos/botões no mobile",
+      "info": "Mostra apenas a imagem no mobile",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "mobile_ratio",
+      "label": "Proporção da imagem no mobile",
+      "info": "Use 'Tela cheia' para ocupar 100% da tela ou 'Personalizada' para ajustar manualmente abaixo.",
+      "options": [
+        { "value": "auto", "label": "Automática (imagem completa, sem corte)" },
+        { "value": "fullscreen", "label": "Tela cheia (100vh)" },
+        { "value": "custom", "label": "Personalizada (altura abaixo)" },
+        { "value": "9-16", "label": "Vertical 9:16 (stories)" },
+        { "value": "3-4", "label": "Vertical 3:4" },
+        { "value": "4-5", "label": "Vertical 4:5" },
+        { "value": "1-1", "label": "Quadrada 1:1" }
+      ],
+      "default": "3-4"
+    },
+    {
+      "type": "range",
+      "id": "mobile_custom_height",
+      "label": "Altura personalizada no mobile",
+      "info": "Aplicada quando a proporção estiver como 'Personalizada'. 100 = tela cheia.",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "default": 90
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagem (desktop)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Imagem (mobile)",
+          "info": "Recomendado: proporção vertical (ex: 900x1200)"
+        },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Tag/Label",
+          "default": "Lançamento"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título",
+          "default": "CONECTE-SE AGORA"
+        },
+        {
+          "type": "textarea",
+          "id": "subtitle",
+          "label": "Subtítulo",
+          "default": "Descubra os novos lançamentos e encontre sua próxima conquista."
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Texto do botão 1",
+          "default": "Comprar Agora"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Link do botão 1"
+        },
+        {
+          "type": "text",
+          "id": "button_text_2",
+          "label": "Texto do botão 2",
+          "default": "Saiba Mais"
+        },
+        {
+          "type": "url",
+          "id": "button_url_2",
+          "label": "Link do botão 2"
+        },
+        {
+          "type": "select",
+          "id": "text_position",
+          "label": "Posição do texto",
+          "options": [
+            { "value": "center", "label": "Centro" },
+            { "value": "left", "label": "Esquerda" },
+            { "value": "bottom-left", "label": "Inferior esquerda" },
+            { "value": "bottom-center", "label": "Inferior centro" }
+          ],
+          "default": "bottom-left"
+        },
+        {
+          "type": "select",
+          "id": "text_color",
+          "label": "Cor do texto",
+          "options": [
+            { "value": "light", "label": "Claro" },
+            { "value": "dark", "label": "Escuro" }
+          ],
+          "default": "light"
+        },
+        {
+          "type": "select",
+          "id": "overlay_style",
+          "label": "Estilo do overlay",
+          "options": [
+            { "value": "dark", "label": "Escuro" },
+            { "value": "light", "label": "Claro" },
+            { "value": "gradient", "label": "Gradiente diagonal" }
+          ],
+          "default": "dark"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Banner",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "tag": "Lançamento",
+            "title": "CONECTE-SE AGORA",
+            "subtitle": "Descubra os novos lançamentos e encontre sua próxima conquista.",
+            "button_text": "Comprar Agora",
+            "button_text_2": "Saiba Mais"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "tag": "ProConnect",
+            "title": "PROCONNECT MAX",
+            "subtitle": "Uma nova era de amortecimento. Experimente o futuro do conforto.",
+            "button_text": "Explorar",
+            "text_position": "center"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "tag": "ConectWhats Member",
+            "title": "MEMBER DAYS",
+            "subtitle": "Promoções exclusivas para membros ConectWhats. Até 40% OFF em produtos selecionados.",
+            "button_text": "Aproveitar",
+            "button_text_2": "Cadastre-se",
+            "text_position": "bottom-center"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,150 @@
+{%- comment -%}
+  Section: Main Search Results
+  Renders search results in a premium, responsive grid layout.
+{%- endcomment -%}
+
+<style>
+  .search-section {
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-16);
+  }
+
+  .search-header {
+    text-align: center;
+    margin-bottom: var(--space-10);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .search-header__title {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-extrabold);
+    text-transform: uppercase;
+  }
+
+  .search-header__form {
+    display: flex;
+    gap: var(--space-2);
+    width: 100%;
+    max-width: 500px;
+    margin-top: var(--space-2);
+  }
+
+  .search-header__input {
+    flex-grow: 1;
+    height: 48px;
+  }
+
+  .search-header__btn {
+    height: 48px;
+    padding: 0 var(--space-6);
+  }
+
+  .search-info-text {
+    font-size: var(--font-size-base);
+    color: var(--color-text-light);
+  }
+
+  .empty-search-state {
+    text-align: center;
+    padding: var(--space-12) 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+  }
+</style>
+
+<section class="search-section">
+  <div class="page-width">
+    
+    <div class="search-header">
+      <h1 class="search-header__title">
+        {%- if search.performed -%}
+          Resultados da Busca
+        {%- else -%}
+          Buscar no Site
+        {%- endif -%}
+      </h1>
+
+      <form action="/search" method="get" class="search-header__form" role="search">
+        <input 
+          type="search" 
+          name="q" 
+          value="{{ search.terms | escape }}" 
+          placeholder="Buscar produtos..." 
+          class="input search-header__input"
+          aria-label="Pesquisa"
+        >
+        <button type="submit" class="btn btn-primary search-header__btn btn-ripple">Buscar</button>
+      </form>
+
+      {%- if search.performed -%}
+        <p class="search-info-text">
+          {%- if search.results_count == 0 -%}
+            Nenhum resultado encontrado para <strong>"{{ search.terms | escape }}"</strong>.
+          {%- else -%}
+            {{ search.results_count }} {{ search.results_count | pluralize: 'resultado encontrado', 'resultados encontrados' }} para <strong>"{{ search.terms | escape }}"</strong>.
+          {%- endif -%}
+        </p>
+      {%- endif -%}
+    </div>
+
+    {%- if search.performed and search.results_count > 0 -%}
+      {%- paginate search.results by 12 -%}
+        
+        <div class="product-grid">
+          {%- for item in search.results -%}
+            {%- if item.object_type == 'product' -%}
+              {%- render 'product-card', product: item, show_colors: true -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        <!-- Pagination -->
+        {%- if paginate.pages > 1 -%}
+          <div class="pagination" style="display: flex; justify-content: center; align-items: center; gap: var(--space-2); margin-top: var(--space-12);">
+            {%- if paginate.previous -%}
+              <a href="{{ paginate.previous.url }}" class="pagination__item" style="display: inline-flex; align-items: center; justify-content: center; min-width: 40px; height: 40px; border: 1px solid var(--color-border); border-radius: 50%; font-size: var(--font-size-sm);">&laquo;</a>
+            {%- endif -%}
+
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}
+                <a href="{{ part.url }}" class="pagination__item" style="display: inline-flex; align-items: center; justify-content: center; min-width: 40px; height: 40px; border: 1px solid var(--color-border); border-radius: 50%; font-size: var(--font-size-sm);">{{ part.title }}</a>
+              {%- else -%}
+                {%- if part.title == paginate.current_page -%}
+                  <span class="pagination__item pagination__item--current" style="display: inline-flex; align-items: center; justify-content: center; min-width: 40px; height: 40px; border: 1px solid var(--color-primary); background-color: var(--color-primary); color: var(--color-text-inverse); border-radius: 50%; font-size: var(--font-size-sm);">{{ part.title }}</span>
+                {%- else -%}
+                  <span class="pagination__item" style="display: inline-flex; align-items: center; justify-content: center; min-width: 40px; height: 40px; border: 1px solid var(--color-border); border-radius: 50%; font-size: var(--font-size-sm);">{{ part.title }}</span>
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+
+            {%- if paginate.next -%}
+              <a href="{{ paginate.next.url }}" class="pagination__item" style="display: inline-flex; align-items: center; justify-content: center; min-width: 40px; height: 40px; border: 1px solid var(--color-border); border-radius: 50%; font-size: var(--font-size-sm);">&raquo;</a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+      {%- endpaginate -%}
+    {%- elsif search.performed -%}
+      <div class="empty-search-state">
+        <h2 class="heading-4">Tente outra pesquisa</h2>
+        <p class="text-secondary">Verifique a grafia das palavras-chave ou use termos mais gerais.</p>
+        <a href="/collections/all" class="btn btn-secondary btn-ripple" style="margin-top: var(--space-2);">Ver Todos os Produtos</a>
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Main Search Results",
+  "tag": "section",
+  "class": "section",
+  "settings": []
+}
+{% endschema %}

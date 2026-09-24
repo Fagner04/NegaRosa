@@ -1,0 +1,109 @@
+{%- comment -%}
+  Section: Trending Now
+  Horizontal product carousel with drag support and navigation arrows
+{%- endcomment -%}
+
+<section class="section-spacing trending-section" id="trending-{{ section.id }}">
+  <div class="page-width">
+    <!-- Header -->
+    <div class="trending-section__header reveal">
+      <div>
+        <h2 class="trending-section__title">{{ section.settings.title | default: 'Em Alta Agora' }}</h2>
+        {%- if section.settings.subtitle != blank -%}
+          <p class="trending-section__subtitle">{{ section.settings.subtitle }}</p>
+        {%- endif -%}
+      </div>
+      <div class="trending-section__nav">
+        <button class="trending-section__nav-btn trending-section__nav-btn--prev" aria-label="Anterior">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="15,18 9,12 15,6"></polyline>
+          </svg>
+        </button>
+        <button class="trending-section__nav-btn trending-section__nav-btn--next" aria-label="Próximo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="9,18 15,12 9,6"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Carousel -->
+    <div class="carousel">
+      {%- assign collection = section.settings.collection -%}
+      {%- assign limit = section.settings.products_to_show -%}
+      {%- if collection != blank -%}
+        {%- for product in collection.products limit: limit -%}
+          <div class="carousel__item carousel__item--1-of-4 carousel__item--animated" data-stagger>
+            {% render 'product-card',
+              product: product,
+              show_secondary_image: true,
+              show_quick_add: true,
+              show_wishlist: true,
+              show_badge: true
+            %}
+          </div>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..8) -%}
+          <div class="carousel__item carousel__item--1-of-4">
+            <div class="product-card card-hover">
+              <div class="product-card__image-wrapper" style="aspect-ratio: 1; background: linear-gradient(135deg, #f0f0f0, #e0e0e0); border-radius: var(--border-radius-md);"></div>
+              <div class="product-card__info">
+                <span class="product-card__category" style="color: var(--color-accent);">Em Alta</span>
+                <h3 class="product-card__title">ConectWhats Pro {{ i }}</h3>
+                <p class="product-card__subtitle text-secondary">Tênis de Corrida</p>
+                <div class="product-card__price">
+                  <span class="product-card__price-current">R$ {{ i | times: 150 | plus: 399 }},99</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Em Alta Agora",
+  "class": "trending-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Em Alta Agora"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtítulo",
+      "default": "Os produtos mais desejados do momento"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Coleção"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Produtos a exibir",
+      "min": 4,
+      "max": 16,
+      "step": 1,
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Em Alta Agora",
+      "settings": {
+        "title": "Em Alta Agora",
+        "subtitle": "Os produtos mais desejados do momento"
+      }
+    }
+  ]
+}
+{% endschema %}

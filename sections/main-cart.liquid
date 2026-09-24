@@ -1,0 +1,616 @@
+{%- comment -%}
+  Section: Main Cart Page
+  A premium, interactive Nike-style shopping bag page.
+{%- endcomment -%}
+
+<style>
+  .cart-section {
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-16);
+  }
+
+  .cart-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    align-items: start;
+  }
+
+  @media (min-width: 992px) {
+    .cart-container {
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: var(--space-12);
+    }
+  }
+
+  .cart-title {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-extrabold);
+    text-transform: uppercase;
+    margin-bottom: var(--space-6);
+  }
+
+  /* Cart Items */
+  .cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .cart-item {
+    display: flex;
+    gap: var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--space-6);
+  }
+
+  .cart-item__image-wrapper {
+    width: 100px;
+    height: 100px;
+    background-color: var(--color-bg-secondary);
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .cart-item__image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .cart-item__info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .cart-item__title {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+  }
+
+  .cart-item__meta {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-light);
+  }
+
+  .cart-item__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    margin-top: var(--space-3);
+  }
+
+  .cart-item__remove {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-light);
+    text-decoration: underline;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color var(--transition-fast);
+  }
+
+  .cart-item__remove:hover {
+    color: var(--color-accent);
+  }
+
+  .cart-item__price-wrapper {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-1);
+  }
+
+  .cart-item__price {
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-base);
+  }
+
+  /* Quantity buttons */
+  .cart-qty {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-full);
+    overflow: hidden;
+    height: 36px;
+  }
+
+  .cart-qty__btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-bg);
+    font-size: var(--font-size-base);
+    transition: background-color var(--transition-fast);
+  }
+
+  .cart-qty__btn:hover {
+    background-color: var(--color-bg-secondary);
+  }
+
+  .cart-qty__input {
+    width: 32px;
+    text-align: center;
+    border: none;
+    outline: none;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    background: transparent;
+  }
+
+  /* Summary Panel */
+  .cart-summary {
+    background-color: var(--color-bg-secondary);
+    padding: var(--space-8);
+    border-radius: var(--border-radius-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-8));
+  }
+
+  .cart-summary__title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--color-border-dark);
+    padding-bottom: var(--space-4);
+  }
+
+  .cart-summary__row {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--font-size-base);
+  }
+
+  .cart-summary__row--total {
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-lg);
+    border-top: 1px solid var(--color-border-dark);
+    padding-top: var(--space-4);
+    margin-top: var(--space-2);
+  }
+
+  .cart-summary__desc {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-light);
+    line-height: var(--line-height-normal);
+  }
+
+  .btn-checkout {
+    height: 54px;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+  }
+
+  .cart-empty-state {
+    text-align: center;
+    padding: var(--space-16) 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  /* Mobile responsive - Cart Summary */
+  @media (max-width: 767px) {
+    .cart-section {
+      padding-top: var(--space-4);
+      padding-bottom: var(--space-8);
+      overflow-x: hidden;
+    }
+    .cart-title {
+      font-size: var(--font-size-2xl);
+      margin-bottom: var(--space-4);
+    }
+    .cart-container {
+      gap: var(--space-6);
+      grid-template-columns: minmax(0, 1fr);
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+    }
+    .cart-items,
+    .cart-summary {
+      min-width: 0;
+      max-width: 100%;
+    }
+    .cart-summary {
+      position: static;
+      top: auto;
+      padding: var(--space-4);
+      gap: var(--space-4);
+      border-radius: var(--border-radius-md);
+      width: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    .cart-summary > * {
+      max-width: 100%;
+      box-sizing: border-box;
+      min-width: 0;
+    }
+    .cart-summary__title {
+      font-size: var(--font-size-lg);
+      padding-bottom: var(--space-3);
+    }
+    .cart-summary__row {
+      font-size: var(--font-size-sm);
+      flex-wrap: wrap;
+      gap: var(--space-1);
+      word-break: break-word;
+    }
+    .cart-summary__row--total {
+      font-size: var(--font-size-base);
+      padding-top: var(--space-3);
+    }
+    .cart-summary__desc {
+      font-size: 11px;
+    }
+    .btn-checkout {
+      height: 48px;
+      font-size: var(--font-size-sm);
+      width: 100%;
+    }
+    .cart-item {
+      min-width: 0;
+    }
+    .cart-item__image-wrapper {
+      width: 80px;
+      height: 80px;
+    }
+    .cart-item__info {
+      min-width: 0;
+    }
+    .cart-item__title {
+      font-size: var(--font-size-sm);
+      word-break: break-word;
+    }
+    .cart-item__actions {
+      gap: var(--space-3);
+      flex-wrap: wrap;
+    }
+
+    /* Wholesale progress card - mobile */
+    .cw-wholesale-progress {
+      padding: 12px !important;
+      margin: 10px 0 !important;
+      box-sizing: border-box;
+      width: 100% !important;
+      max-width: 100% !important;
+      overflow: hidden;
+    }
+    .cw-wholesale-progress > div {
+      font-size: 12px !important;
+      flex-wrap: wrap;
+      max-width: 100%;
+      word-break: break-word;
+    }
+    .cw-wholesale-progress div[style*="font-size:20px"] {
+      font-size: 17px !important;
+    }
+    .cw-wholesale-progress div[style*="font-size:13px"] {
+      font-size: 12px !important;
+      line-height: 1.3;
+    }
+
+    /* Frete calculator - garantir que não estoure */
+    .frete-calc {
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    .frete-calc * {
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    .frete-calc__input-group {
+      flex-wrap: wrap;
+    }
+    .frete-calc__input {
+      min-width: 0;
+      width: 100%;
+    }
+  }
+</style>
+
+<section class="cart-section">
+  <div class="page-width">
+    
+    {%- if cart.item_count > 0 -%}
+      <h1 class="cart-title">Sua Sacola</h1>
+      
+      <form action="/cart" method="post" id="CartForm" class="cart-container">
+        
+        <!-- Left: Cart Items List -->
+        <div class="cart-items">
+          {%- for item in cart.items -%}
+            <div class="cart-item" data-line-item-key="{{ item.key }}">
+              
+              <!-- Item Image -->
+              <div class="cart-item__image-wrapper">
+                {%- if item.image != blank -%}
+                  <img src="{{ item.image | image_url: width: 200 }}" alt="{{ item.product.title | escape }}">
+                {%- else -%}
+                  <div style="background-color: var(--color-bg-secondary); width: 100%; height: 100%;"></div>
+                {%- endif -%}
+              </div>
+
+              <!-- Item Info -->
+              <div class="cart-item__info">
+                <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
+                
+                {%- if item.variant.title != 'Default Title' -%}
+                  <span class="cart-item__meta">{{ item.variant.title }}</span>
+                {%- endif -%}
+
+                {%- if item.selling_plan_allocation != blank -%}
+                  <span class="cart-item__meta">{{ item.selling_plan_allocation.selling_plan.name }}</span>
+                {%- endif -%}
+
+                <!-- Actions (Qty & Remove) -->
+                <div class="cart-item__actions">
+                  <div class="cart-qty">
+                    <button type="button" class="cart-qty__btn qty-minus-btn" aria-label="Diminuir">-</button>
+                    <input type="number" name="updates[]" value="{{ item.quantity }}" min="0" class="cart-qty__input line-qty-input" data-index="{{ forloop.index }}">
+                    <button type="button" class="cart-qty__btn qty-plus-btn" aria-label="Aumentar">+</button>
+                  </div>
+
+                  <a href="/cart/change?line={{ forloop.index }}&quantity=0" class="cart-item__remove">Remover</a>
+                </div>
+              </div>
+
+              <!-- Price -->
+              <div class="cart-item__price-wrapper">
+                <span class="cart-item__price">{{ item.final_line_price | money }}</span>
+                {%- if item.original_line_price > item.final_line_price -%}
+                  <span class="price price--compare" style="text-decoration: line-through; font-size: var(--font-size-sm); color: var(--color-text-light);">
+                    {{ item.original_line_price | money }}
+                  </span>
+                {%- endif -%}
+              </div>
+
+            </div>
+          {%- endfor -%}
+        </div>
+
+        <!-- Right: Summary Panel -->
+        <div class="cart-summary">
+          <h2 class="cart-summary__title">Resumo</h2>
+
+          {%- comment -%} Cálculo antecipado do atacado — reaproveitado no resumo e no card {%- endcomment -%}
+          {%- assign wholesale_min = section.settings.wholesale_min_qty | default: 6 -%}
+          {%- assign total_items = cart.item_count -%}
+          {%- assign progress = total_items | times: 100 | divided_by: wholesale_min -%}
+          {%- if progress > 100 -%}{%- assign progress = 100 -%}{%- endif -%}
+          {%- assign wholesale_active = false -%}
+          {%- if total_items >= wholesale_min -%}{%- assign wholesale_active = true -%}{%- endif -%}
+
+          {%- assign wholesale_total = 0 -%}
+          {%- assign original_total = 0 -%}
+          {%- assign has_wholesale = false -%}
+          {%- for item in cart.items -%}
+            {%- comment -%} Extrai o preço de atacado do metafield (aceita money object, number ou string em reais — pt-BR "179,91" ou en "179.91") {%- endcomment -%}
+            {%- assign ws_raw = item.product.metafields.custom.wholesale_price | default: item.product.metafields.custom.preco_atacado -%}
+            {%- assign ws_price_str = '' -%}
+            {%- if ws_raw != blank -%}
+              {%- if ws_raw.amount -%}
+                {%- assign ws_price_str = ws_raw.amount -%}
+              {%- elsif ws_raw.value.amount -%}
+                {%- assign ws_price_str = ws_raw.value.amount -%}
+              {%- elsif ws_raw.value -%}
+                {%- assign ws_price_str = ws_raw.value -%}
+              {%- else -%}
+                {%- assign ws_price_str = ws_raw -%}
+              {%- endif -%}
+            {%- endif -%}
+            {%- comment -%} Normaliza pt-BR "1.234,56" → "1234.56" {%- endcomment -%}
+            {%- assign ws_price_str = ws_price_str | append: '' | replace: ' ', '' | replace: 'R$', '' -%}
+            {%- if ws_price_str contains ',' -%}
+              {%- assign ws_price_str = ws_price_str | replace: '.', '' | replace: ',', '.' -%}
+            {%- endif -%}
+            {%- assign ws_price = ws_price_str | times: 1.0 -%}
+
+            {%- assign unit_price_cents = item.final_price -%}
+            {%- if ws_price > 0 -%}
+              {%- comment -%} Sempre trata metafield como REAIS → converte pra centavos {%- endcomment -%}
+              {%- assign ws_price_cents = ws_price | times: 100 | round -%}
+              {%- comment -%} Só aplica se for menor que o preço unitário atual (evita "descontos" que aumentam o valor) {%- endcomment -%}
+              {%- if ws_price_cents > 0 and ws_price_cents < unit_price_cents -%}
+                {%- assign has_wholesale = true -%}
+                {%- assign item_ws_total = ws_price_cents | times: item.quantity -%}
+                {%- assign wholesale_total = wholesale_total | plus: item_ws_total -%}
+              {%- else -%}
+                {%- assign wholesale_total = wholesale_total | plus: item.final_line_price -%}
+              {%- endif -%}
+            {%- else -%}
+              {%- assign wholesale_total = wholesale_total | plus: item.final_line_price -%}
+            {%- endif -%}
+            {%- assign original_total = original_total | plus: item.final_line_price -%}
+          {%- endfor -%}
+          {%- assign savings = original_total | minus: wholesale_total -%}
+          {%- assign show_wholesale_discount = false -%}
+          {%- if section.settings.wholesale_enabled and wholesale_active and has_wholesale and savings > 0 -%}
+            {%- assign show_wholesale_discount = true -%}
+          {%- endif -%}
+
+          <div class="cart-summary__row">
+            <span>Subtotal</span>
+            <span>{{ cart.total_price | money }}</span>
+          </div>
+
+          {%- if show_wholesale_discount -%}
+            <div class="cart-summary__row" style="color:#15803D;font-weight:600;">
+              <span>Desconto Atacado</span>
+              <span>− {{ savings | money }}</span>
+            </div>
+          {%- endif -%}
+
+          <div class="cart-summary__row">
+            <span>Entrega</span>
+            {%- if cart.total_price > 39990 -%}
+              <span style="color: var(--color-success); font-weight: var(--font-weight-medium);">Grátis</span>
+            {%- else -%}
+              <span>Calculado no Checkout</span>
+            {%- endif -%}
+          </div>
+
+          <div class="cart-summary__row cart-summary__row--total">
+            <span>Total</span>
+            {%- if show_wholesale_discount -%}
+              <span style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;">
+                <span style="text-decoration:line-through;font-size:var(--font-size-sm);color:var(--color-text-light);font-weight:400;">{{ cart.total_price | money }}</span>
+                <span style="color:#15803D;">{{ wholesale_total | money }}</span>
+              </span>
+            {%- else -%}
+              <span>{{ cart.total_price | money }}</span>
+            {%- endif -%}
+          </div>
+
+
+
+
+          <div class="cart-summary__desc">
+            O valor total do frete será calculado na tela de finalização da compra. Para compras acima de R$ 399,90 o frete é grátis.
+          </div>
+
+          {%- if section.settings.wholesale_enabled -%}
+            <div class="cw-wholesale-progress" style="margin:12px 0;padding:10px 14px;border-radius:8px;{% if wholesale_active %}background:#F0FDF4;border:2px solid #86EFAC{% else %}background:#FEF2F2;border:2px solid #FECACA{% endif %}">
+              {%- if wholesale_active -%}
+                <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#166534;">
+                  <span>🎉</span> Atacado Ativo! ({{ total_items }}/{{ wholesale_min }} peças)
+                </div>
+              {%- else -%}
+                {%- assign faltam = wholesale_min | minus: total_items -%}
+                <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#991B1B;">
+                  <span>📦</span> Faltam {{ faltam }} peça(s) para Atacado
+                </div>
+                <div style="margin-top:6px;height:6px;background:#FECACA;border-radius:9999px;overflow:hidden;">
+                  <div style="height:100%;width:{{ progress }}%;background:#EF4444;border-radius:9999px;transition:width .3s;"></div>
+                </div>
+                <div style="font-size:10px;color:#DC2626;margin-top:2px;">{{ total_items }}/{{ wholesale_min }} peças</div>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+
+
+
+          <button type="submit" name="checkout" class="btn btn-primary btn-checkout w-full btn-shiny btn-ripple">
+            Finalizar Compra
+          </button>
+        </div>
+
+      </form>
+      
+    {%- else -%}
+      <!-- Empty Cart State -->
+      <div class="cart-empty-state">
+        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="var(--color-secondary)" stroke-width="1.5">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <h1 class="cart-title" style="margin-bottom: 0;">Sua Sacola está vazia</h1>
+        <p class="text-secondary" style="max-width: 400px; line-height: var(--line-height-normal);">
+          Parece que você ainda não adicionou nenhum item à sua sacola. Explore as categorias ou novidades para encontrar produtos incríveis.
+        </p>
+        <a href="/collections/all" class="btn btn-primary btn-arrow btn-ripple" style="padding: var(--space-4) var(--space-10);">
+          Ver Lançamentos
+        </a>
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+<!-- Automatic Cart Update on Quantity Change (AJAX — evita submeter o form e ir pro checkout) -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('CartForm');
+    if (!form) return;
+
+    function updateLine(lineIndex, quantity) {
+      fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ line: lineIndex, quantity: quantity })
+      })
+      .then(r => r.json())
+      .then(() => { window.location.reload(); })
+      .catch(() => { window.location.reload(); });
+    }
+
+    document.querySelectorAll('.cart-item').forEach((item, idx) => {
+      const input = item.querySelector('.line-qty-input');
+      const minusBtn = item.querySelector('.qty-minus-btn');
+      const plusBtn = item.querySelector('.qty-plus-btn');
+      if (!input) return;
+
+      const lineIndex = parseInt(input.dataset.index) || (idx + 1);
+
+      minusBtn && minusBtn.addEventListener('click', (e) => {
+        e.preventDefault(); e.stopPropagation();
+        let val = parseInt(input.value) || 1;
+        if (val > 0) { input.value = val - 1; updateLine(lineIndex, val - 1); }
+      });
+
+      plusBtn && plusBtn.addEventListener('click', (e) => {
+        e.preventDefault(); e.stopPropagation();
+        let val = parseInt(input.value) || 1;
+        input.value = val + 1; updateLine(lineIndex, val + 1);
+      });
+
+      input.addEventListener('change', (e) => {
+        e.preventDefault();
+        let val = parseInt(input.value); if (isNaN(val) || val < 0) val = 0;
+        updateLine(lineIndex, val);
+      });
+
+      // Impede Enter dentro do input de submeter o form (que dispararia o botão default "checkout")
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Main Cart Page",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Atacado"
+    },
+    {
+      "type": "checkbox",
+      "id": "wholesale_enabled",
+      "label": "Ativar barra de progresso de atacado",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "wholesale_min_qty",
+      "label": "Quantidade mínima para atacado",
+      "min": 2,
+      "max": 24,
+      "step": 1,
+      "default": 6
+    }
+  ]
+}
+{% endschema %}

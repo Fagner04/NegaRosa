@@ -1,0 +1,177 @@
+{%- comment -%}
+  Size Guide Modal
+  Reads product metafield (namespace: "size_guide", key: "table") as JSON
+  and renders a tabbed table inside a modal.
+{%- endcomment -%}
+
+{%- liquid
+  assign sg_raw = product.metafields.size_guide.table
+  if sg_raw == blank
+    assign sg_raw = product.metafields.custom.size_guide_table
+  endif
+  if sg_raw == blank
+    assign sg_raw = product.metafields.custom.size_guide
+  endif
+  if sg_raw == blank
+    assign sg_raw = product.metafields.custom.tabela_medidas
+  endif
+-%}
+{%- assign sg_has_data = false -%}
+{%- if sg_raw != blank -%}
+  {%- assign sg_has_data = true -%}
+{%- endif -%}
+
+<size-guide-modal>
+  <button type="button" class="size-guide-trigger" data-sg-open aria-label="Abrir tabela de medidas">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+      <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+    </svg>
+    Tabela de Medidas
+  </button>
+
+  <div class="size-guide-overlay" data-sg-overlay aria-hidden="true">
+    <div class="size-guide-modal" role="dialog" aria-modal="true" aria-label="Tabela de Medidas">
+      <div class="size-guide-modal__header">
+        <h2 class="size-guide-modal__title">Guia de Medidas</h2>
+        <button type="button" class="size-guide-modal__close" data-sg-close aria-label="Fechar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="20" height="20">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="size-guide-modal__body" data-sg-body>
+        {%- if sg_has_data -%}
+          <div class="size-guide-modal__loading">Carregando...</div>
+        {%- else -%}
+          <div class="size-guide-modal__empty">
+            <p>Este produto ainda não possui tabela de medidas.</p>
+            <p class="size-guide-modal__empty-hint">Configure o metafield <code>size_guide.table</code> no produto. Também aceito <code>custom.size_guide_table</code>.</p>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</size-guide-modal>
+
+<script>
+  (function() {
+    var root = document.currentScript.previousElementSibling;
+    if (!root || root.tagName !== 'SIZE-GUIDE-MODAL') {
+      // fallback: last size-guide-modal on page
+      var all = document.querySelectorAll('size-guide-modal');
+      root = all[all.length - 1];
+    }
+    if (!root) return;
+
+    var overlay = root.querySelector('[data-sg-overlay]');
+    var openBtn = root.querySelector('[data-sg-open]');
+    var closeBtn = root.querySelector('[data-sg-close]');
+    var body = root.querySelector('[data-sg-body]');
+
+    function open() {
+      overlay.classList.remove('closing');
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function close() {
+      overlay.classList.add('closing');
+      setTimeout(function() {
+        overlay.classList.remove('open');
+        overlay.classList.remove('closing');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }, 160);
+    }
+
+    openBtn && openBtn.addEventListener('click', open);
+    closeBtn && closeBtn.addEventListener('click', close);
+    overlay && overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) close();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && overlay.classList.contains('open')) close();
+    });
+
+    {%- if sg_has_data -%}
+    var raw = {{ sg_raw.value | default: sg_raw | json }};
+    // Metafield pode vir como JSON real, string JSON ou texto multilinha.
+    if (typeof raw === 'string') {
+      raw = raw.trim();
+      try { raw = JSON.parse(raw); } catch (err) {
+        body.innerHTML = '<div class="size-guide-modal__empty"><p>Erro ao ler a tabela de medidas.</p><p class="size-guide-modal__empty-hint">Verifique se o metafield é do tipo JSON válido.</p></div>';
+        return;
+      }
+    }
+    if (raw && Array.isArray(raw)) {
+      raw = { categories: raw };
+    }
+    if (!raw || !raw.categories || !raw.categories.length) {
+      body.innerHTML = '<div class="size-guide-modal__empty"><p>Tabela de medidas vazia.</p><p class="size-guide-modal__empty-hint">O JSON precisa ter <code>categories</code> com pelo menos uma tabela.</p></div>';
+      return;
+    }
+
+    function escapeHtml(str) {
+      var d = document.createElement('div');
+      d.textContent = (str == null ? '' : String(str));
+      return d.innerHTML;
+    }
+
+    var html = '';
+    if (raw.categories.length > 1) {
+      html += '<div class="sg-tabs">';
+      raw.categories.forEach(function(cat, i) {
+        html += '<button type="button" class="sg-tab' + (i === 0 ? ' active' : '') + '" data-sg-tab="' + i + '">' + escapeHtml(cat.name) + '</button>';
+      });
+      html += '</div>';
+    }
+    raw.categories.forEach(function(cat, ci) {
+      html += '<div class="sg-table-wrap' + (ci === 0 ? ' active' : '') + '" data-sg-table="' + ci + '">';
+      html += '<table class="sg-table">';
+      if (cat.headers && cat.headers.length) {
+        html += '<thead><tr>';
+        cat.headers.forEach(function(h) { html += '<th>' + escapeHtml(h) + '</th>'; });
+        html += '</tr></thead>';
+      }
+      if (cat.rows && cat.rows.length) {
+        html += '<tbody>';
+        cat.rows.forEach(function(row) {
+          html += '<tr>';
+          row.forEach(function(cell) { html += '<td>' + escapeHtml(cell) + '</td>'; });
+          html += '</tr>';
+        });
+        html += '</tbody>';
+      }
+      html += '</table>';
+      if (cat.footnote) html += '<p class="sg-footnote">' + escapeHtml(cat.footnote) + '</p>';
+      html += '</div>';
+    });
+
+    body.innerHTML = html;
+
+    body.querySelectorAll('[data-sg-tab]').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var idx = tab.dataset.sgTab;
+        body.querySelectorAll('[data-sg-tab]').forEach(function(t) { t.classList.remove('active'); });
+        body.querySelectorAll('[data-sg-table]').forEach(function(t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        var table = body.querySelector('[data-sg-table="' + idx + '"]');
+        if (table) table.classList.add('active');
+      });
+    });
+    {%- endif -%}
+  })();
+</script>
+
+<style>
+  .sg-tabs { display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid var(--color-border); }
+  .sg-tab { padding: 8px 14px; font-size: 13px; font-weight: 600; color: var(--color-text-muted); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color .2s, border-color .2s; }
+  .sg-tab.active { color: var(--color-text); border-bottom-color: var(--color-text); background: var(--color-bg-secondary, #f7f7f7); box-shadow: inset 0 0 0 1px var(--color-border, rgba(0,0,0,0.12)); }
+  .sg-table-wrap { display: none; }
+  .sg-table-wrap.active { display: block; }
+  .sg-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .sg-table th, .sg-table td { padding: 10px 8px; text-align: center; border-bottom: 1px solid var(--color-border); }
+  .sg-table th { font-weight: 700; background: var(--color-bg-secondary); }
+  .sg-footnote { margin-top: 12px; font-size: 12px; color: var(--color-text-muted); font-style: italic; }
+</style>

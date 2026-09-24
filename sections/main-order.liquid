@@ -1,0 +1,84 @@
+{%- comment -%}
+  Section: Main Order
+  Customer order detail page
+{%- endcomment -%}
+
+<section style="padding-top: var(--space-12); padding-bottom: var(--space-16);">
+  <div class="page-width">
+    <div style="margin-bottom: var(--space-8);">
+      <a href="/account" style="font-size: var(--font-size-sm); color: var(--color-text-light); text-decoration: underline; display: inline-flex; align-items: center; gap: var(--space-1);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15,18 9,12 15,6"></polyline>
+        </svg>
+        Minha Conta
+      </a>
+      <h1 style="font-size: var(--font-size-2xl); font-weight: var(--font-weight-extrabold); text-transform: uppercase; margin-top: var(--space-3);">
+        Pedido {{ order.name }}
+      </h1>
+      <p style="font-size: var(--font-size-sm); color: var(--color-text-light); margin-top: var(--space-1);">
+        Realizado em {{ order.created_at | date: '%d de %B de %Y' }}
+      </p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr; gap: var(--space-8);">
+      <!-- Items -->
+      <div>
+        <h2 style="font-size: var(--font-size-base); font-weight: var(--font-weight-bold); text-transform: uppercase; margin-bottom: var(--space-4); padding-bottom: var(--space-3); border-bottom: 1px solid var(--color-border);">
+          Itens do Pedido
+        </h2>
+        {%- for line_item in order.line_items -%}
+          <div style="display: flex; gap: var(--space-4); padding: var(--space-4) 0; border-bottom: 1px solid var(--color-border);">
+            <div style="width: 80px; height: 80px; background-color: var(--color-bg-secondary); border-radius: var(--border-radius-sm); overflow: hidden; flex-shrink: 0;">
+              {%- if line_item.image != blank -%}
+                <img src="{{ line_item.image | image_url: width: 160 }}" alt="{{ line_item.title | escape }}" style="width:100%; height:100%; object-fit:cover;">
+              {%- endif -%}
+            </div>
+            <div style="flex: 1;">
+              <p style="font-weight: var(--font-weight-semibold);">{{ line_item.title }}</p>
+              {%- if line_item.variant.title != 'Default Title' -%}
+                <p style="font-size: var(--font-size-sm); color: var(--color-text-light);">{{ line_item.variant.title }}</p>
+              {%- endif -%}
+              <p style="font-size: var(--font-size-sm); color: var(--color-text-light);">Qtd: {{ line_item.quantity }}</p>
+            </div>
+            <div style="text-align: right;">
+              <p style="font-weight: var(--font-weight-semibold);">{{ line_item.final_line_price | money }}</p>
+            </div>
+          </div>
+        {%- endfor -%}
+
+        <!-- Totals -->
+        <div style="margin-top: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); max-width: 320px; margin-left: auto;">
+          <div style="display: flex; justify-content: space-between; font-size: var(--font-size-sm);">
+            <span style="color: var(--color-text-light);">Subtotal</span>
+            <span>{{ order.subtotal_price | money }}</span>
+          </div>
+          {%- for shipping_method in order.shipping_methods -%}
+            <div style="display: flex; justify-content: space-between; font-size: var(--font-size-sm);">
+              <span style="color: var(--color-text-light);">{{ shipping_method.title }}</span>
+              <span>{{ shipping_method.price | money }}</span>
+            </div>
+          {%- endfor -%}
+          {%- for discount in order.discounts -%}
+            <div style="display: flex; justify-content: space-between; font-size: var(--font-size-sm);">
+              <span style="color: var(--color-text-light);">Desconto ({{ discount.code }})</span>
+              <span style="color: green;">-{{ discount.amount | money }}</span>
+            </div>
+          {%- endfor -%}
+          <div style="display: flex; justify-content: space-between; font-weight: var(--font-weight-bold); font-size: var(--font-size-base); padding-top: var(--space-2); border-top: 1px solid var(--color-border);">
+            <span>Total</span>
+            <span>{{ order.total_price | money }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Detalhe do Pedido",
+  "tag": "section",
+  "class": "section",
+  "settings": []
+}
+{% endschema %}

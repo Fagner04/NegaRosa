@@ -1,0 +1,184 @@
+{%- comment -%}
+  Section: Featured Collection
+  Grid of products from a selected collection with header and view all link
+{%- endcomment -%}
+
+<section class="section-spacing" id="featured-{{ section.id }}">
+  <div class="page-width">
+    <!-- Section Header -->
+    <div class="section-header reveal">
+      <div>
+        <h2 class="section-header__title">{{ section.settings.title | default: 'Destaques' }}</h2>
+        {%- if section.settings.subtitle != blank -%}
+          <p class="text-secondary" style="margin-top: var(--space-1);">{{ section.settings.subtitle }}</p>
+        {%- endif -%}
+      </div>
+      {%- if section.settings.collection != blank -%}
+        <a href="{{ section.settings.collection.url }}" class="section-header__link hover-underline">
+          {{ 'sections.featured_collection.view_all' | t | default: 'Ver Tudo' }}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9,18 15,12 9,6"></polyline>
+          </svg>
+        </a>
+      {%- endif -%}
+    </div>
+
+    <!-- Product Grid -->
+    {%- if section.settings.layout == 'grid' -%}
+      <div class="product-grid product-grid--{{ section.settings.columns }}" data-stagger-container>
+        {%- assign collection = section.settings.collection -%}
+        {%- assign limit = section.settings.products_to_show -%}
+        {%- if collection != blank -%}
+          {%- for product in collection.products limit: limit -%}
+            {% render 'product-card',
+              product: product,
+              show_secondary_image: section.settings.show_secondary_image,
+              show_quick_add: section.settings.show_quick_add,
+              show_wishlist: true,
+              show_badge: true,
+              show_category: section.settings.show_category
+            %}
+          {%- endfor -%}
+        {%- else -%}
+          {%- for i in (1..limit) -%}
+            <div class="product-card card-hover">
+              <div class="product-card__image-wrapper" style="aspect-ratio: 1; background: var(--color-bg-secondary); border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: center;">
+                <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                  <rect width="60" height="60" rx="8" fill="#EBEBEB"/>
+                  <path d="M20 35L25 30L30 35L40 25" stroke="#CACACB" stroke-width="2" stroke-linecap="round"/>
+                  <circle cx="24" cy="24" r="3" stroke="#CACACB" stroke-width="2"/>
+                </svg>
+              </div>
+              <div class="product-card__info">
+                <span class="product-card__category" style="color: var(--color-accent);">Categoria</span>
+                <h3 class="product-card__title">Produto Exemplo {{ i }}</h3>
+                <p class="product-card__subtitle text-secondary">Descrição do produto</p>
+                <div class="product-card__price">
+                  <span class="product-card__price-current">R$ {{ i | times: 100 | plus: 299 }},99</span>
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+
+    {%- elsif section.settings.layout == 'carousel' -%}
+      <!-- Carousel Layout -->
+      <div class="trending-section carousel-section">
+        <div class="carousel">
+          {%- assign collection = section.settings.collection -%}
+          {%- assign limit = section.settings.products_to_show -%}
+          {%- if collection != blank -%}
+            {%- for product in collection.products limit: limit -%}
+              <div class="carousel__item carousel__item--1-of-{{ section.settings.columns }}">
+                {% render 'product-card',
+                  product: product,
+                  show_secondary_image: section.settings.show_secondary_image,
+                  show_quick_add: section.settings.show_quick_add
+                %}
+              </div>
+            {%- endfor -%}
+          {%- else -%}
+            {%- for i in (1..8) -%}
+              <div class="carousel__item carousel__item--1-of-{{ section.settings.columns }}">
+                <div class="product-card">
+                  <div class="product-card__image-wrapper" style="aspect-ratio: 1; background: var(--color-bg-secondary); border-radius: var(--border-radius-md);"></div>
+                  <div class="product-card__info">
+                    <h3 class="product-card__title">Produto {{ i }}</h3>
+                    <div class="product-card__price">
+                      <span class="product-card__price-current">R$ {{ i | times: 100 | plus: 199 }},99</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {%- endfor -%}
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Coleção em Destaque",
+  "class": "featured-collection-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Destaques"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtítulo"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Coleção"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Produtos a exibir",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Colunas (desktop)",
+      "options": [
+        { "value": "2", "label": "2 colunas" },
+        { "value": "3", "label": "3 colunas" },
+        { "value": "4", "label": "4 colunas" }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "grid", "label": "Grid" },
+        { "value": "carousel", "label": "Carrossel" }
+      ],
+      "default": "grid"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "label": "Mostrar segunda imagem no hover",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quick_add",
+      "label": "Mostrar botão Adicionar Rápido",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_category",
+      "label": "Mostrar categoria do produto",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Coleção em Destaque",
+      "settings": {
+        "title": "Lançamentos",
+        "products_to_show": 4,
+        "columns": "4",
+        "layout": "grid"
+      }
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,126 @@
+{%- comment -%}
+  Section: Category Grid
+  Grid of category cards with image, overlay, and CTA
+{%- endcomment -%}
+
+<section class="section-spacing" id="categories-{{ section.id }}">
+  <div class="page-width">
+    {%- if section.settings.title != blank -%}
+      <div class="section-header reveal">
+        <h2 class="section-header__title">{{ section.settings.title }}</h2>
+      </div>
+    {%- endif -%}
+
+    <div class="category-grid category-grid--layout-{{ section.settings.layout }}" data-stagger-container>
+      {%- for block in section.blocks -%}
+        <a href="{{ block.settings.link | default: '#' }}" class="category-card card-hover" {{ block.shopify_attributes }}>
+          <div class="category-card__image-wrapper" data-parallax="0.15">
+            {%- if block.settings.image != blank -%}
+              <img
+                class="category-card__image"
+                src="{{ block.settings.image | image_url: width: 800 }}"
+                alt="{{ block.settings.title | escape }}"
+                width="800"
+                height="600"
+                loading="lazy"
+              >
+            {%- else -%}
+              <div class="category-card__image" style="background: linear-gradient(135deg, #{{ block.settings.placeholder_color | default: '333' }} 0%, #{{ block.settings.placeholder_color_2 | default: '666' }} 100%);"></div>
+            {%- endif -%}
+          </div>
+
+          <div class="category-card__overlay"></div>
+
+          <div class="category-card__content">
+            <h3 class="category-card__title">{{ block.settings.title | default: 'Categoria' }}</h3>
+            <span class="category-card__cta">
+              {{ block.settings.cta_text | default: 'Comprar' }}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9,18 15,12 9,6"></polyline>
+              </svg>
+            </span>
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Grid de Categorias",
+  "class": "category-grid-section",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Explore por Categoria"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "1", "label": "3 colunas iguais" },
+        { "value": "2", "label": "1 grande + 2 menores" },
+        { "value": "3", "label": "1 destaque + 4 menores" }
+      ],
+      "default": "1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Categoria",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título",
+          "default": "Calçados"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagem"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "cta_text",
+          "label": "Texto do botão",
+          "default": "Comprar"
+        },
+        {
+          "type": "text",
+          "id": "placeholder_color",
+          "label": "Cor placeholder 1 (hex sem #)",
+          "default": "333333"
+        },
+        {
+          "type": "text",
+          "id": "placeholder_color_2",
+          "label": "Cor placeholder 2 (hex sem #)",
+          "default": "666666"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Grid de Categorias",
+      "blocks": [
+        { "type": "category", "settings": { "title": "Calçados", "placeholder_color": "1a1a2e", "placeholder_color_2": "16213e" } },
+        { "type": "category", "settings": { "title": "Vestuário", "placeholder_color": "2d2d2d", "placeholder_color_2": "4a4a4a" } },
+        { "type": "category", "settings": { "title": "Acessórios", "placeholder_color": "3d1a1a", "placeholder_color_2": "5a2d2d" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

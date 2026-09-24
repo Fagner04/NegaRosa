@@ -1,0 +1,206 @@
+{%- comment -%}
+  Section: Main Login
+  Customer login form
+{%- endcomment -%}
+
+<style>
+  .account-section {
+    padding-top: var(--space-16);
+    padding-bottom: var(--space-16);
+  }
+
+  .account-box {
+    max-width: 440px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .account-box__title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-extrabold);
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  .account-box__subtitle {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-light);
+    text-align: center;
+    margin-top: calc(var(--space-2) * -1);
+  }
+
+  .account-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .account-form__label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: block;
+    margin-bottom: var(--space-1);
+  }
+
+  .account-form__input {
+    width: 100%;
+    height: 48px;
+    padding: 0 var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-base);
+    background: var(--color-bg);
+    color: var(--color-text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .account-form__input:focus {
+    border-color: var(--color-primary);
+  }
+
+  .account-form__btn {
+    height: 52px;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: var(--space-2);
+  }
+
+  .account-form__forgot {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-light);
+    text-align: right;
+    text-decoration: underline;
+  }
+
+  .account-divider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-light);
+  }
+
+  .account-divider::before,
+  .account-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: var(--color-border);
+  }
+
+  .account-register-link {
+    font-size: var(--font-size-sm);
+    text-align: center;
+    color: var(--color-text-light);
+  }
+
+  .account-register-link a {
+    color: var(--color-text);
+    font-weight: var(--font-weight-semibold);
+    text-decoration: underline;
+  }
+
+  .account-errors {
+    background-color: #fff2f2;
+    border: 1px solid #ffcccc;
+    border-radius: var(--border-radius-sm);
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--font-size-sm);
+    color: #cc0000;
+  }
+</style>
+
+<section class="account-section">
+  <div class="page-width">
+    <div class="account-box">
+      <h1 class="account-box__title">Entrar</h1>
+      <p class="account-box__subtitle">Acesse sua conta ConectWhats</p>
+
+      {%- form 'customer_login' -%}
+        {%- if form.errors -%}
+          <div class="account-errors" role="alert">
+            {{ form.errors | default_errors }}
+          </div>
+        {%- endif -%}
+
+        <div class="account-form">
+          <div>
+            <label for="CustomerEmail" class="account-form__label">E-mail</label>
+            <input
+              type="email"
+              name="customer[email]"
+              id="CustomerEmail"
+              class="account-form__input"
+              autocomplete="email"
+              autocorrect="off"
+              autocapitalize="off"
+              placeholder="seu@email.com"
+              required
+            >
+          </div>
+
+          <div>
+            <label for="CustomerPassword" class="account-form__label">Senha</label>
+            <input
+              type="password"
+              name="customer[password]"
+              id="CustomerPassword"
+              class="account-form__input"
+              autocomplete="current-password"
+              placeholder="••••••••"
+              required
+            >
+            <a href="/account/login#recover" class="account-form__forgot" style="display:block; margin-top: var(--space-1);">
+              Esqueceu sua senha?
+            </a>
+          </div>
+
+          <button type="submit" class="btn btn-primary account-form__btn w-full btn-ripple">
+            Entrar
+          </button>
+        </div>
+      {%- endform -%}
+
+      <!-- Recuperação de senha -->
+      {%- if request.path contains '#recover' -%}
+        <div id="RecoverPasswordForm">
+          <h2 class="account-box__title" style="font-size: var(--font-size-lg);">Recuperar senha</h2>
+          {%- form 'recover_customer_password' -%}
+            {%- if form.posted_successfully? -%}
+              <p style="color: green; font-size: var(--font-size-sm);">E-mail de recuperação enviado!</p>
+            {%- else -%}
+              <div>
+                <label for="RecoverEmail" class="account-form__label">E-mail</label>
+                <input type="email" name="email" id="RecoverEmail" class="account-form__input" placeholder="seu@email.com" required>
+              </div>
+              <button type="submit" class="btn btn-primary account-form__btn w-full btn-ripple" style="margin-top: var(--space-4);">
+                Enviar e-mail
+              </button>
+            {%- endif -%}
+          {%- endform -%}
+        </div>
+      {%- endif -%}
+
+      <div class="account-divider">ou</div>
+
+      <p class="account-register-link">
+        Não tem conta? <a href="/account/register">Cadastre-se grátis</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Login",
+  "tag": "section",
+  "class": "section",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,853 @@
+/* ==========================================================================
+   ConectWhats - Animations CSS
+   All keyframes, transitions, and animation utilities
+   ========================================================================== */
+
+/* ---------- Keyframes ---------- */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes scaleUp {
+  from { transform: scale(1); }
+  to { transform: scale(1.05); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes pulseScale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes progressFill {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes slideDrawerIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideDrawerInLeft {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes bounceSubtle {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(-5px); }
+  75% { transform: translateY(2px); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-3deg); }
+  75% { transform: rotate(3deg); }
+}
+
+@keyframes underlineGrow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes countdownTick {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* ---------- Advanced Scroll Keyframes ---------- */
+
+@keyframes clipReveal {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes clipDiagonal {
+  from {
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+  }
+  to {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+}
+
+@keyframes blurIn {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideUpBlur {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(60px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+/* ---------- Scroll Progress Bar ---------- */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-accent), #ff4444, var(--color-accent-hover));
+  z-index: 10000;
+  transform-origin: left;
+  transition: width 50ms linear;
+  will-change: width;
+}
+
+/* ---------- Scroll Reveal Classes ---------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.shopify-design-mode .reveal,
+.shopify-design-mode .reveal-left,
+.shopify-design-mode .reveal-right,
+.shopify-design-mode .reveal-scale,
+.shopify-design-mode .reveal-clip,
+.shopify-design-mode .reveal-blur,
+.shopify-design-mode .reveal-zoom {
+  opacity: 1 !important;
+  transform: none !important;
+  clip-path: none !important;
+  filter: none !important;
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-left.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(50px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-right.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-scale.revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ---------- Advanced Reveal Variants ---------- */
+
+.reveal-clip {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 1s cubic-bezier(0.77, 0, 0.18, 1);
+}
+
+.reveal-clip.revealed {
+  clip-path: inset(0 0 0 0);
+}
+
+.reveal-blur {
+  opacity: 0;
+  filter: blur(10px);
+  transform: translateY(20px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-blur.revealed {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+}
+
+.reveal-zoom {
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-zoom.revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ---------- Image Reveal (mask animation) ---------- */
+.image-reveal {
+  position: relative;
+  overflow: hidden;
+}
+
+.image-reveal img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.1);
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.image-reveal::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--color-bg);
+  transform: translateX(-100%);
+  transition: transform 1s cubic-bezier(0.77, 0, 0.18, 1);
+}
+
+.image-reveal.revealed img {
+  transform: scale(1);
+}
+
+.image-reveal.revealed::after {
+  transform: translateX(101%);
+}
+
+/* Image reveal from left */
+.image-reveal-left::after {
+  transform: translateX(-100%);
+}
+
+.image-reveal-left.revealed::after {
+  transform: translateX(101%);
+}
+
+/* Image reveal from right */
+.image-reveal-right::after {
+  transform: translateX(100%);
+}
+
+.image-reveal-right.revealed::after {
+  transform: translateX(-101%);
+}
+
+/* ---------- Stagger Delays ---------- */
+.stagger-1 { transition-delay: 0.05s; }
+.stagger-2 { transition-delay: 0.1s; }
+.stagger-3 { transition-delay: 0.15s; }
+.stagger-4 { transition-delay: 0.2s; }
+.stagger-5 { transition-delay: 0.25s; }
+.stagger-6 { transition-delay: 0.3s; }
+.stagger-7 { transition-delay: 0.35s; }
+.stagger-8 { transition-delay: 0.4s; }
+.stagger-9 { transition-delay: 0.45s; }
+.stagger-10 { transition-delay: 0.5s; }
+
+/* ---------- Parallax ---------- */
+.parallax {
+  will-change: transform;
+}
+
+.parallax-layer {
+  will-change: transform;
+}
+
+/* ---------- Image Zoom Hover ---------- */
+.img-zoom {
+  overflow: hidden;
+}
+
+.img-zoom img,
+.img-zoom .img-zoom-target {
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.img-zoom:hover img,
+.img-zoom:hover .img-zoom-target {
+  transform: scale(1.08);
+}
+
+/* ---------- Card Hover ---------- */
+.card-hover {
+  transition: transform var(--transition-base);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+}
+
+/* ---------- Text Reveal ---------- */
+.text-reveal {
+  overflow: hidden;
+}
+
+.text-reveal span {
+  display: inline-block;
+  transform: translateY(100%);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.text-reveal.revealed span {
+  transform: translateY(0);
+}
+
+/* ---------- Text Split Reveal (word by word) ---------- */
+.text-split-reveal .word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(40px) rotateX(40deg);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.text-split-reveal.revealed .word {
+  opacity: 1;
+  transform: translateY(0) rotateX(0deg);
+}
+
+/* ---------- Marquee ---------- */
+.marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.marquee-content {
+  display: inline-flex;
+  animation: marquee 30s linear infinite;
+}
+
+.marquee-content:hover {
+  animation-play-state: paused;
+}
+
+/* ---------- Progress Bar ---------- */
+.progress-bar {
+  height: 3px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: var(--border-radius-full);
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: var(--color-bg);
+  border-radius: var(--border-radius-full);
+  transition: width 0.3s linear;
+}
+
+.progress-bar-fill.animating {
+  animation: progressFill 5s linear forwards;
+}
+
+/* ---------- Hover Underline ---------- */
+.hover-underline {
+  position: relative;
+}
+
+.hover-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hover-underline:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ---------- Magnetic Button ---------- */
+.btn-magnetic {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform;
+}
+
+/* ---------- Animated Button: Shiny ---------- */
+.btn-shiny {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shiny::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transform: skewX(-25deg);
+  transition: left 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-shiny:hover::before {
+  left: 125%;
+}
+
+/* ---------- Animated Button: Border Draw ---------- */
+.btn-border-draw {
+  position: relative;
+  background: transparent !important;
+  border: none !important;
+  color: var(--color-text) !important;
+}
+
+.btn-border-draw::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--color-primary);
+  border-radius: var(--border-radius-full);
+  clip-path: polygon(50% 0, 50% 0, 50% 100%, 50% 100%);
+  transition: clip-path 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.btn-border-draw:hover::before {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.btn-border-draw:hover {
+  color: var(--color-text-inverse) !important;
+}
+
+.btn-border-draw::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--color-primary);
+  border-radius: var(--border-radius-full);
+  clip-path: polygon(50% 0, 50% 0, 50% 100%, 50% 100%);
+  transition: clip-path 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.btn-border-draw:hover::after {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+/* ---------- Animated Button: Glow ---------- */
+.btn-glow {
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.3),
+              0 0 40px rgba(255, 0, 0, 0.15),
+              0 0 60px rgba(255, 0, 0, 0.1);
+}
+
+/* ---------- Animated Button: Arrow Slide ---------- */
+.btn-arrow {
+  gap: var(--space-1);
+  transition: gap 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-arrow svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-arrow:hover {
+  gap: var(--space-3);
+}
+
+.btn-arrow:hover svg {
+  transform: translateX(4px);
+}
+
+/* ---------- Animated Button: Scale ---------- */
+.btn-scale {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.2s ease;
+}
+
+.btn-scale:hover {
+  transform: scale(1.04);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-scale:active {
+  transform: scale(0.97);
+}
+
+/* ---------- Animated Button: Slide Up Text ---------- */
+.btn-slide-up {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-slide-up .btn__text {
+  display: block;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-slide-up .btn__text-hover {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 100%);
+  opacity: 0;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.3s ease;
+}
+
+.btn-slide-up:hover .btn__text {
+  transform: translateY(-100%);
+}
+
+.btn-slide-up:hover .btn__text-hover {
+  transform: translate(-50%, -50%);
+  opacity: 1;
+}
+
+/* ---------- Animated Button: Loading State ---------- */
+.btn-loading {
+  position: relative;
+  pointer-events: none;
+  color: transparent !important;
+}
+
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: btn-spin 0.7s linear infinite;
+}
+
+@keyframes btn-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- Animated Button: Success State ---------- */
+.btn-success {
+  background-color: var(--color-success) !important;
+  border-color: var(--color-success) !important;
+  pointer-events: none;
+}
+
+.btn-success svg.btn__check {
+  display: inline-block;
+  animation: btn-check-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes btn-check-in {
+  0% {
+    transform: scale(0) rotate(-45deg);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+
+/* ---------- Animated Button: Ripple Click ---------- */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ripple .ripple-effect {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(0);
+  animation: ripple-expand 0.6s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes ripple-expand {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* ---------- Counter ---------- */
+.counter {
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.counter.ticking {
+  animation: countdownTick 0.3s ease;
+}
+
+/* ---------- Section Transition Overlay ---------- */
+.section-transition {
+  position: relative;
+}
+
+.section-transition::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to bottom, var(--color-bg), transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.section-transition::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to top, var(--color-bg), transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ---------- Sticky Scroll Section ---------- */
+.sticky-scroll {
+  position: relative;
+}
+
+.sticky-scroll__panel {
+  position: sticky;
+  top: var(--header-height);
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.sticky-scroll__panel:first-child {
+  margin-top: 0;
+}
+
+/* ---------- Counter Up ---------- */
+.counter-up {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+}
+
+.counter-up .counter-digit {
+  display: inline-block;
+  transform: translateY(100%);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.counter-up.revealed .counter-digit {
+  transform: translateY(0);
+}
+
+/* ---------- Scroll Scale (scale based on scroll) ---------- */
+.scroll-scale {
+  transition: transform 0.1s ease-out;
+  will-change: transform;
+}
+
+/* ---------- Smooth Section ---------- */
+.smooth-section {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+/* ---------- Cursor Follow ---------- */
+.cursor-follow {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+/* ---------- Scroll Velocity Indicator ---------- */
+/* cursor: grabbing removed — was causing grab cursor across entire page during fast scroll */
+
+/* ---------- Reduced Motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal,
+  .reveal-left,
+  .reveal-right,
+  .reveal-scale,
+  .reveal-clip,
+  .reveal-blur,
+  .reveal-zoom {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+    filter: none;
+  }
+
+  .parallax {
+    transform: none !important;
+  }
+
+  .image-reveal::after {
+    display: none;
+  }
+
+  .image-reveal img {
+    transform: scale(1);
+  }
+
+  .marquee-content {
+    animation: none;
+  }
+
+  .scroll-progress {
+    display: none;
+  }
+}

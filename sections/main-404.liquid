@@ -1,0 +1,105 @@
+{%- comment -%}
+  Section: Main 404 Page
+  A beautiful premium 404 page section.
+{%- endcomment -%}
+
+<style>
+  .error-section {
+    padding-top: var(--space-20);
+    padding-bottom: var(--space-20);
+    text-align: center;
+  }
+
+  .error-container {
+    max-width: 500px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  .error-code {
+    font-size: var(--font-size-hero);
+    font-weight: var(--font-weight-black);
+    color: var(--color-accent);
+    line-height: 1;
+    margin: 0;
+  }
+
+  .error-title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-extrabold);
+    text-transform: uppercase;
+  }
+
+  .error-text {
+    font-size: var(--font-size-base);
+    color: var(--color-text-light);
+    line-height: var(--line-height-normal);
+  }
+
+  .error-search {
+    width: 100%;
+    margin-top: var(--space-2);
+  }
+
+  .error-search-form {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  .error-search-input {
+    flex-grow: 1;
+    height: 48px;
+  }
+
+  .error-search-btn {
+    height: 48px;
+    padding: 0 var(--space-6);
+  }
+</style>
+
+<section class="error-section">
+  <div class="page-width">
+    <div class="error-container">
+      <p class="error-code">404</p>
+      <h1 class="error-title">Página Não Encontrada</h1>
+      <p class="error-text">
+        Desculpe, a página que você está procurando não existe ou foi removida. Tente pesquisar abaixo ou volte para o início.
+      </p>
+
+      <!-- Search bar -->
+      <div class="error-search">
+        <form action="/search" method="get" class="error-search-form" role="search">
+          <input 
+            type="search" 
+            name="q" 
+            placeholder="O que você está procurando?" 
+            class="input error-search-input"
+            aria-label="Pesquisa"
+          >
+          <button type="submit" class="btn btn-primary error-search-btn btn-ripple">Buscar</button>
+        </form>
+      </div>
+
+      <a href="/" class="btn btn-secondary btn-ripple" style="margin-top: var(--space-4); padding: var(--space-3) var(--space-8);">
+        Voltar para a Home
+      </a>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Main 404 Page",
+  "tag": "section",
+  "class": "section",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Main 404 Page"
+    }
+  ]
+}
+{% endschema %}

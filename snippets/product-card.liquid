@@ -1,0 +1,217 @@
+{%- comment -%}
+  Snippet: product-card
+  Renders a product card with image, hover, badges, wishlist, quick-add, and info.
+  
+  Usage:
+    {% render 'product-card', product: product, show_secondary_image: true, show_quick_add: true %}
+  
+  Variables:
+    product {Object} - Shopify product object
+    show_secondary_image {Boolean} - Show hover image swap (default: true)
+    show_quick_add {Boolean} - Show quick add button on hover (default: true)
+    show_wishlist {Boolean} - Show wishlist heart button (default: true)
+    show_badge {Boolean} - Show product badges (default: true)
+    show_category {Boolean} - Show product type/category (default: true)
+    show_colors {Boolean} - Show color count (default: false)
+{%- endcomment -%}
+
+{%- liquid
+  assign show_secondary_image = show_secondary_image | default: true
+  assign show_quick_add = show_quick_add | default: true
+  assign show_wishlist = show_wishlist | default: true
+  assign show_badge = show_badge | default: true
+  assign show_category = show_category | default: false
+  assign show_colors = show_colors | default: false
+  assign current_variant = product.selected_or_first_available_variant
+  assign featured_image = product.featured_image
+  assign secondary_image = product.images[1]
+-%}
+
+<div class="product-card reveal-zoom card-hover" data-product-id="{{ product.id }}" data-product-handle="{{ product.handle }}">
+  <!-- Image Wrapper -->
+  <div class="product-card__image-outer">
+    <a href="/products/{{ product.handle | handleize }}" class="product-card__image-wrapper img-zoom" aria-label="{{ product.title }}">
+    <!-- Primary Image -->
+    {%- if featured_image != blank -%}
+      <img
+        class="product-card__image product-card__image--primary"
+        src="{{ featured_image | image_url: width: 600 }}"
+        alt="{{ featured_image.alt | escape | default: product.title }}"
+        width="600"
+        height="600"
+        loading="lazy"
+      >
+    {%- else -%}
+      <div class="product-card__image product-card__image--primary" style="background-color: var(--color-bg-secondary); display: flex; align-items: center; justify-content: center;">
+        <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+          <rect width="60" height="60" rx="8" fill="#F5F5F5"/>
+          <path d="M20 35L25 30L30 35L40 25" stroke="#CACACB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="24" cy="24" r="3" stroke="#CACACB" stroke-width="2"/>
+        </svg>
+      </div>
+    {%- endif -%}
+
+    <!-- Secondary Image (hover) -->
+    {%- if show_secondary_image and secondary_image != blank -%}
+      <img
+        class="product-card__image product-card__image--hover"
+        src="{{ secondary_image | image_url: width: 600 }}"
+        alt="{{ secondary_image.alt | escape | default: product.title }}"
+        width="600"
+        height="600"
+        loading="lazy"
+      >
+    {%- endif -%}
+
+    <!-- Badges -->
+    {%- if show_badge -%}
+      <div class="product-card__badges">
+        {%- if product.available == false -%}
+          <span class="badge badge-sale">Esgotado</span>
+        {%- else -%}
+          {%- assign created_at_timestamp = product.created_at | date: '%s' | plus: 0 -%}
+          {%- assign now_timestamp = 'now' | date: '%s' | plus: 0 -%}
+          {%- assign diff_seconds = now_timestamp | minus: created_at_timestamp -%}
+          {%- if product.tags contains 'novo' or diff_seconds < 2592000 -%}
+            <span class="badge badge-new">Novo</span>
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- if product.compare_at_price > product.price -%}
+          {%- assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price -%}
+          <span class="badge badge-sale">-{{ discount }}%</span>
+        {%- endif -%}
+
+        {%- if product.tags contains 'exclusivo' -%}
+          <span class="badge badge-exclusive">Exclusivo</span>
+        {%- endif -%}
+
+        {%- if product.tags contains 'member' -%}
+          <span class="badge badge-member">Member</span>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <!-- Wishlist Button -->
+    {%- if show_wishlist -%}
+      <button type="button" class="product-card__wishlist" aria-label="Adicionar aos favoritos"
+        data-product-id="{{ product.id }}"
+        data-product-title="{{ product.title | escape }}"
+        data-product-url="{{ product.url }}"
+        data-product-image="{{ product.featured_image | image_url: width: 200 }}"
+        data-product-price="{{ product.price | money }}">
+        {% render 'icon-heart' %}
+      </button>
+    {%- endif -%}
+
+  </a>
+
+  {%- comment -%} Color swatches removidos a pedido {%- endcomment -%}
+
+
+  <!-- Quick Add (fora do link para não navegar ao clicar) -->
+{%- if show_quick_add and product.available -%}
+    {%- liquid
+      assign cm = product.metafields.custom.swatch_colors
+      assign cm_val = cm.value | default: ''
+      if cm_val != ''
+        assign cm_size = cm_val | size
+        assign cm_first_size = cm_val | first | size
+        if cm_first_size > cm_size
+          assign cm_str = cm_val | join: '|'
+        else
+          assign cm_str = cm_val
+        endif
+      else
+        assign cm_str = ''
+      endif
+    -%}
+    <button class="product-card__quick-add" data-variant-id="{{ current_variant.id }}" data-product-handle="{{ product.handle }}" data-color-map="{{ cm_str | escape }}">
+      {{ 'sections.featured_collection.quick_add' | t | default: 'Adicionar RÃ¡pido' }}
+    </button>
+  {%- endif -%}
+  </div><!-- /.product-card__image-outer -->
+
+  <!-- Product Info -->
+  <div class="product-card__info">
+    {%- comment -%} Tipo do produto ocultado do card a pedido {%- endcomment -%}
+
+    <h3 class="product-card__title">
+      <a href="/products/{{ product.handle | handleize }}">{{ product.title }}</a>
+    </h3>
+
+    {%- if product.metafields.custom.subtitle != blank -%}
+      <p class="product-card__subtitle">{{ product.metafields.custom.subtitle }}</p>
+    {%- endif -%}
+
+    {%- if show_colors and product.options_by_name['Cor'] -%}
+      <span class="product-card__colors">{{ product.options_by_name['Cor'].values.size }} cores</span>
+    {%- endif -%}
+
+    <!-- Price block (Varejo / Atacado / PIX / Parcelamento) -->
+    {%- assign pix_pct = 5 -%}
+    {%- assign max_parcelas = 6 -%}
+    {%- assign pix_mult = 100 | minus: pix_pct -%}
+    {%- assign pix_price = product.price | times: pix_mult | divided_by: 100 -%}
+    {%- assign parcela = product.price | divided_by: max_parcelas -%}
+    {%- if settings.wholesale_enabled -%}
+      {%- assign wholesale_raw = product.metafields.custom.wholesale_price | default: product.metafields.custom.preco_atacado -%}
+      {%- assign wholesale_price_str = '' -%}
+      {%- if wholesale_raw != blank -%}
+        {%- if wholesale_raw.amount -%}
+          {%- assign wholesale_price_str = wholesale_raw.amount -%}
+        {%- elsif wholesale_raw.value.amount -%}
+          {%- assign wholesale_price_str = wholesale_raw.value.amount -%}
+        {%- elsif wholesale_raw.value -%}
+          {%- assign wholesale_price_str = wholesale_raw.value -%}
+        {%- else -%}
+          {%- assign wholesale_price_str = wholesale_raw -%}
+        {%- endif -%}
+      {%- endif -%}
+      {%- assign wholesale_price_str = wholesale_price_str | append: '' | replace: ' ', '' | replace: 'R$', '' -%}
+      {%- if wholesale_price_str contains ',' -%}
+        {%- assign wholesale_price_str = wholesale_price_str | replace: '.', '' | replace: ',', '.' -%}
+      {%- endif -%}
+      {%- assign wholesale_price_number = wholesale_price_str | times: 1.0 -%}
+      {%- assign wholesale_price_cents = 0 -%}
+      {%- if wholesale_price_number > 0 -%}
+        {%- assign wholesale_price_cents = wholesale_price_number | times: 100 | round -%}
+      {%- endif -%}
+      {%- assign wholesale_min_qty = product.metafields.custom.wholesale_min_qty.value | default: product.metafields.custom.wholesale_min_qty -%}
+    {%- endif -%}
+
+    <div class="product-card__price">
+      <div class="product-card__price-cols">
+        <div class="product-card__price-col">
+          <span class="product-card__price-label">VAREJO</span>
+          {%- if product.compare_at_price > product.price -%}
+            <span class="product-card__price-current product-card__price-sale">{{ product.price | money }}</span>
+            <span class="product-card__price-compare">{{ product.compare_at_price | money }}</span>
+          {%- else -%}
+            <span class="product-card__price-current">{{ product.price | money }}</span>
+          {%- endif -%}
+        </div>
+        {%- if settings.wholesale_enabled -%}
+        <div class="product-card__price-col product-card__price-col--atacado">
+          <span class="product-card__price-label">ATACADO</span>
+          {%- if wholesale_price_cents > 0 -%}
+            <span class="product-card__price-current">{{ wholesale_price_cents | money }}</span>
+            {%- if wholesale_min_qty != blank -%}
+              <span class="product-card__price-min-qty" style="display:block;font-size:9px;color:#9A3412;font-weight:600;">mín. {{ wholesale_min_qty }} un.</span>
+            {%- endif -%}
+          {%- else -%}
+            <span class="product-card__price-dash">—</span>
+          {%- endif -%}
+        </div>
+        {%- endif -%}
+      </div>
+
+      <div class="product-card__pix">ou {{ pix_price | money }} no PIX</div>
+
+      <div class="product-card__installments">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="13" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        <span><strong>{{ max_parcelas }}x</strong> de <strong>{{ parcela | money }}</strong> <em>SEM JUROS</em></span>
+      </div>
+    </div>
+  </div>
+</div>

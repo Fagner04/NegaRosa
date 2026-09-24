@@ -1,0 +1,272 @@
+{%- comment -%}
+  Section: DROPS
+  Exclusive sneaker launches with countdown timers and featured layout
+{%- endcomment -%}
+
+<section class="drops-section" id="drops-{{ section.id }}" style="{% if section.settings.bg_color != blank %}background: {{ section.settings.bg_color }};{% endif %}--drops-card-bg: {{ section.settings.card_bg_color | default: '#1A1A1A' }};--drops-text: {{ section.settings.text_color | default: '#FFFFFF' }};--drops-heading: {{ section.settings.heading_color | default: '#FFFFFF' }};--drops-accent: {{ section.settings.accent_color | default: '#D4AF37' }};--drops-btn-bg: {{ section.settings.btn_bg_color | default: '#FFFFFF' }};--drops-btn-text: {{ section.settings.btn_text_color | default: '#0A0A0A' }};--drops-btn-hover-bg: {{ section.settings.btn_hover_bg_color | default: '#D4AF37' }};--drops-btn-hover-text: {{ section.settings.btn_hover_text_color | default: '#0A0A0A' }};--drops-btn-border: {{ section.settings.btn_border_color | default: 'transparent' }};">
+  <div class="page-width">
+    <!-- Header -->
+    <div class="drops-section__header reveal">
+      <div>
+        <span class="drops-section__label">{{ section.settings.label | default: 'Lançamentos Exclusivos' }}</span>
+        <h2 class="drops-section__title">{{ section.settings.title | default: 'DROPS' }}</h2>
+      </div>
+      {%- if section.settings.link != blank -%}
+        <a href="{{ section.settings.link }}" class="drops-section__view-all hover-underline">
+          Ver Tudo
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9,18 15,12 9,6"></polyline>
+          </svg>
+        </a>
+      {%- endif -%}
+    </div>
+
+    <!-- DROPS Grid -->
+    <div class="drops-grid" data-stagger-container>
+      {%- for block in section.blocks -%}
+        <div class="drops-card{% if forloop.first %} drops-card--featured{% endif %} card-hover" {{ block.shopify_attributes }}>
+          <div class="drops-card__image-wrapper image-reveal" data-parallax="0.15">
+            {%- if block.settings.image != blank -%}
+              <img
+                class="drops-card__image"
+                src="{{ block.settings.image | image_url: width: 800 }}"
+                alt="{{ block.settings.name | escape }}"
+                width="800"
+                height="800"
+                loading="lazy"
+              >
+            {%- else -%}
+              <div class="drops-card__image" style="background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);"></div>
+            {%- endif -%}
+
+            <!-- Status Badge -->
+            <span class="drops-card__status drops-card__status--{{ block.settings.status }}">
+              {%- case block.settings.status -%}
+                {%- when 'upcoming' -%}
+                  Em Breve
+                {%- when 'available' -%}
+                  Disponível
+                {%- when 'sold-out' -%}
+                  Esgotado
+              {%- endcase -%}
+            </span>
+          </div>
+
+          <div class="drops-card__info">
+            {%- if block.settings.launch_date != blank -%}
+              <span class="drops-card__date">{{ block.settings.launch_date }}</span>
+            {%- endif -%}
+
+            <h3 class="drops-card__name">{{ block.settings.name | default: 'ConectWhats Elite' }}</h3>
+
+            {%- if block.settings.price != blank -%}
+              <span class="drops-card__price">{{ block.settings.price }}</span>
+            {%- endif -%}
+
+            {%- if block.settings.countdown_date != blank and block.settings.status == 'upcoming' -%}
+              <div class="drops-card__countdown reveal-scale" data-countdown="{{ block.settings.countdown_date }}">
+                <div class="countdown__item">
+                  <span class="countdown__number" data-days>00</span>
+                  <span class="countdown__label">Dias</span>
+                </div>
+                <div class="countdown__item">
+                  <span class="countdown__number" data-hours>00</span>
+                  <span class="countdown__label">Horas</span>
+                </div>
+                <div class="countdown__item">
+                  <span class="countdown__number" data-minutes>00</span>
+                  <span class="countdown__label">Min</span>
+                </div>
+                <div class="countdown__item">
+                  <span class="countdown__number counter" data-seconds>00</span>
+                  <span class="countdown__label">Seg</span>
+                </div>
+              </div>
+
+              <button class="drops-card__notify">Avise-me</button>
+            {%- elsif block.settings.status == 'available' -%}
+              {%- if block.settings.product_link != blank -%}
+                <a href="{{ block.settings.product_link }}" class="drops-card__notify" style="display: block; text-align: center; text-decoration: none;">Comprar</a>
+              {%- endif -%}
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "DROPS",
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "color_background",
+      "id": "bg_color",
+      "label": "Cor de fundo da seção",
+      "default": "#0A0A0A"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Cor de fundo dos cards",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Cor do texto geral",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Cor do título (DROPS)",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Cor de destaque (label, data, badges)",
+      "default": "#D4AF37"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg_color",
+      "label": "Cor de fundo do botão",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "btn_text_color",
+      "label": "Cor do texto do botão",
+      "default": "#0A0A0A"
+    },
+    {
+      "type": "color",
+      "id": "btn_hover_bg_color",
+      "label": "Cor de fundo do botão (hover)",
+      "default": "#D4AF37"
+    },
+    {
+      "type": "color",
+      "id": "btn_hover_text_color",
+      "label": "Cor do texto do botão (hover)",
+      "default": "#0A0A0A"
+    },
+    {
+      "type": "color",
+      "id": "btn_border_color",
+      "label": "Cor da borda do botão",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "DROPS"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Lançamentos Exclusivos"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link Ver Tudo"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "release",
+      "name": "Lançamento",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Nome do produto",
+          "default": "ConectWhats Elite Edition"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagem"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Preço",
+          "default": "R$ 1.299,99"
+        },
+        {
+          "type": "text",
+          "id": "launch_date",
+          "label": "Data de lançamento",
+          "default": "20 Jun 2026"
+        },
+        {
+          "type": "text",
+          "id": "countdown_date",
+          "label": "Data do countdown (ISO format)",
+          "info": "Ex: 2026-06-20T10:00:00",
+          "default": "2026-07-01T10:00:00"
+        },
+        {
+          "type": "select",
+          "id": "status",
+          "label": "Status",
+          "options": [
+            { "value": "upcoming", "label": "Em Breve" },
+            { "value": "available", "label": "Disponível" },
+            { "value": "sold-out", "label": "Esgotado" }
+          ],
+          "default": "upcoming"
+        },
+        {
+          "type": "url",
+          "id": "product_link",
+          "label": "Link do produto"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "DROPS",
+      "blocks": [
+        {
+          "type": "release",
+          "settings": {
+            "name": "ConectWhats Elite Edition 'Chicago'",
+            "price": "R$ 1.299,99",
+            "launch_date": "01 Jul 2026",
+            "countdown_date": "2026-07-01T10:00:00",
+            "status": "upcoming"
+          }
+        },
+        {
+          "type": "release",
+          "settings": {
+            "name": "ConectWhats ProConnect 'Midnight Navy'",
+            "price": "R$ 999,99",
+            "launch_date": "25 Jun 2026",
+            "status": "available"
+          }
+        },
+        {
+          "type": "release",
+          "settings": {
+            "name": "ConectWhats Classic 'Panda'",
+            "price": "R$ 799,99",
+            "launch_date": "Esgotado",
+            "status": "sold-out"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

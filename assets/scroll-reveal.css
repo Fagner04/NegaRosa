@@ -1,0 +1,130 @@
+/* ==========================================================================
+   Scroll Reveal — animações suaves ao entrar/sair da viewport
+   ========================================================================== */
+
+/* Estado inicial: elementos "reveláveis" começam invisíveis e deslocados */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+/* Variantes de direção */
+[data-reveal="up"]    { transform: translateY(28px); }
+[data-reveal="down"]  { transform: translateY(-28px); }
+[data-reveal="left"]  { transform: translateX(28px); }
+[data-reveal="right"] { transform: translateX(-28px); }
+[data-reveal="fade"]  { transform: none; }
+[data-reveal="zoom"]  { transform: scale(0.94); }
+
+/* Estado visível */
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+/* Delay em cascata (via data-reveal-delay="100" etc.) */
+[data-reveal-delay="100"] { transition-delay: 0.1s; }
+[data-reveal-delay="200"] { transition-delay: 0.2s; }
+[data-reveal-delay="300"] { transition-delay: 0.3s; }
+[data-reveal-delay="400"] { transition-delay: 0.4s; }
+[data-reveal-delay="500"] { transition-delay: 0.5s; }
+
+/* Auto-reveal: aplica APENAS em cards específicos (sem seções amplas
+   que podem conter dropdowns / mega-menus / bolhas com transform próprio). */
+.product-card,
+.snippet-card,
+.trending__item,
+.drops-card,
+.lookbook__item,
+.category-card,
+.trust-badges__item,
+.about-us__content,
+.newsletter__inner,
+.featured-collection__grid > *,
+.category-grid__item {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.product-card.is-visible,
+.snippet-card.is-visible,
+.trending__item.is-visible,
+.drops-card.is-visible,
+.lookbook__item.is-visible,
+.category-card.is-visible,
+.trust-badges__item.is-visible,
+.about-us__content.is-visible,
+.newsletter__inner.is-visible,
+.featured-collection__grid > .is-visible,
+.category-grid__item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Garante que dropdowns, bolhas, tooltips e menus nunca sejam afetados */
+.mega-menu,
+.mega-menu *,
+.header__cart-bubble,
+.header__cart-bubble *,
+.tooltip,
+.dropdown,
+[role="menu"],
+[role="dialog"],
+[role="tooltip"] {
+  opacity: initial;
+  transform: initial;
+  transition: initial;
+}
+
+/* Não aplicar reveal em elementos fixos/críticos. NÃO usar transform:none aqui
+   porque muitos usam translateX/Y para abrir/fechar (mobile-menu, drawers). */
+.header[data-reveal],
+.fixed-top[data-reveal],
+.top-bar[data-reveal],
+.announcement-bar[data-reveal],
+.mobile-menu[data-reveal],
+.back-to-top[data-reveal],
+.social-proof-container[data-reveal],
+.zap-widget[data-reveal],
+.hero-banner[data-reveal],
+.hero[data-reveal],
+.hero-slider[data-reveal] {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+[data-no-reveal],
+[data-no-reveal] * {
+  opacity: 1 !important;
+  transition: none !important;
+}
+
+/* Respeita preferências de movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  .product-card,
+  .snippet-card,
+  .trending__item,
+  .drops-card,
+  .lookbook__item,
+  .category-card,
+  .trust-badges__item,
+  .about-us__content,
+  .newsletter__inner,
+  .featured-collection__grid > *,
+  .category-grid__item,
+  .shopify-section > .section,
+  .shopify-section > section {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

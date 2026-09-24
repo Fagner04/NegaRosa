@@ -1,0 +1,231 @@
+{%- comment -%}
+  Section: Main Collection Product Grid
+  A clean, responsive, premium Nike-style collection page.
+{%- endcomment -%}
+
+<style>
+  .collection-section {
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-16);
+  }
+
+  .collection-header {
+    margin-bottom: var(--space-8);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .collection-header__title {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-extrabold);
+    text-transform: uppercase;
+  }
+
+  .collection-header__desc {
+    font-size: var(--font-size-base);
+    color: var(--color-text-light);
+    max-width: 800px;
+    line-height: var(--line-height-normal);
+  }
+
+  /* Utility bar (filter/sort summary) */
+  .collection-utility {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .collection-utility__count {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-light);
+  }
+
+  .collection-utility__sort {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+  }
+
+  .collection-utility__select {
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-sm);
+    background: transparent;
+    cursor: pointer;
+  }
+
+  /* Main layout */
+  .collection-layout {
+    display: flex;
+    gap: var(--space-8);
+  }
+
+  /* Sidebar Filters (optional) */
+  .collection-sidebar {
+    width: 240px;
+    flex-shrink: 0;
+  }
+
+  .collection-grid-wrapper {
+    flex-grow: 1;
+  }
+
+  /* Pagination */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-12);
+  }
+
+  .pagination__item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 var(--space-2);
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    font-size: var(--font-size-sm);
+    transition: all var(--transition-fast);
+  }
+
+  .pagination__item:hover:not(.pagination__item--current),
+  .pagination__item--current {
+    background-color: var(--color-primary);
+    color: var(--color-text-inverse);
+    border-color: var(--color-primary);
+  }
+
+  .pagination__item--disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .empty-collection-state {
+    text-align: center;
+    padding: var(--space-16) 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  @media (max-width: 767px) {
+    .collection-layout {
+      flex-direction: column;
+    }
+    .collection-sidebar {
+      display: none;
+    }
+  }
+</style>
+
+<section class="collection-section">
+  <div class="page-width">
+    
+    <!-- Collection Header -->
+    <div class="collection-header">
+      <h1 class="collection-header__title">{{ collection.title }}</h1>
+      {%- if collection.description != blank -%}
+        <div class="collection-header__desc">{{ collection.description }}</div>
+      {%- endif -%}
+    </div>
+
+    <!-- Paginated product list -->
+    {%- paginate collection.products by 12 -%}
+      {%- if collection.products.size > 0 -%}
+        
+        <!-- Utility Bar -->
+        <div class="collection-utility">
+          <div class="collection-utility__count">
+            {{ collection.all_products_count }} {{ collection.all_products_count | pluralize: 'produto', 'produtos' }}
+          </div>
+          
+          <div class="collection-utility__sort">
+            <label for="SortBy">Ordenar por:</label>
+            <select id="SortBy" class="collection-utility__select" onchange="location.href = this.value;">
+              {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+              <option value="{{ collection.url }}?sort_by=manual"{% if sort_by == 'manual' %} selected{% endif %}>Destaques</option>
+              <option value="{{ collection.url }}?sort_by=best-selling"{% if sort_by == 'best-selling' %} selected{% endif %}>Mais vendidos</option>
+              <option value="{{ collection.url }}?sort_by=title-ascending"{% if sort_by == 'title-ascending' %} selected{% endif %}>Alfabeto: A-Z</option>
+              <option value="{{ collection.url }}?sort_by=title-descending"{% if sort_by == 'title-descending' %} selected{% endif %}>Alfabeto: Z-A</option>
+              <option value="{{ collection.url }}?sort_by=price-ascending"{% if sort_by == 'price-ascending' %} selected{% endif %}>Preço: Menor para maior</option>
+              <option value="{{ collection.url }}?sort_by=price-descending"{% if sort_by == 'price-descending' %} selected{% endif %}>Preço: Maior para menor</option>
+              <option value="{{ collection.url }}?sort_by=created-ascending"{% if sort_by == 'created-ascending' %} selected{% endif %}>Data: Antigos para novos</option>
+              <option value="{{ collection.url }}?sort_by=created-descending"{% if sort_by == 'created-descending' %} selected{% endif %}>Data: Novos para antigos</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="collection-layout">
+          <!-- Main Product Grid -->
+          <div class="collection-grid-wrapper">
+            <div class="product-grid">
+              {%- for product in collection.products -%}
+                {%- render 'product-card', product: product, show_colors: true -%}
+              {%- endfor -%}
+            </div>
+
+            <!-- Pagination block -->
+            {%- if paginate.pages > 1 -%}
+              <div class="pagination">
+                {%- if paginate.previous -%}
+                  <a href="{{ paginate.previous.url }}" class="pagination__item" aria-label="Página anterior">&laquo;</a>
+                {%- endif -%}
+
+                {%- for part in paginate.parts -%}
+                  {%- if part.is_link -%}
+                    <a href="{{ part.url }}" class="pagination__item">{{ part.title }}</a>
+                  {%- else -%}
+                    {%- if part.title == paginate.current_page -%}
+                      <span class="pagination__item pagination__item--current">{{ part.title }}</span>
+                    {%- else -%}
+                      <span class="pagination__item">{{ part.title }}</span>
+                    {%- endif -%}
+                  {%- endif -%}
+                {%- endfor -%}
+
+                {%- if paginate.next -%}
+                  <a href="{{ paginate.next.url }}" class="pagination__item" aria-label="Próxima página">&raquo;</a>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+          </div>
+        </div>
+
+      {%- else -%}
+        <!-- Empty collection state -->
+        <div class="empty-collection-state">
+          <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="var(--color-secondary)" stroke-width="1.5">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <h2 class="heading-4">Nenhum produto encontrado</h2>
+          <p class="text-secondary">Parece que esta coleção está temporariamente vazia. Volte mais tarde!</p>
+          <a href="/collections/all" class="btn btn-primary btn-arrow btn-ripple">Ver todos os produtos</a>
+        </div>
+      {%- endif -%}
+
+    {%- endpaginate -%}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Main Collection Grid",
+  "tag": "section",
+  "class": "section",
+  "settings": []
+}
+{% endschema %}

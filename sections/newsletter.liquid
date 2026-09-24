@@ -1,0 +1,86 @@
+{%- comment -%}
+  Section: Newsletter
+  Email signup with Shopify customer form
+{%- endcomment -%}
+
+<section class="newsletter-section" id="newsletter-{{ section.id }}">
+  <div class="page-width">
+    <div class="newsletter-section__container reveal">
+      {%- if section.settings.title != blank -%}
+        <h2 class="newsletter-section__title">{{ section.settings.title }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.text != blank -%}
+        <p class="newsletter-section__text">{{ section.settings.text }}</p>
+      {%- endif -%}
+
+      {%- form 'customer', id: 'newsletter-form' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+
+        {%- if form.posted_successfully? -%}
+          <p class="newsletter-section__success" style="color: var(--color-success); font-weight: var(--font-weight-semibold); padding: var(--space-4); background: rgba(18, 138, 9, 0.1); border-radius: var(--border-radius-md);">
+            {{ 'general.newsletter.success' | t | default: 'Obrigado por se cadastrar!' }}
+          </p>
+        {%- endif -%}
+
+        {%- if form.errors -%}
+          <p class="newsletter-section__error" style="color: var(--color-error); font-size: var(--font-size-sm); margin-bottom: var(--space-3);">
+            {{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}
+          </p>
+        {%- endif -%}
+
+        <div class="newsletter-section__form">
+          <input
+            type="email"
+            name="contact[email]"
+            class="newsletter-section__input"
+            placeholder="{{ 'general.newsletter.email_placeholder' | t | default: 'Seu melhor e-mail' }}"
+            required
+            autocomplete="email"
+            aria-label="E-mail"
+            {%- if form.errors %} aria-invalid="true"{% endif -%}
+          >
+          <button type="submit" class="newsletter-section__btn btn-shiny btn-ripple">
+            {{ section.settings.button_text | default: 'Cadastrar' }}
+          </button>
+        </div>
+      {%- endform -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "class": "newsletter-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Fique por dentro"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Texto",
+      "default": "Cadastre-se e receba as últimas novidades, lançamentos exclusivos e ofertas especiais diretamente no seu e-mail."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Texto do botão",
+      "default": "Cadastrar"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter",
+      "settings": {
+        "title": "Fique por dentro",
+        "text": "Cadastre-se e receba as últimas novidades, lançamentos exclusivos e ofertas especiais diretamente no seu e-mail."
+      }
+    }
+  ]
+}
+{% endschema %}

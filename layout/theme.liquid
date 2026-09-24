@@ -1,0 +1,292 @@
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}" dir="{{ settings.text_direction | default: 'ltr' }}">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="theme-color" content="{{ settings.color_primary }}">
+
+  {%- if settings.favicon != blank -%}
+    <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+  {%- endif -%}
+
+  <title>
+    {{ page_title }}
+    {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+    {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+    {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+  </title>
+
+  {%- if page_description -%}
+    <meta name="description" content="{{ page_description | escape }}">
+  {%- endif -%}
+
+  <link rel="canonical" href="{{ canonical_url }}">
+
+  {%- if settings.social_twitter_link != blank -%}
+    <meta name="twitter:site" content="{{ settings.social_twitter_link }}">
+  {%- endif -%}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ page_title }}">
+  <meta name="twitter:description" content="{{ page_description | escape }}">
+
+  <meta property="og:site_name" content="{{ shop.name }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:title" content="{{ page_title }}">
+  <meta property="og:type" content="website">
+  <meta property="og:description" content="{{ page_description | escape }}">
+
+  {%- if page_image -%}
+    <meta property="og:image" content="https:{{ page_image | image_url: width: 1200 }}">
+    <meta property="og:image:secure_url" content="https:{{ page_image | image_url: width: 1200 }}">
+    <meta name="twitter:image" content="https:{{ page_image | image_url: width: 1200 }}">
+  {%- endif -%}
+
+  <!-- Preconnect to Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Theme Settings Override -->
+  <style>
+    :root {
+      --color-primary: {{ settings.color_primary | default: '#111111' }};
+      --color-secondary: {{ settings.color_secondary | default: '#757575' }};
+      --color-accent: {{ settings.color_accent | default: '#FF0000' }};
+      --color-bg: {{ settings.color_background | default: '#FFFFFF' }};
+      --color-bg-secondary: {{ settings.color_background_secondary | default: '#F5F5F5' }};
+      --color-bg-dark: {{ settings.footer_bg_color | default: '#111111' }};
+      --color-text: {{ settings.color_text | default: '#111111' }};
+      --color-text-light: {{ settings.color_text_light | default: '#757575' }};
+      --color-text-inverse: {{ settings.color_background | default: '#FFFFFF' }};
+      --color-border: {{ settings.color_border | default: '#E5E5E5' }};
+      --color-button-bg: {{ settings.color_button_bg | default: '#111111' }};
+      --color-button-text: {{ settings.color_button_text | default: '#FFFFFF' }};
+      
+      /* Header */
+      --header-bg: {{ settings.header_bg_color | default: '#FFFFFF' }};
+      --header-text: {{ settings.header_text_color | default: '#111111' }};
+      
+      /* Footer */
+      --footer-bg: {{ settings.footer_bg_color | default: '#111111' }};
+      --footer-text: {{ settings.footer_text_color | default: '#FFFFFF' }};
+      --footer-heading: {{ settings.footer_heading_color | default: '#FFFFFF' }};
+    }
+  </style>
+
+  <!-- Theme Stylesheets -->
+  {{ 'base.css' | asset_url | stylesheet_tag }}
+  {{ 'animations.css' | asset_url | stylesheet_tag }}
+  {{ 'component-header.css' | asset_url | stylesheet_tag }}
+  {{ 'component-hero.css' | asset_url | stylesheet_tag }}
+  {{ 'component-product-card.css' | asset_url | stylesheet_tag }}
+  {{ 'section-categories.css' | asset_url | stylesheet_tag }}
+  {{ 'section-drops.css' | asset_url | stylesheet_tag }}
+  {{ 'section-trending.css' | asset_url | stylesheet_tag }}
+  {{ 'section-lookbook.css' | asset_url | stylesheet_tag }}
+  {{ 'component-footer.css' | asset_url | stylesheet_tag }}
+  {{ 'responsive.css' | asset_url | stylesheet_tag }}
+  {{ 'quick-add.css' | asset_url | stylesheet_tag }}
+
+  {{ content_for_header }}
+
+  {%- if settings.frete_ativo and settings.frete_api_url != blank -%}
+    {{ 'frete-calculator.css' | asset_url | stylesheet_tag }}
+  {%- endif -%}
+  {{ 'fitting-room.css' | asset_url | stylesheet_tag }}
+  {{ 'scroll-reveal.css' | asset_url | stylesheet_tag }}
+
+  <script>
+    document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+    window.shopUrl = '{{ request.origin }}';
+    window.routes = {
+      cart_add_url: '{{ routes.cart_add_url }}',
+      cart_change_url: '{{ routes.cart_change_url }}',
+      cart_update_url: '{{ routes.cart_update_url }}',
+      cart_url: '{{ routes.cart_url }}',
+      predictive_search_url: '{{ routes.predictive_search_url }}'
+    };
+    window.cartStrings = {
+      error: `{{ 'sections.cart.cart_error' | t }}`,
+      quantityError: `{{ 'sections.cart.cart_quantity_error' | t: quantity: '[quantity]' }}`
+    };
+    window.freteMostrarPrazo = {{ settings.frete_mostrar_prazo | json }};
+  </script>
+</head>
+
+<body class="template-{{ template.name }}{% if template.suffix %} template-{{ template.name }}-{{ template.suffix }}{% endif %}" data-variant-type="{{ settings.variant_selector_type | default: 'block' }}">
+  <a class="skip-to-content-link visually-hidden" href="#MainContent">
+    {{ 'accessibility.skip_to_text' | t }}
+  </a>
+
+  <!-- Fixed Top Bar -->
+  <div class="fixed-top">
+    <!-- Announcement Bar (toggle via Configurações do tema > Barra de Anúncios) -->
+    {% if settings.show_announcement_bar %}
+      {% section 'announcement-bar' %}
+    {% endif %}
+
+    <!-- Header -->
+    {% section 'header' %}
+  </div>
+  <div class="header-spacer"></div>
+
+  <!-- Main Content -->
+  <main id="MainContent" class="main-content" role="main" tabindex="-1">
+    {{ content_for_layout }}
+  </main>
+
+  <!-- Footer -->
+  {% section 'footer' %}
+
+  <!-- Overlay for menus/modals -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Theme Scripts -->
+  <script src="{{ 'global.js' | asset_url }}" defer></script>
+  <script src="{{ 'hero-slider.js' | asset_url }}" defer></script>
+  <script src="{{ 'product-carousel.js' | asset_url }}" defer></script>
+  <script src="{{ 'animations.js' | asset_url }}" defer></script>
+  <script src="{{ 'scroll-reveal.js' | asset_url }}" defer></script>
+  {%- if settings.frete_ativo and settings.frete_api_url != blank -%}
+    <script src="{{ 'frete-calculator.js' | asset_url }}" defer></script>
+  {%- endif -%}
+
+  <!-- Quick Add Overlay -->
+  <div class="quick-add-overlay" id="quick-add-overlay"></div>
+
+  <!-- Quick Add Modal (Desktop) -->
+  <div class="quick-add-modal" id="quick-add-modal" role="dialog" aria-modal="true" aria-label="Adicionar Rápido">
+    <button class="quick-add-modal__close" id="quick-add-modal-close" aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    <div class="quick-add-modal__inner">
+      <!-- Gallery -->
+      <div class="quick-add-modal__gallery">
+        <img class="quick-add-modal__main-image" data-qa-main-image src="" alt="" width="800" height="800">
+        <button class="qa-gallery-btn qa-gallery-btn--prev" data-qa-prev aria-label="Foto anterior">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="qa-gallery-btn qa-gallery-btn--next" data-qa-next aria-label="Próxima foto">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <div class="quick-add-modal__thumbs" data-qa-dots></div>
+      </div>
+      <!-- Info -->
+      <div class="quick-add-modal__info">
+        <div>
+          <span class="qa-type" data-qa-type></span>
+          <h2 class="qa-title" data-qa-title>…</h2>
+        </div>
+        <div class="quick-add-price-group" style="display: flex; flex-direction: column; gap: 6px;">
+          <div class="qa-price-row" data-qa-price></div>
+          <div class="qa-pix" data-qa-pix></div>
+          <div class="qa-installments" data-qa-installments></div>
+        </div>
+        <div data-qa-options></div>
+        <div class="qa-actions">
+          <div class="qa-qty">
+            <button class="qa-qty__btn" data-qa-qty-minus aria-label="Diminuir">−</button>
+            <input class="qa-qty__input" type="number" value="1" min="1" aria-label="Quantidade">
+            <button class="qa-qty__btn" data-qa-qty-plus aria-label="Aumentar">+</button>
+          </div>
+          <button class="qa-add-btn btn-scale btn-ripple" data-variant-id="">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 01-8 0"></path>
+            </svg>
+            <span data-btn-text>Adicionar à Sacola</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Add Drawer (Mobile) -->
+  <div class="quick-add-drawer" id="quick-add-drawer" role="dialog" aria-modal="true" aria-label="Adicionar Rápido" aria-hidden="true">
+    <div class="quick-add-drawer__handle"></div>
+    <div class="quick-add-drawer__header">
+      <img class="quick-add-drawer__image" data-qa-thumb src="" alt="" width="90" height="90">
+      <div class="quick-add-drawer__header-info">
+        <span class="qa-type" data-qa-type></span>
+        <h2 class="qa-title" data-qa-title>…</h2>
+        <div class="quick-add-price-group" style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
+          <div class="qa-price-row" data-qa-price></div>
+          <div class="qa-pix" data-qa-pix></div>
+        </div>
+      </div>
+    </div>
+    <div class="qa-installments-drawer-wrapper" style="margin-bottom: var(--space-4);">
+      <div class="qa-installments" data-qa-installments></div>
+    </div>
+    <div data-qa-options></div>
+    <div class="qa-actions" style="margin-top: var(--space-4);">
+      <div class="qa-qty">
+        <button class="qa-qty__btn" data-qa-qty-minus aria-label="Diminuir">−</button>
+        <input class="qa-qty__input" type="number" value="1" min="1" aria-label="Quantidade">
+        <button class="qa-qty__btn" data-qa-qty-plus aria-label="Aumentar">+</button>
+      </div>
+      <button class="qa-add-btn btn-scale btn-ripple" data-variant-id="">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 01-8 0"></path>
+        </svg>
+        <span data-btn-text>Adicionar à Sacola</span>
+      </button>
+    </div>
+  </div>
+
+  <script src="{{ 'quick-add.js' | asset_url }}" defer></script>
+
+  <!-- Coupon Widget (global) -->
+  {% render 'coupon-widget' %}
+  {% render 'social-proof' %}
+
+  {% render 'conectwhats-checkout' %}
+
+  {%- if settings.addzap -%}{% render 'addzap' %}{%- endif -%}
+
+  <!-- Back to Top Button -->
+  <button type="button" id="back-to-top" class="back-to-top" aria-label="Voltar ao topo" title="Voltar ao topo">
+    <svg class="back-to-top__icon-mouse" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="6" y="2" width="12" height="20" rx="6"/>
+      <line x1="12" y1="6" x2="12" y2="10"/>
+    </svg>
+    <svg class="back-to-top__icon-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="18 15 12 9 6 15"/>
+    </svg>
+  </button>
+
+  <style>
+    .back-to-top{position:fixed;right:20px;bottom:90px;z-index:10000;width:48px;height:48px;border-radius:50%;border:1px solid rgba(0,0,0,.08);background:#fff;color:#111;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.15);opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .25s ease,transform .25s ease,visibility .25s ease,background .2s ease;padding:0;}
+    .back-to-top.is-visible{opacity:1;visibility:visible;transform:translateY(0);}
+    .back-to-top:hover{background:#111;color:#fff;}
+    .back-to-top svg{width:22px;height:22px;}
+    .back-to-top__icon-arrow{display:none;}
+    .back-to-top:hover .back-to-top__icon-mouse{display:none;}
+    .back-to-top:hover .back-to-top__icon-arrow{display:block;animation:btt-bounce .6s ease infinite;}
+    @keyframes btt-bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-3px);}}
+    @media (max-width:749px){.back-to-top{right:14px;bottom:140px;width:44px;height:44px;}.back-to-top svg{width:20px;height:20px;}}
+    @media (prefers-reduced-motion:reduce){.back-to-top,.back-to-top__icon-arrow{transition:none;animation:none;}}
+  </style>
+  <script>
+    (function(){
+      var btn=document.getElementById('back-to-top');if(!btn)return;
+      var threshold=400,ticking=false;
+      function onScroll(){if(ticking)return;ticking=true;requestAnimationFrame(function(){if(window.scrollY>threshold){btn.classList.add('is-visible');}else{btn.classList.remove('is-visible');}ticking=false;});}
+      window.addEventListener('scroll',onScroll,{passive:true});
+      btn.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+      onScroll();
+    })();
+  </script>
+
+  {% render 'wishlist-drawer' %}
+  {% render 'cookie-consent' %}
+
+</body>
+</html>

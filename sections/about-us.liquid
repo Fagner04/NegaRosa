@@ -1,0 +1,183 @@
+{%- comment -%}
+  Section: About Us ("Pouco de Nós")
+  Logo circular com selo verificado + título, texto e CTA
+{%- endcomment -%}
+
+<section class="about-us" style="background: {{ section.settings.bg_color }};" data-section-id="{{ section.id }}">
+  <div class="page-width">
+    <div class="about-us__container">
+      <!-- Logo circular com badge -->
+      <div class="about-us__media">
+        <div class="about-us__circle">
+          {%- if section.settings.logo != blank -%}
+            <img src="{{ section.settings.logo | image_url: width: 600 }}"
+                 alt="{{ section.settings.title | escape }}"
+                 loading="lazy"
+                 width="320" height="320">
+          {%- else -%}
+            <span class="about-us__logo-text">{{ shop.name }}</span>
+          {%- endif -%}
+
+          {%- if section.settings.show_badge -%}
+            <span class="about-us__badge" aria-hidden="true" title="Verificado">
+              <svg viewBox="0 0 24 24" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <path fill="{{ section.settings.badge_color }}" d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .494.083.964.237 1.4-1.272.65-2.147 2.018-2.147 3.6 0 1.495.782 2.798 1.942 3.486-.02.17-.032.34-.032.514 0 2.21 1.708 4 3.818 4 .47 0 .92-.086 1.335-.25.62 1.334 1.926 2.25 3.437 2.25 1.512 0 2.818-.916 3.437-2.25.415.163.865.248 1.336.248 2.11 0 3.818-1.79 3.818-4 0-.174-.012-.344-.033-.513 1.158-.687 1.943-1.99 1.943-3.484z"/>
+                <path fill="#fff" d="M10.16 16.59l-3.39-3.39 1.41-1.41 1.98 1.98 5.65-5.65 1.41 1.41z"/>
+              </svg>
+            </span>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <!-- Texto -->
+      <div class="about-us__content">
+        {%- if section.settings.title != blank -%}
+          <h2 class="about-us__title">{{ section.settings.title }}</h2>
+        {%- endif -%}
+
+        {%- if section.settings.description != blank -%}
+          <div class="about-us__text">{{ section.settings.description }}</div>
+        {%- endif -%}
+
+        {%- if section.settings.subtitle != blank -%}
+          <p class="about-us__subtitle"><strong><em>{{ section.settings.subtitle }}</em></strong></p>
+        {%- endif -%}
+
+        {%- if section.settings.cta_helper != blank -%}
+          <p class="about-us__helper">{{ section.settings.cta_helper }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.button_label != blank -%}
+          <a href="{{ section.settings.button_url }}" class="about-us__btn">
+            {{ section.settings.button_label }}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-us { padding: 60px 0; }
+  .about-us__container {
+    display: grid;
+    grid-template-columns: minmax(260px, 1fr) 1.4fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .about-us__media { display: flex; justify-content: center; }
+  .about-us__circle {
+    position: relative;
+    width: clamp(220px, 28vw, 340px);
+    aspect-ratio: 1 / 1;
+    overflow: visible;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .about-us__circle::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+    z-index: 0;
+  }
+  .about-us__circle img {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+  }
+  .about-us__logo-text {
+    position: relative;
+    z-index: 1;
+    font-weight: 700;
+    font-size: 1.4rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .about-us__badge {
+    position: absolute;
+    /* Centro do selo exatamente sobre a borda do círculo, no ângulo de 45° */
+    top: calc(50% - 35.355%);
+    left: calc(50% + 35.355%);
+    transform: translate(-50%, -50%);
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.22));
+    z-index: 2;
+  }
+  .about-us__badge svg { display: block; width: 100%; height: 100%; }
+
+
+  .about-us__content { max-width: 560px; }
+  .about-us__title {
+    font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+    font-weight: 700;
+    margin: 0 0 16px;
+    color: #111;
+  }
+  .about-us__text,
+  .about-us__text p {
+    color: #555;
+    line-height: 1.6;
+    margin: 0 0 14px;
+    font-size: 1rem;
+  }
+  .about-us__subtitle { color: #111; margin: 18px 0 4px; }
+  .about-us__helper { color: #555; margin: 0 0 20px; }
+  .about-us__btn {
+    display: inline-block;
+    padding: 14px 32px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #6b6b6b 0%, #2b2b2b 100%);
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .about-us__btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,0,0,0.22); }
+
+  @media (max-width: 768px) {
+    .about-us { padding: 40px 0; }
+    .about-us__container {
+      grid-template-columns: 1fr;
+      gap: 28px;
+      text-align: center;
+    }
+    .about-us__content { margin: 0 auto; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Sobre Nós",
+  "tag": "section",
+  "class": "section-about-us",
+  "settings": [
+    { "type": "color", "id": "bg_color", "label": "Cor de fundo", "default": "#f5f5f5" },
+    { "type": "image_picker", "id": "logo", "label": "Logo / imagem (circular)" },
+    { "type": "checkbox", "id": "show_badge", "label": "Mostrar selo verificado", "default": true },
+    { "type": "color", "id": "badge_color", "label": "Cor do selo", "default": "#22c55e" },
+    { "type": "text", "id": "title", "label": "Título", "default": "Pouco De Nós" },
+    { "type": "richtext", "id": "description", "label": "Descrição", "default": "<p>Desenvolvidos para atender suas necessidades e prezar pela satisfação e segurança entregando produtos da mais alta qualidade da melhor forma possível!</p>" },
+    { "type": "text", "id": "subtitle", "label": "Subtítulo (destaque)", "default": "Quer saber mais sobre nós e nossa equipe?" },
+    { "type": "text", "id": "cta_helper", "label": "Texto antes do botão", "default": "Clique no botão abaixo" },
+    { "type": "text", "id": "button_label", "label": "Texto do botão", "default": "Saber mais sobre nós" },
+    { "type": "url", "id": "button_url", "label": "Link do botão" }
+  ],
+  "presets": [
+    { "name": "Sobre Nós" }
+  ]
+}
+{% endschema %}

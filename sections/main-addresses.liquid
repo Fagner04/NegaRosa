@@ -1,0 +1,118 @@
+{%- comment -%}
+  Section: Main Addresses
+  Customer address book management
+{%- endcomment -%}
+
+<section style="padding-top: var(--space-12); padding-bottom: var(--space-16);">
+  <div class="page-width">
+    <div style="margin-bottom: var(--space-8); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4);">
+      <div>
+        <a href="/account" style="font-size: var(--font-size-sm); color: var(--color-text-light); text-decoration: underline; display: inline-flex; align-items: center; gap: var(--space-1);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15,18 9,12 15,6"></polyline>
+          </svg>
+          Minha Conta
+        </a>
+        <h1 style="font-size: var(--font-size-2xl); font-weight: var(--font-weight-extrabold); text-transform: uppercase; margin-top: var(--space-3);">Meus Endereços</h1>
+      </div>
+    </div>
+
+    <!-- Novo endereço -->
+    <div style="margin-bottom: var(--space-10);">
+      <h2 style="font-size: var(--font-size-lg); font-weight: var(--font-weight-bold); text-transform: uppercase; margin-bottom: var(--space-5);">Adicionar Novo Endereço</h2>
+      {%- form 'customer_address', customer.new_address -%}
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); max-width: 600px;">
+          <div>
+            <label style="font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); text-transform: uppercase; display: block; margin-bottom: var(--space-1);">Nome</label>
+            <input type="text" name="address[first_name]" value="{{ form.first_name }}" autocomplete="given-name"
+              style="width:100%; height:44px; padding: 0 var(--space-3); border: 1px solid var(--color-border); border-radius: var(--border-radius-sm); font-size: var(--font-size-sm); background: var(--color-bg); color: var(--color-text); outline:none;">
+          </div>
+          <div>
+            <label style="font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); text-transform: uppercase; display: block; margin-bottom: var(--space-1);">Sobrenome</label>
+            <input type="text" name="address[last_name]" value="{{ form.last_name }}" autocomplete="family-name"
+              style="width:100%; height:44px; padding: 0 var(--space-3); border: 1px solid var(--color-border); border-radius: var(--border-radius-sm); font-size: var(--font-size-sm); background: var(--color-bg); color: var(--color-text); outline:none;">
+          </div>
+          <div style="grid-column: 1 / -1;">
+            <label style="font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); text-transform: uppercase; display: block; margin-bottom: var(--space-1);">Endereço</label>
+            <input type="text" name="address[address1]" value="{{ form.address1 }}" autocomplete="address-line1"
+              style="width:100%; height:44px; padding: 0 var(--space-3); border: 1px solid var(--color-border); border-radius: var(--border-radius-sm); font-size: var(--font-size-sm); background: var(--color-bg); color: var(--color-text); outline:none;">
+          </div>
+          <div>
+            <label style="font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); text-transform: uppercase; display: block; margin-bottom: var(--space-1);">Cidade</label>
+            <input type="text" name="address[city]" value="{{ form.city }}" autocomplete="address-level2"
+              style="width:100%; height:44px; padding: 0 var(--space-3); border: 1px solid var(--color-border); border-radius: var(--border-radius-sm); font-size: var(--font-size-sm); background: var(--color-bg); color: var(--color-text); outline:none;">
+          </div>
+          <div>
+            <label style="font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); text-transform: uppercase; display: block; margin-bottom: var(--space-1);">CEP</label>
+            <input type="text" name="address[zip]" value="{{ form.zip }}" autocomplete="postal-code"
+              style="width:100%; height:44px; padding: 0 var(--space-3); border: 1px solid var(--color-border); border-radius: var(--border-radius-sm); font-size: var(--font-size-sm); background: var(--color-bg); color: var(--color-text); outline:none;">
+          </div>
+          <div>
+            <label style="font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); text-transform: uppercase; display: block; margin-bottom: var(--space-1);">Estado</label>
+            <input type="text" name="address[province]" value="{{ form.province }}" autocomplete="address-level1"
+              style="width:100%; height:44px; padding: 0 var(--space-3); border: 1px solid var(--color-border); border-radius: var(--border-radius-sm); font-size: var(--font-size-sm); background: var(--color-bg); color: var(--color-text); outline:none;">
+          </div>
+          <div>
+            <label style="font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); text-transform: uppercase; display: block; margin-bottom: var(--space-1);">País</label>
+            <select name="address[country]" autocomplete="country"
+              style="width:100%; height:44px; padding: 0 var(--space-3); border: 1px solid var(--color-border); border-radius: var(--border-radius-sm); font-size: var(--font-size-sm); background: var(--color-bg); color: var(--color-text); outline:none;">
+              {{ all_country_option_tags }}
+            </select>
+          </div>
+          <div>
+            <label style="font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); text-transform: uppercase; display: block; margin-bottom: var(--space-1);">Telefone</label>
+            <input type="tel" name="address[phone]" value="{{ form.phone }}" autocomplete="tel"
+              style="width:100%; height:44px; padding: 0 var(--space-3); border: 1px solid var(--color-border); border-radius: var(--border-radius-sm); font-size: var(--font-size-sm); background: var(--color-bg); color: var(--color-text); outline:none;">
+          </div>
+          <div style="grid-column: 1 / -1;">
+            <label style="display: flex; align-items: center; gap: var(--space-2); font-size: var(--font-size-sm); cursor: pointer;">
+              <input type="checkbox" name="address[default]" value="1" {% if customer.default_address == customer.new_address %}checked{% endif %}> Definir como endereço padrão
+            </label>
+          </div>
+          <div style="grid-column: 1 / -1;">
+            <button type="submit" class="btn btn-primary btn-ripple btn-scale" style="height: 48px; padding: 0 var(--space-8); font-weight: var(--font-weight-bold); text-transform: uppercase;">
+              Adicionar Endereço
+            </button>
+          </div>
+        </div>
+      {%- endform -%}
+    </div>
+
+    <!-- Endereços existentes -->
+    {%- if customer.addresses.size > 0 -%}
+      <h2 style="font-size: var(--font-size-lg); font-weight: var(--font-weight-bold); text-transform: uppercase; margin-bottom: var(--space-5);">
+        Endereços Salvos ({{ customer.addresses.size }})
+      </h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--space-5);">
+        {%- for address in customer.addresses -%}
+          <div style="border: 1px solid var(--color-border); border-radius: var(--border-radius-md); padding: var(--space-5);">
+            {%- if address == customer.default_address -%}
+              <span style="font-size: var(--font-size-xs); font-weight: var(--font-weight-bold); text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-accent); display: block; margin-bottom: var(--space-2);">Padrão</span>
+            {%- endif -%}
+            <p style="font-weight: var(--font-weight-semibold);">{{ address.first_name }} {{ address.last_name }}</p>
+            <p style="font-size: var(--font-size-sm); color: var(--color-text-light); margin-top: var(--space-1); line-height: 1.6;">
+              {{ address.address1 }}<br>
+              {%- if address.address2 != blank -%}{{ address.address2 }}<br>{%- endif -%}
+              {{ address.city }}, {{ address.province_code }} {{ address.zip }}<br>
+              {{ address.country }}
+            </p>
+            <div style="display: flex; gap: var(--space-3); margin-top: var(--space-4);">
+              <a href="/account/addresses/{{ address.id }}" style="font-size: var(--font-size-sm); text-decoration: underline;">Editar</a>
+              <a href="/account/addresses/{{ address.id }}" data-method="delete" style="font-size: var(--font-size-sm); text-decoration: underline; color: var(--color-accent);"
+                onclick="return confirm('Tem certeza que deseja excluir este endereço?')">Excluir</a>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Endereços",
+  "tag": "section",
+  "class": "section",
+  "settings": []
+}
+{% endschema %}

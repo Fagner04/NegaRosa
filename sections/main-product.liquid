@@ -1,0 +1,2832 @@
+{%- comment -%}
+  Section: Main Product Details
+  A premium, interactive Nike-style product detail page.
+{%- endcomment -%}
+
+<style>
+  .product-section {
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-16);
+  }
+
+  .product-back {
+    margin-bottom: var(--space-6);
+  }
+  .product-back__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    background: transparent;
+    border: 1px solid var(--color-border, rgba(0,0,0,0.15));
+    border-radius: var(--border-radius-full, 999px);
+    color: var(--color-text, #111);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
+  .product-back__btn:hover {
+    background: var(--color-text, #111);
+    color: var(--color-background, #fff);
+    border-color: var(--color-text, #111);
+  }
+  .product-back__btn svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s ease;
+  }
+  .product-back__btn:hover svg {
+    transform: translateX(-3px);
+  }
+  @media (max-width: 749px) {
+    .product-back {
+      margin-bottom: var(--space-4);
+    }
+    .product-back__btn {
+      padding: var(--space-2) var(--space-3);
+      font-size: 13px;
+    }
+  }
+
+  .product-container {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: var(--space-12);
+    align-items: start;
+  }
+
+  /* Gallery */
+  .product-gallery {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "thumbs main"
+      "desc desc";
+    gap: var(--space-3);
+    align-items: start;
+    direction: ltr;
+  }
+
+  /* Thumbnails — coluna vertical à esquerda, abrange todas as linhas */
+  .product-gallery__thumbs {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    max-height: 560px;
+    overflow-y: auto;
+    scrollbar-width: none;
+    grid-area: thumbs;
+  }
+
+  .product-gallery__thumbs::-webkit-scrollbar { display: none; }
+
+  .product-gallery__thumb {
+    width: 76px;
+    height: 76px;
+    flex-shrink: 0;
+    overflow: hidden;
+    background-color: var(--color-bg-secondary);
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color var(--transition-fast);
+  }
+
+  .product-gallery__thumb.active,
+  .product-gallery__thumb:hover {
+    border-color: var(--color-primary);
+  }
+
+  .product-gallery__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Foto principal */
+  .product-gallery__main {
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    background-color: var(--color-bg-secondary);
+    border-radius: var(--border-radius-lg);
+    grid-area: main;
+    width: 100%;
+  }
+
+  /* Descrição sempre abaixo da foto, ocupando largura total da galeria */
+  .product-gallery > .product-description-full {
+    grid-area: desc;
+  }
+
+  /* Quando o produto tem apenas 1 imagem (sem thumbnails), a foto ocupa toda a largura */
+  .product-gallery--single {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "main"
+      "desc";
+  }
+  .product-gallery--single .product-gallery__main {
+    grid-area: main;
+  }
+
+  .product-gallery__main img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .product-gallery__main:hover img {
+    transform: scale(1.04);
+  }
+
+  /* Mobile carousel — hidden on desktop */
+  .product-gallery__mobile-carousel,
+  .product-gallery__mobile-dots { display: none; }
+
+  @media (max-width: 767px) {
+    .product-gallery {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "main"
+        "desc";
+    }
+    .product-gallery__thumbs { display: none; }
+    .product-gallery__main {
+      order: 1;
+      aspect-ratio: auto;
+      grid-area: main;
+      position: relative;
+      overflow: visible;
+      background: transparent;
+      padding: 0;
+    }
+    /* Hide the single static image on mobile — carousel takes over */
+    .product-gallery__main > #ProductMainImage { display: none; }
+
+    .product-gallery__mobile-carousel {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      gap: 0;
+      touch-action: pan-x;
+      border-radius: var(--border-radius-lg, 12px);
+      background: var(--color-bg-secondary);
+    }
+    .product-gallery__mobile-carousel::-webkit-scrollbar { display: none; }
+    .product-gallery__mobile-slide {
+      flex: 0 0 100%;
+      scroll-snap-align: center;
+      scroll-snap-stop: always;
+      aspect-ratio: 1;
+    }
+    .product-gallery__mobile-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      pointer-events: none;
+    }
+    .product-gallery__mobile-dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .product-gallery__mobile-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      border: none;
+      padding: 0;
+      background: rgba(0,0,0,.25);
+      cursor: pointer;
+      transition: background .2s, transform .2s;
+    }
+    .product-gallery__mobile-dot.active {
+      background: var(--color-primary, #000);
+      transform: scale(1.25);
+    }
+  }
+
+
+  /* Info / Right Column */
+  .product-info {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-8));
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .product-info__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .product-info__type {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+  }
+
+  .product-info__title {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-extrabold);
+    line-height: var(--line-height-tight);
+    text-transform: uppercase;
+  }
+
+  .product-info__price-wrapper {
+    margin-top: var(--space-2);
+  }
+
+  .product-info__price-wrapper .price {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .product-info__price-wrapper .price--compare {
+    font-size: var(--font-size-md);
+    color: var(--color-text-light);
+    text-decoration: line-through;
+    margin-left: var(--space-2);
+  }
+
+  .product-info__price-wrapper .price--discount {
+    font-size: var(--font-size-sm);
+    background-color: var(--color-accent);
+    color: var(--color-text-inverse);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--border-radius-sm);
+    font-weight: var(--font-weight-bold);
+    margin-left: var(--space-2);
+  }
+
+  .product-info__installments {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-light);
+    margin-top: var(--space-1);
+  }
+
+  .product-info__pix {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+  }
+  .product-info__pix svg { flex-shrink: 0; }
+
+  /* Form and Options */
+  .product-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-6) 0;
+  }
+
+  .option-selector {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .option-selector__label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    display: flex;
+    justify-content: flex-start;
+    gap: var(--space-1);
+  }
+
+  .option-selector__selected {
+    font-weight: var(--font-weight-regular);
+    color: var(--color-text-light);
+    text-transform: none;
+  }
+
+  /* Size Selector (Nike Style Grid) */
+  .size-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--space-2);
+  }
+
+  .size-button {
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    transition: all var(--transition-fast);
+    background: var(--color-bg);
+  }
+
+  .size-button:hover:not(.disabled) {
+    border-color: var(--color-primary);
+  }
+
+  .size-button.active {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary);
+    color: var(--color-text-inverse);
+  }
+
+  /* Esgotado mas selecionado — borda destaque, fundo acinzentado, texto visível */
+  .size-button.active.unavailable,
+  .size-button.active.disabled {
+    border-color: var(--color-primary);
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text);
+    opacity: 0.7;
+  }
+
+  .size-button.disabled {
+    opacity: 0.5;
+    background-color: var(--color-bg-secondary);
+    cursor: pointer;
+    position: relative;
+  }
+
+  .size-button.disabled::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: var(--color-border-dark);
+    transform: rotate(-25deg);
+  }
+
+  /* Color Swatches */
+  .color-swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .color-swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--color-border);
+    cursor: pointer;
+    position: relative;
+    transition: all var(--transition-fast);
+    background-size: cover;
+  }
+
+  .color-swatch:hover {
+    transform: scale(1.1);
+  }
+
+  .color-swatch.active {
+    border-color: var(--color-primary);
+    transform: scale(1.1);
+  }
+
+  .color-swatch.unavailable,
+  .color-swatch[disabled] {
+    opacity: 0.35;
+    cursor: not-allowed;
+    position: relative;
+  }
+  .color-swatch.unavailable::after,
+  .color-swatch[disabled]::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--color-border-dark);
+    border-radius: 50%;
+    background: linear-gradient(
+      to bottom right,
+      transparent calc(50% - 1px),
+      var(--color-border-dark) calc(50% - 1px),
+      var(--color-border-dark) calc(50% + 1px),
+      transparent calc(50% + 1px)
+    );
+  }
+
+  .variant-image-swatch.unavailable,
+  .variant-image-swatch[disabled] {
+    opacity: 0.35;
+    cursor: not-allowed;
+    position: relative;
+  }
+  .variant-image-swatch.unavailable::after,
+  .variant-image-swatch[disabled]::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--color-border-dark);
+    border-radius: var(--border-radius-md);
+    background: linear-gradient(
+      to bottom right,
+      transparent calc(50% - 1px),
+      var(--color-border-dark) calc(50% - 1px),
+      var(--color-border-dark) calc(50% + 1px),
+      transparent calc(50% + 1px)
+    );
+  }
+
+  .size-button.unavailable {
+    opacity: 0.35;
+    background-color: var(--color-bg-secondary);
+    cursor: pointer;
+    position: relative;
+  }
+  .size-button.unavailable::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--color-border-dark);
+    border-radius: var(--border-radius-sm);
+    background: linear-gradient(
+      to bottom right,
+      transparent calc(50% - 1.5px),
+      var(--color-border-dark) calc(50% - 1.5px),
+      var(--color-border-dark) calc(50% + 1.5px),
+      transparent calc(50% + 1.5px)
+    );
+  }
+
+  /* Em modo block, cores esgotadas mostram cursor not-allowed */
+  .option-selector[data-option-name^="cor"] .size-button.unavailable,
+  .option-selector[data-option-name^="color"] .size-button.unavailable {
+    cursor: not-allowed;
+  }
+
+  /* Variant Image Swatches */
+  .variant-image-swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .variant-image-swatch {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--border-radius-md);
+    border: 2px solid var(--color-border);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    background-color: var(--color-bg-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .variant-image-swatch img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .variant-image-swatch__label {
+    font-size: 10px;
+    font-weight: var(--font-weight-semibold);
+    text-align: center;
+    line-height: 1.2;
+    padding: 2px;
+    color: var(--color-text);
+  }
+
+  .variant-image-swatch:hover {
+    border-color: var(--color-primary);
+    transform: scale(1.05);
+  }
+
+  .variant-image-swatch.active {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 1px var(--color-primary);
+  }
+
+  /* Quantity and Buttons */
+  .qty-selector {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .qty-input-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-full);
+    overflow: hidden;
+    height: 48px;
+  }
+
+  .qty-btn {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-lg);
+    background-color: var(--color-bg);
+    transition: background-color var(--transition-fast);
+  }
+
+  .qty-btn:hover {
+    background-color: var(--color-bg-secondary);
+  }
+
+  .qty-input {
+    width: 40px;
+    text-align: center;
+    border: none;
+    background: transparent;
+    font-weight: var(--font-weight-semibold);
+    outline: none;
+  }
+
+  .product-form__buttons {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+  }
+
+  .btn-add-to-cart {
+    height: 54px;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+  }
+
+  /* Accordion details */
+  .product-details {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .product-details__item {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .product-details__trigger {
+    width: 100%;
+    padding: var(--space-4) 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    font-size: var(--font-size-base);
+  }
+
+  .product-details__trigger svg {
+    transition: transform var(--transition-base);
+    width: 20px;
+    height: 20px;
+  }
+
+  .product-details__item.active .product-details__trigger svg {
+    transform: rotate(180deg);
+  }
+
+  .product-details__content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--transition-base) ease;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-light);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .product-details__item.active .product-details__content {
+    max-height: 300px;
+    padding-bottom: var(--space-4);
+  }
+
+  @media (max-width: 991px) {
+    .product-container {
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+    }
+    .product-info {
+      position: static;
+    }
+  }
+
+  /* Descrição dentro da coluna esquerda (galeria) */
+  .product-description-full {
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .product-description-full__title {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    margin-bottom: var(--space-4);
+    color: var(--color-text);
+  }
+
+  .product-description-full__wrapper {
+    position: relative;
+    overflow: hidden;
+    max-height: 110px;
+    transition: max-height 0.4s ease;
+  }
+
+  .product-description-full__wrapper.expanded {
+    max-height: 2000px;
+  }
+
+  .product-description-full__content {
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-relaxed);
+    color: var(--color-text);
+  }
+
+  .product-description-full__content p {
+    margin-bottom: var(--space-3);
+    color: var(--color-text-light);
+  }
+
+  .product-description-full__content strong {
+    color: var(--color-text);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .product-description-full__fade {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background: linear-gradient(to bottom, transparent, var(--color-bg, #fff));
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .product-description-full__wrapper.expanded .product-description-full__fade {
+    opacity: 0;
+  }
+
+  .product-description-full__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+    padding: var(--space-2) var(--space-4);
+    border: 1.5px solid var(--color-primary);
+    border-radius: var(--border-radius-sm);
+    background: transparent;
+    color: var(--color-text);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .product-description-full__toggle:hover {
+    background: var(--color-primary);
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .product-description-full__toggle svg {
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  .product-description-full__toggle.expanded svg {
+    transform: rotate(180deg);
+  }
+
+  /* Size Guide Modal */
+  .size-guide-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    padding: var(--space-2) 0;
+    margin: var(--space-3) 0;
+    transition: color var(--transition-fast);
+  }
+
+  .size-guide-trigger:hover {
+    color: var(--color-text);
+  }
+
+  .size-guide-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    align-items: flex-start;
+    justify-content: center;
+    padding: var(--space-12) var(--space-4) var(--space-4);
+  }
+
+  .size-guide-overlay.open {
+    display: flex;
+  }
+
+  .size-guide-modal {
+    background-color: var(--color-bg);
+    border-radius: var(--border-radius-lg);
+    width: 100%;
+    max-width: 500px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-xl);
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .size-guide-overlay.open .size-guide-modal {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  .size-guide-overlay.closing .size-guide-modal {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+    transition: opacity 0.15s ease,
+                transform 0.15s ease;
+  }
+
+  .size-guide-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-5) var(--space-6);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .size-guide-modal__title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .size-guide-modal__close {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color var(--transition-fast);
+  }
+
+  .size-guide-modal__close:hover {
+    background-color: var(--color-bg-secondary);
+  }
+
+  .size-guide-modal__body {
+    padding: var(--space-6);
+    overflow-y: auto;
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-normal);
+  }
+
+  .size-guide-modal__empty {
+    text-align: center;
+    padding: var(--space-10) 0;
+    color: var(--color-text-muted);
+  }
+
+  .size-guide-modal__empty-hint {
+    font-size: var(--font-size-xs);
+    margin-top: var(--space-2);
+  }
+
+  .size-guide-modal__loading {
+    text-align: center;
+    padding: var(--space-6);
+    color: var(--color-text-muted);
+  }
+
+  /* Tabs */
+  .sg-tabs {
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .sg-tab {
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--border-radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text-muted);
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .sg-tab:hover {
+    background-color: var(--color-bg-tertiary, #f0f0f0);
+    color: var(--color-text);
+  }
+
+  .sg-tab.active {
+    background-color: var(--color-bg-secondary, #f7f7f7);
+    color: var(--color-text, #111111);
+    box-shadow: inset 0 0 0 1px var(--color-border, rgba(0,0,0,0.12));
+  }
+
+  /* Tables */
+  .sg-table-wrap {
+    display: none;
+    animation: fadeIn 0.25s ease;
+  }
+
+  .sg-table-wrap.active {
+    display: block;
+  }
+
+  .sg-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-sm);
+  }
+
+  .sg-table th {
+    background-color: var(--color-bg-secondary);
+    font-weight: var(--font-weight-semibold);
+    text-align: left;
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 2px solid var(--color-border);
+    white-space: nowrap;
+    font-size: var(--font-size-xs);
+  }
+
+  .sg-table td {
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+    font-size: var(--font-size-xs);
+  }
+
+  .sg-table tbody tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.02);
+  }
+
+  .sg-footnote {
+    margin-top: var(--space-3);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
+
+  @media (max-width: 640px) {
+    .size-guide-overlay {
+      padding: 0;
+      align-items: flex-end;
+    }
+
+    .size-guide-modal {
+      max-width: 100%;
+      max-height: 90vh;
+      border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+      opacity: 0;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.2s ease;
+    }
+
+    .size-guide-overlay.open .size-guide-modal {
+      transform: translateY(0);
+    }
+
+    .size-guide-overlay.closing .size-guide-modal {
+      opacity: 0;
+      transform: translateY(100%);
+      transition: transform 0.2s ease,
+                  opacity 0.15s ease;
+    }
+
+    .sg-tab {
+      padding: var(--space-1) var(--space-3);
+      font-size: 11px;
+    }
+    .sg-table th,
+    .sg-table td {
+      padding: var(--space-1) var(--space-2);
+      font-size: 11px;
+    }
+  }
+
+  /* =====================================================
+     RESPONSIVIDADE MOBILE — Página de Produto (escopo isolado)
+     ===================================================== */
+  @media (max-width: 767px) {
+    .product-section { padding: var(--space-4) 0 var(--space-8); }
+    .product-container { gap: var(--space-6); }
+
+    /* Título e preços */
+    .product-info { gap: var(--space-4); }
+    .product-info__title { font-size: var(--font-size-2xl); }
+    .product-info__type { font-size: 11px; }
+    .product-info__price-wrapper .price { font-size: var(--font-size-xl); }
+    .product-info__price-wrapper .price--compare { font-size: var(--font-size-sm); }
+    .product-info__price-wrapper .price--discount { font-size: 11px; padding: 2px 6px; }
+    .product-info__installments { font-size: 12px; }
+    .product-info__pix { font-size: 12px; flex-wrap: wrap; }
+
+    /* Formulário */
+    .product-form { gap: var(--space-4); padding: var(--space-4) 0; }
+    .option-selector { gap: var(--space-2); }
+    .option-selector__label { font-size: 12px; flex-wrap: wrap; }
+
+    /* Seletores de tamanho e cor */
+    .size-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .size-button { height: 40px; font-size: 13px; }
+    .color-swatch { width: 32px; height: 32px; }
+    .variant-image-swatch { width: 40px; height: 40px; }
+
+    /* Quantidade e botão principal */
+    .qty-selector { flex-wrap: wrap; gap: var(--space-3); }
+    .qty-input-wrapper { height: 44px; }
+    .qty-btn { width: 44px; height: 44px; }
+    .product-form__buttons { gap: var(--space-2); margin-top: 0; }
+    .btn-add-to-cart { height: 50px; font-size: 14px; }
+
+    /* Favoritos e compartilhar */
+    .product-social { gap: var(--space-3); margin-top: 0; }
+    .product-social__wishlist { height: 48px; font-size: 14px; }
+    .product-social__share {
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      justify-content: center;
+    }
+    .product-social__share-label { width: 100%; text-align: center; font-size: 12px; }
+    .product-social__share-btn { font-size: 13px; }
+
+    /* Card de cálculo de frete */
+    .frete-calc { padding: 1rem; margin-top: 1rem; }
+    .frete-calc__input-group { flex-wrap: wrap; }
+    .frete-calc__input { height: 44px; font-size: 14px; flex: 1 1 100%; }
+    .frete-calc__badge {
+      height: 36px;
+      flex: 1 1 100%;
+      justify-content: center;
+      font-size: 11px;
+    }
+    .frete-calc__item {
+      padding: 0.5rem 0.625rem;
+      gap: 0.375rem;
+    }
+    .frete-calc__servico { font-size: 12px; }
+    .frete-calc__preco { font-size: 13px; }
+    .frete-calc__prazo { font-size: 11px; }
+
+    /* Trust badges — grade 3 colunas compacta em vez de virar 1 coluna a 480px */
+    .product-trust__row { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .product-trust__item { font-size: 10px; gap: 4px; }
+    .product-trust__item strong { font-size: 11px; }
+    .product-trust__item svg { width: 20px; height: 20px; }
+    .product-trust__payments-icons { gap: 4px; }
+    .pay-icon { width: 40px; height: 26px; }
+
+    /* Accordion */
+    .product-details__trigger { padding: var(--space-3) 0; font-size: 13px; }
+
+    /* Descrição completa */
+    .product-description-full { margin-top: var(--space-6); padding-top: var(--space-4); }
+    .product-description-full__title { font-size: 13px; }
+  }
+
+  @media (max-width: 480px) {
+    .product-info__title { font-size: var(--font-size-xl); }
+    .size-grid { grid-template-columns: repeat(4, 1fr); }
+    .product-trust__row { grid-template-columns: repeat(3, 1fr) !important; }
+    .product-trust__item { flex-direction: column !important; text-align: center !important; }
+    .pay-icon { width: 36px; height: 24px; }
+  }
+</style>
+
+<section class="product-section">
+  <div class="page-width">
+    <div class="product-back">
+      <a href="{% if collection %}{{ collection.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}"
+         class="product-back__btn"
+         onclick="if(document.referrer && history.length > 1){event.preventDefault(); history.back();}"
+         aria-label="Voltar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>Voltar</span>
+      </a>
+    </div>
+    <div class="product-container">
+      
+      <!-- Left: Media Gallery -->
+      <div class="product-gallery reveal-left{% if product.images.size <= 1 %} product-gallery--single{% endif %}">
+
+        <!-- Thumbnails (coluna vertical à esquerda) -->
+        {%- if product.images.size > 1 -%}
+          <div class="product-gallery__thumbs">
+            {%- for image in product.images -%}
+              <button class="product-gallery__thumb{% if forloop.first %} active{% endif %}"
+                      data-image-url="{{ image | image_url: width: 1000 }}"
+                      aria-label="Ver imagem {{ forloop.index }}">
+                <img src="{{ image | image_url: width: 200 }}"
+                     alt="{{ product.title | escape }} - {{ forloop.index }}"
+                     width="76" height="76"
+                     loading="lazy">
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        <!-- Foto principal -->
+        <div class="product-gallery__main">
+          {%- if product.featured_image != blank -%}
+            <img id="ProductMainImage"
+                 src="{{ product.featured_image | image_url: width: 1000 }}"
+                 alt="{{ product.title | escape }}"
+                 width="1000" height="1000"
+                 loading="eager">
+          {%- else -%}
+            <div style="background-color:var(--color-bg-secondary);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+              <svg width="100" height="100" viewBox="0 0 60 60" fill="none">
+                <rect width="60" height="60" rx="8" fill="#F5F5F5"/>
+                <path d="M20 35L25 30L30 35L40 25" stroke="#CACACB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="24" cy="24" r="3" stroke="#CACACB" stroke-width="2"/>
+              </svg>
+            </div>
+          {%- endif -%}
+
+          {%- if product.images.size > 1 -%}
+            <!-- Carrossel mobile (swipe) -->
+            <div class="product-gallery__mobile-carousel" id="ProductMobileCarousel" aria-label="Galeria de fotos do produto">
+              {%- for image in product.images -%}
+                <div class="product-gallery__mobile-slide" data-index="{{ forloop.index0 }}">
+                  <img src="{{ image | image_url: width: 1000 }}"
+                       alt="{{ product.title | escape }} - {{ forloop.index }}"
+                       width="1000" height="1000"
+                       loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
+                </div>
+              {%- endfor -%}
+            </div>
+            <div class="product-gallery__mobile-dots" id="ProductMobileDots">
+              {%- for image in product.images -%}
+                <button type="button" class="product-gallery__mobile-dot{% if forloop.first %} active{% endif %}" data-index="{{ forloop.index0 }}" aria-label="Ir para imagem {{ forloop.index }}"></button>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+
+
+        <!-- Descrição abaixo da foto principal (coluna esquerda) -->
+        {%- if product.description != blank -%}
+          <div class="product-description-full">
+            <h2 class="product-description-full__title">Descrição</h2>
+            <div class="product-description-full__wrapper">
+              <div class="product-description-full__content rte" id="ProductDescContent">
+                {{ product.description }}
+              </div>
+              <div class="product-description-full__fade" id="ProductDescFade"></div>
+            </div>
+            <button type="button" class="product-description-full__toggle" id="ProductDescToggle" aria-expanded="false">
+              Ver mais detalhes do produto
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                <polyline points="6,9 12,15 18,9"></polyline>
+              </svg>
+            </button>
+          </div>
+        {%- endif -%}
+
+      </div>
+
+      <!-- Right: Product Information -->
+      <div class="product-info reveal-right">
+        
+        <div class="product-info__header">
+          {%- if product.type != blank -%}
+            <span class="product-info__type">{{ product.type }}</span>
+          {%- endif -%}
+          <h1 class="product-info__title">{{ product.title }}</h1>
+          
+          <div class="product-info__price-wrapper">
+            {%- render 'price', product: product -%}
+          </div>
+
+          {%- if section.settings.installments_enabled -%}
+            {%- assign n_parcelas = section.settings.installments_max -%}
+            {%- assign valor_parcela = product.price | divided_by: n_parcelas | money -%}
+            {%- if section.settings.installments_no_interest -%}
+              {%- assign juros_txt = 'sem juros' -%}
+            {%- else -%}
+              {%- assign juros_txt = '' -%}
+            {%- endif -%}
+            {%- assign inst_txt = section.settings.installments_text | replace: '[parcelas]', n_parcelas | replace: '[valor]', valor_parcela | replace: '[juros]', juros_txt -%}
+            <div class="product-info__installments">{{ inst_txt }}</div>
+          {%- endif -%}
+
+          {%- if section.settings.pix_discount_enabled and section.settings.pix_discount_percent > 0 -%}
+            {%- assign pix_pct = section.settings.pix_discount_percent -%}
+            {%- assign pix_multiplier = 100 | minus: pix_pct -%}
+            {%- assign pix_price_cents = product.price | times: pix_multiplier | divided_by: 100 -%}
+            {%- assign pix_price = pix_price_cents | money -%}
+            {%- assign pix_txt = section.settings.pix_discount_text | replace: '[valor]', pix_price | replace: '[desconto]', pix_pct -%}
+            <div class="product-info__pix" style="color: {{ section.settings.pix_discount_color }};">
+              <svg width="18" height="18" viewBox="0 0 512 512" aria-hidden="true" style="flex-shrink:0;display:block;"><path fill="#32BCAD" d="M242.4 292.5C247.8 287.1 257 287.1 262.5 292.5L339.5 369.5C353.7 383.7 372.6 391.5 392.6 391.5H407.7L310.6 488.6C280.3 518.1 231.1 518.1 200.8 488.6L103.3 391.2H112.6C132.7 391.2 151.5 383.4 165.7 369.2L242.4 292.5zM262.5 218.9C256.1 224.4 247.9 224.5 242.4 218.9L165.7 142.2C151.5 127.1 132.6 120.2 112.6 120.2H103.3L200.7 22.8C231.1-7.6 280.3-7.6 310.6 22.8L407.8 119.9H392.6C372.6 119.9 353.7 127.7 339.5 141.9L262.5 218.9zM112.6 142.7C126.4 142.7 139.1 148.3 149.8 158.1L226.5 234.8C233.6 241.9 242.9 245.4 252.2 245.4C261.5 245.4 270.8 241.9 277.9 234.8L354.9 157.8C364.7 148.1 378.3 142.5 392.6 142.5H430.3L488.6 200.8C518.9 231.1 518.9 280.3 488.6 310.6L430.3 368.9H392.6C378.3 368.9 364.7 363.3 354.9 353.5L277.9 276.5C264.4 262.1 240.1 262.1 226.6 276.6L149.8 353.3C139.1 363.1 126.4 368.7 112.6 368.7H81.8L22.8 310.6C-7.6 280.3-7.6 231.1 22.8 200.8L81.8 142.7H112.6z"/></svg>
+              <span>{{ pix_txt }}</span>
+            </div>
+          {%- endif -%}
+
+          {%- if settings.wholesale_enabled -%}
+            {%- assign wholesale_raw = product.metafields.custom.wholesale_price | default: product.metafields.custom.preco_atacado -%}
+            {%- assign wholesale_price_str = '' -%}
+            {%- if wholesale_raw != blank -%}
+              {%- if wholesale_raw.amount -%}
+                {%- assign wholesale_price_str = wholesale_raw.amount -%}
+              {%- elsif wholesale_raw.value.amount -%}
+                {%- assign wholesale_price_str = wholesale_raw.value.amount -%}
+              {%- elsif wholesale_raw.value -%}
+                {%- assign wholesale_price_str = wholesale_raw.value -%}
+              {%- else -%}
+                {%- assign wholesale_price_str = wholesale_raw -%}
+              {%- endif -%}
+            {%- endif -%}
+            {%- assign wholesale_price_str = wholesale_price_str | append: '' | replace: ' ', '' | replace: 'R$', '' -%}
+            {%- if wholesale_price_str contains ',' -%}
+              {%- assign wholesale_price_str = wholesale_price_str | replace: '.', '' | replace: ',', '.' -%}
+            {%- endif -%}
+            {%- assign wholesale_price_number = wholesale_price_str | times: 1.0 -%}
+            {%- assign wholesale_price_cents = 0 -%}
+            {%- if wholesale_price_number > 0 -%}
+              {%- assign wholesale_price_cents = wholesale_price_number | times: 100 | round -%}
+            {%- endif -%}
+            {%- if wholesale_price_cents > 0 -%}
+              {%- assign wholesale_min_qty = product.metafields.custom.wholesale_min_qty.value | default: product.metafields.custom.wholesale_min_qty -%}
+              {%- assign wholesale_min_value = product.metafields.custom.wholesale_min_value.value | default: product.metafields.custom.wholesale_min_value -%}
+              <div class="wholesale-info" style="margin:4px 0;font-size:12px;">
+                <span style="color:#9A3412;font-weight:600;">Atacado:</span>
+                <strong style="color:#C2410C;font-size:14px;">{{ wholesale_price_cents | money }}</strong>
+                {%- if wholesale_min_qty != blank -%}
+                  <span style="color:#9A3412;">(mín. {{ wholesale_min_qty }} un.)</span>
+                {%- endif -%}
+                {%- if wholesale_min_value != blank -%}
+                  <br><span style="font-size:11px;color:#B45309;">Pedido mínimo: {{ wholesale_min_value | money }}</span>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          {%- endif -%}
+        </div>
+
+        <!-- Add to Cart Form -->
+        {%- form 'product', product, id: 'AddToCartForm', class: 'product-form' -%}
+          <!-- Hidden Variant Input -->
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" id="ProductVariantId">
+
+          <!-- Option Selectors -->
+          {%- if product.variants.size > 1 -%}
+            {%- assign selector_type = section.settings.variant_selector_type | default: settings.variant_selector_type | default: 'block' -%}
+            {%- for option in product.options_with_values -%}
+              {%- liquid
+                assign is_color_option = false
+                assign option_name_lower = option.name | downcase
+                if option_name_lower == 'cor' or option_name_lower == 'color' or option_name_lower == 'colour' or option_name_lower == 'cores'
+                  assign is_color_option = true
+                endif
+
+                comment
+                  Determina qual tipo de seletor usar para ESTA opção:
+                  - Dropdown  → aplica em todas as opções
+                  - Swatch    → aplica apenas em opções de cor; demais usam bloco
+                  - Img       → aplica apenas em opções de cor; demais usam bloco
+                  - Bloco     → aplica em todas as opções
+                endcomment
+
+                assign resolved_type = 'block'
+                if selector_type == 'dropdown'
+                  assign resolved_type = 'dropdown'
+                elsif selector_type == 'swatch'
+                  if is_color_option
+                    assign resolved_type = 'swatch'
+                  else
+                    assign resolved_type = 'block'
+                  endif
+                elsif selector_type == 'variant_image'
+                  if is_color_option
+                    assign resolved_type = 'variant_image'
+                  else
+                    assign resolved_type = 'block'
+                  endif
+                endif
+              -%}
+              <div class="option-selector" data-option-index="{{ forloop.index0 }}" data-option-name="{{ option.name | downcase }}">
+                <label class="option-selector__label">
+                  {{ option.name }}:
+                  <span class="option-selector__selected" id="SelectedOptionVal-{{ forloop.index0 }}">{{ option.selected_value }}</span>
+                </label>
+
+                {%- if resolved_type == 'dropdown' -%}
+                  {%- comment -%} Suspenso — dropdown para qualquer opção {%- endcomment -%}
+                  <select class="input" style="height: 48px;" data-option-select>
+                    {%- for value in option.values -%}
+                      <option value="{{ value | escape }}"{% if option.selected_value == value %} selected{% endif %}>
+                        {{ value }}
+                      </option>
+                    {%- endfor -%}
+                  </select>
+
+                {%- elsif resolved_type == 'swatch' -%}
+                  {%- comment -%} Cor da amostra — apenas para opção de Cor {%- endcomment -%}
+                  <div class="color-swatches">
+                    {%- for value in option.values -%}
+                      {%- liquid
+                        assign swatch_color = '#cccccc'
+                        assign value_lower = value | downcase
+
+                        comment
+                          Try meta field custom.swatch_colors first.
+                          Suporta: Lista (array) ou Texto de linha única (string).
+                          Nomes:  Foggy:#e8ebea
+                        endcomment
+                        assign swatch_meta_raw = product.metafields.custom.swatch_colors
+                        assign swatch_meta_val = swatch_meta_raw.value | default: ''
+                        if swatch_meta_val != ''
+                          assign cm_size = swatch_meta_val | size
+                          assign cm_first_size = swatch_meta_val | first | size
+                          if cm_first_size > cm_size
+                            assign cm_str = swatch_meta_val | join: '|'
+                          else
+                            assign cm_str = swatch_meta_val
+                          endif
+                          assign entries = cm_str | split: '|'
+                          for entry in entries
+                            assign parts = entry | split: '#'
+                            if parts.size == 2
+                              assign meta_name = parts[0] | strip | remove: ':' | downcase
+                              if meta_name == value_lower
+                                assign swatch_color = parts[1] | strip | prepend: '#'
+                              endif
+                            endif
+                          endfor
+                        endif
+
+                        comment
+                          Fallback to hardcoded mapping if meta didn't match
+                        endcomment
+                        if swatch_color == '#cccccc'
+                          if value_lower contains 'preto' or value_lower contains 'preta' or value_lower contains 'black'
+                            assign swatch_color = '#000000'
+                          elsif value_lower contains 'branco' or value_lower contains 'branca' or value_lower contains 'white'
+                            assign swatch_color = '#ffffff'
+                          elsif value_lower contains 'vermelho' or value_lower contains 'vermelha' or value_lower contains 'red'
+                            assign swatch_color = '#e60000'
+                          elsif value_lower contains 'marinho' or value_lower contains 'navy'
+                            assign swatch_color = '#001f5b'
+                          elsif value_lower contains 'azul' or value_lower contains 'blue'
+                            assign swatch_color = '#0044ff'
+                          elsif value_lower contains 'verde' or value_lower contains 'green'
+                            assign swatch_color = '#00aa33'
+                          elsif value_lower contains 'cinza' or value_lower contains 'grey' or value_lower contains 'gray'
+                            assign swatch_color = '#888888'
+                          elsif value_lower contains 'rosa' or value_lower contains 'pink'
+                            assign swatch_color = '#ff69b4'
+                          elsif value_lower contains 'amarelo' or value_lower contains 'yellow'
+                            assign swatch_color = '#f5c518'
+                          elsif value_lower contains 'laranja' or value_lower contains 'orange'
+                            assign swatch_color = '#ff6600'
+                          elsif value_lower contains 'roxo' or value_lower contains 'purple' or value_lower contains 'violeta'
+                            assign swatch_color = '#7b2fbe'
+                          elsif value_lower contains 'bege' or value_lower contains 'beige' or value_lower contains 'nude'
+                            assign swatch_color = '#c8a882'
+                          elsif value_lower contains 'caramelo' or value_lower contains 'camel' or value_lower contains 'marrom' or value_lower contains 'brown'
+                            assign swatch_color = '#8b4513'
+                          endif
+                        endif
+                      -%}
+                      <button type="button"
+                              class="color-swatch{% if option.selected_value == value %} active{% endif %}"
+                              data-value="{{ value | escape }}"
+                              style="background-color: {{ swatch_color }};"
+                              title="{{ value | escape }}"
+                              aria-label="{{ value | escape }}">
+                      </button>
+                    {%- endfor -%}
+                  </div>
+
+                {%- elsif resolved_type == 'variant_image' -%}
+                  {%- comment -%} Imagem da variante — apenas para opção de Cor {%- endcomment -%}
+                  <div class="variant-image-swatches">
+                    {%- for value in option.values -%}
+                      {%- liquid
+                        assign variant_img = nil
+                        for variant in product.variants
+                          if variant.options contains value
+                            if variant.image != blank
+                              assign variant_img = variant.image
+                              break
+                            endif
+                          endif
+                        endfor
+                      -%}
+                      <button type="button"
+                              class="variant-image-swatch{% if option.selected_value == value %} active{% endif %}"
+                              data-value="{{ value | escape }}"
+                              title="{{ value | escape }}"
+                              aria-label="{{ value | escape }}">
+                        {%- if variant_img != blank -%}
+                          <img src="{{ variant_img | image_url: width: 100 }}"
+                               alt="{{ value | escape }}"
+                               width="50" height="50"
+                               loading="lazy">
+                        {%- else -%}
+                          <span class="variant-image-swatch__label">{{ value | truncate: 6, '' }}</span>
+                        {%- endif -%}
+                      </button>
+                    {%- endfor -%}
+                  </div>
+
+                {%- else -%}
+                  {%- comment -%} Bloco — grade de botões (padrão para tamanho e demais) {%- endcomment -%}
+                  <div class="size-grid">
+                    {%- for value in option.values -%}
+                      <button type="button"
+                              class="size-button{% if option.selected_value == value %} active{% endif %}"
+                              data-value="{{ value | escape }}">
+                        {{ value }}
+                      </button>
+                    {%- endfor -%}
+                  </div>
+                {%- endif -%}
+
+              </div>
+            {%- endfor -%}
+          {%- endif -%}
+
+          <!-- Quantity Selector -->
+          <div class="qty-selector">
+            <span class="option-selector__label" style="margin-bottom: 0;">Quantidade:</span>
+            <div class="qty-input-wrapper">
+              <button type="button" class="qty-btn" id="QtyMinus" aria-label="Diminuir">-</button>
+              <input type="number" name="quantity" id="ProductQuantity" class="qty-input" value="1" min="1">
+              <button type="button" class="qty-btn" id="QtyPlus" aria-label="Aumentar">+</button>
+            </div>
+          </div>
+
+          <!-- Size Guide -->
+          {%- if section.settings.size_guide_enabled -%}
+            {%- render 'size-guide-modal', product: product -%}
+          {%- endif -%}
+
+          <!-- Add & Buy Buttons -->
+          <div class="product-form__buttons">
+            <button type="submit" name="add" class="btn btn-primary btn-add-to-cart w-full btn-scale btn-ripple" id="AddToCartBtn" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
+              {%- if product.selected_or_first_available_variant.available -%}
+                Adicionar à Sacola
+              {%- else -%}
+                Esgotado
+              {%- endif -%}
+            </button>
+          </div>
+
+          <!-- Widget de Frete (movido para logo abaixo do botão Adicionar à Sacola) -->
+          {%- render 'frete-calculator', product: product -%}
+
+
+
+          {% if section.settings.mostrar_btn_wtspp %}
+          <a href="{{ section.settings.whatsapplinknumber }}" class="btn-whatsapp-buy">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22" style="flex-shrink:0;">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+            </svg>
+            {{ section.settings.wtspp_text }}
+          </a>
+          <style>
+            .btn-whatsapp-buy {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 8px;
+              width: 100%;
+              padding: 14px 32px;
+              border-radius: var(--button-border-radius, 999px);
+              font-size: 14px;
+              font-weight: 600;
+              text-decoration: none;
+              transition: all 0.3s ease-in-out;
+              background: {{ section.settings.background_whatsapp_btn | default: '#25D366' }};
+              border: 1px solid {{ section.settings.txt_whatsapp_btn | default: '#25D366' }};
+              color: {{ section.settings.txt_whatsapp_btn | default: '#fff' }};
+              margin-top: 8px;
+              box-sizing: border-box;
+            }
+            .btn-whatsapp-buy:hover {
+              background: {{ section.settings.txt_whatsapp_btn | default: '#fff' }};
+              color: {{ section.settings.background_whatsapp_btn | default: '#25D366' }};
+            }
+            .btn-whatsapp-buy:hover svg {
+              fill: {{ section.settings.background_whatsapp_btn | default: '#25D366' }};
+            }
+            .btn-whatsapp-buy svg {
+              fill: {{ section.settings.txt_whatsapp_btn | default: '#fff' }};
+              transition: fill 0.3s ease-in-out;
+            }
+          </style>
+          {% endif %}
+
+          <!-- Trust Badges -->
+          <div class="product-trust reveal">
+            <div class="product-trust__row">
+              <div class="product-trust__item card-hover">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span><strong>Compra 100% Segura</strong><br>Site protegido com SSL</span>
+              </div>
+              <div class="product-trust__item card-hover">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <span><strong>Loja Oficial</strong><br>Produto original garantido</span>
+              </div>
+              <div class="product-trust__item card-hover">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                <span><strong>Troca Fácil</strong><br>Até 7 dias após o recebimento</span>
+              </div>
+            </div>
+            <div class="product-trust__payments">
+              <span class="product-trust__payments-label">Formas de pagamento aceitas:</span>
+              <div class="product-trust__payments-icons">
+                {%- render 'payment-flag', brand: 'visa' -%}
+                {%- render 'payment-flag', brand: 'mastercard' -%}
+                {%- render 'payment-flag', brand: 'elo' -%}
+                {%- render 'payment-flag', brand: 'amex' -%}
+                {%- render 'payment-flag', brand: 'hipercard' -%}
+                {%- render 'payment-flag', brand: 'pix' -%}
+              </div>
+            </div>
+          </div>
+
+          <style>
+            .product-trust {
+              margin-top: var(--space-4);
+              padding: var(--space-4) 0;
+              border: none;
+              border-radius: 0;
+              background: transparent;
+            }
+            .product-trust__row {
+              display: grid;
+              grid-template-columns: repeat(3, 1fr);
+              gap: var(--space-3);
+            }
+            .product-trust__item {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              text-align: center;
+              gap: 6px;
+              font-size: 11px;
+              line-height: 1.35;
+              color: var(--color-text-light);
+            }
+            .product-trust__item strong {
+              color: var(--color-text);
+              font-weight: var(--font-weight-bold);
+              font-size: 12px;
+            }
+            .product-trust__item svg {
+              width: 22px;
+              height: 22px;
+              color: var(--color-accent, #111);
+            }
+            .product-trust__payments {
+              margin-top: var(--space-4);
+              padding-top: var(--space-4);
+              border-top: 1px dashed var(--color-border);
+            }
+            .product-trust__payments-label {
+              display: block;
+              font-size: 11px;
+              text-transform: uppercase;
+              letter-spacing: 0.06em;
+              color: var(--color-text-light);
+              margin-bottom: var(--space-2);
+              text-align: center;
+            }
+            .product-trust__payments-icons {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 8px;
+              justify-content: center;
+              align-items: center;
+            }
+            .product-trust__payments-icons .footer__payment-icon {
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              width: 34px;
+              height: 22px;
+              background: #fff;
+              border-radius: 4px;
+              box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+              padding: 3px;
+              box-sizing: border-box;
+            }
+            .product-trust__payments-icons .payment-flag__svg,
+            .product-trust__payments-icons .footer__payment-icon svg {
+              width: 100%;
+              height: 100%;
+              display: block;
+              object-fit: contain;
+            }
+            .product-trust__payments-icons .footer__payment-icon--elo .payment-flag__svg,
+            .product-trust__payments-icons .footer__payment-icon--hipercard .payment-flag__svg,
+            .product-trust__payments-icons .footer__payment-icon--pix .payment-flag__svg {
+              width: 100%;
+              height: 100%;
+            }
+
+            @media (max-width: 480px) {
+              .product-trust__row { grid-template-columns: 1fr; }
+              .product-trust__item { flex-direction: row; text-align: left; }
+            }
+          </style>
+        {%- endform -%}
+
+        <!-- Favoritos + Compartilhar -->
+        <div class="product-social">
+
+          <button class="product-social__wishlist" id="WishlistBtn" aria-label="Salvar como favoritos" data-product-id="{{ product.id }}">
+            <span class="product-social__wishlist-text">Salvar como favoritos</span>
+            {% render 'icon-heart' %}
+          </button>
+
+          <div class="product-social__share">
+            <span class="product-social__share-label">Compartilhar:</span>
+
+            <a class="product-social__share-btn"
+               href="https://wa.me/?text={{ product.title | url_encode }}%20{{ shop.url }}{{ product.url }}"
+               target="_blank" rel="noopener noreferrer" aria-label="Compartilhar no WhatsApp">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="17" height="17">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+              WhatsApp
+            </a>
+
+            <button class="product-social__share-btn" id="CopyLinkBtn" aria-label="Copiar link do produto">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span id="CopyLinkText">Copiar link</span>
+            </button>
+          </div>
+
+        </div>
+
+        <style>
+          .product-social {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+            margin-top: var(--space-2);
+          }
+
+          .product-social__wishlist {
+            width: 100%;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            border: 1.5px solid var(--color-border);
+            border-radius: 100px;
+            background: transparent;
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+          }
+
+          .product-social__wishlist:hover,
+          .product-social__wishlist.active {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+          }
+
+          .product-social__wishlist.active svg path {
+            fill: var(--color-accent);
+            stroke: var(--color-accent);
+          }
+
+          .product-social__wishlist svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            transition: all var(--transition-fast);
+          }
+
+          .product-social__share {
+            display: flex;
+            align-items: center;
+            gap: var(--space-5);
+            justify-content: center;
+          }
+
+          .product-social__share-label {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-light);
+            font-weight: var(--font-weight-medium);
+          }
+
+          .product-social__share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text);
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: color var(--transition-fast);
+            padding: 0;
+          }
+
+          .product-social__share-btn:hover {
+            color: var(--color-accent);
+          }
+
+          .product-social__share-btn svg {
+            flex-shrink: 0;
+          }
+        </style>
+
+        <script>
+          (function () {
+            // Favoritos
+            var wishlistBtn = document.getElementById('WishlistBtn');
+            if (wishlistBtn) {
+              var productId = wishlistBtn.getAttribute('data-product-id');
+              var storageKey = 'wishlist_' + productId;
+              var isSaved = localStorage.getItem(storageKey) === '1';
+              if (isSaved) wishlistBtn.classList.add('active');
+
+              wishlistBtn.addEventListener('click', function () {
+                isSaved = !isSaved;
+                wishlistBtn.classList.toggle('active', isSaved);
+                localStorage.setItem(storageKey, isSaved ? '1' : '0');
+                var txt = wishlistBtn.querySelector('.product-social__wishlist-text');
+                if (txt) txt.textContent = isSaved ? 'Salvo nos favoritos' : 'Salvar como favoritos';
+              });
+            }
+
+            // Copiar link
+            var copyBtn  = document.getElementById('CopyLinkBtn');
+            var copyText = document.getElementById('CopyLinkText');
+            if (copyBtn && copyText) {
+              copyBtn.addEventListener('click', function () {
+                var url = window.location.href;
+                if (navigator.clipboard) {
+                  navigator.clipboard.writeText(url).then(function () {
+                    copyText.textContent = 'Link copiado!';
+                    setTimeout(function () { copyText.textContent = 'Copiar link'; }, 2500);
+                  });
+                } else {
+                  var ta = document.createElement('textarea');
+                  ta.value = url;
+                  document.body.appendChild(ta);
+                  ta.select();
+                  document.execCommand('copy');
+                  document.body.removeChild(ta);
+                  copyText.textContent = 'Link copiado!';
+                  setTimeout(function () { copyText.textContent = 'Copiar link'; }, 2500);
+                }
+              });
+            }
+          })();
+        </script>
+
+        <!-- Widget de Frete movido para logo abaixo do botão de Adicionar à Sacola -->
+
+
+
+        {%- comment -%} ── PROVADOR VIRTUAL (bolinhas sobre a galeria) ── {%- endcomment -%}
+        {%- comment -%} ── PROVADOR VIRTUAL (bolinhas sobre a galeria) ── {%- endcomment -%}
+        {%- if section.settings.fitting_room_enabled -%}
+          {%- assign fr_videos = product.metafields.custom.fitting_videos.value -%}
+          {%- assign fv_count = 0 -%}
+          {%- if fr_videos != blank and fr_videos != nil -%}
+            {%- assign fv_count = fr_videos.size -%}
+          {%- endif -%}
+          {%- if fv_count > 0 -%}
+            <div class="fr-modal" id="FRModal" role="dialog" aria-modal="true" aria-label="Provador Virtual" hidden>
+              <div class="fr-modal__backdrop" id="FRBackdrop"></div>
+              <div class="fr-modal__wrap">
+                <div class="fr-modal__bars" id="FRBars"></div>
+                <div class="fr-modal__top">
+                  <div class="fr-modal__brand">
+                    {%- if product.featured_image != blank -%}<img src="{{ product.featured_image | image_url: width: 56 }}" alt="{{ product.title | escape }}" class="fr-modal__brand-img" width="28" height="28" loading="lazy">{%- endif -%}
+                    <span class="fr-modal__brand-name">{{ section.settings.fitting_room_label | default: 'Provador Virtual' }}</span>
+                  </div>
+                  <div class="fr-modal__top-actions">
+                    <button class="fr-modal__mute" id="FRMute" aria-label="Som"><svg id="FRMuteIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg></button>
+                    <button class="fr-modal__close" id="FRClose" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="20" height="20"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                  </div>
+                </div>
+                <div class="fr-modal__video-wrap">
+                  <video class="fr-modal__video" id="FRVideo" playsinline autoplay muted preload="metadata"><source src="" type="video/mp4"></video>
+                  <div class="fr-modal__tap-prev" id="FRTapPrev"></div>
+                  <div class="fr-modal__tap-next" id="FRTapNext"></div>
+                  <!-- Rodapé flutuando sobre o vídeo -->
+                  <div class="fr-modal__footer" id="FRFooter">
+                    <div class="fr-modal__footer-cards" id="FRFooterCards">
+                      <!-- Card 1 -->
+                      <a href="#" class="fr-modal__footer-card" id="FRCard0" style="display:none;">
+                        <div class="fr-modal__footer-card-top">
+                          <div class="fr-modal__footer-card-media">
+                            <img src="" alt="" class="fr-modal__footer-card-img" id="FRCardImg0" width="50" height="50" loading="lazy">
+                            <div class="fr-modal__footer-card-monogram" id="FRCardMonogram0" style="display:none;"></div>
+                          </div>
+                          <div class="fr-modal__footer-card-info">
+                            <span class="fr-modal__footer-card-title" id="FRCardTitle0"></span>
+                            <span class="fr-modal__footer-card-price" id="FRCardPrice0"></span>
+                          </div>
+                        </div>
+                        <div class="fr-modal__footer-card-cta">
+                          <span class="fr-modal__footer-card-cta-text">Saiba mais</span>
+                          <svg class="fr-modal__footer-card-cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" width="12" height="12">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                          </svg>
+                        </div>
+                      </a>
+                      <!-- Card 2 -->
+                      <a href="#" class="fr-modal__footer-card" id="FRCard1" style="display:none;">
+                        <div class="fr-modal__footer-card-top">
+                          <div class="fr-modal__footer-card-media">
+                            <img src="" alt="" class="fr-modal__footer-card-img" id="FRCardImg1" width="50" height="50" loading="lazy">
+                            <div class="fr-modal__footer-card-monogram" id="FRCardMonogram1" style="display:none;"></div>
+                          </div>
+                          <div class="fr-modal__footer-card-info">
+                            <span class="fr-modal__footer-card-title" id="FRCardTitle1"></span>
+                            <span class="fr-modal__footer-card-price" id="FRCardPrice1"></span>
+                          </div>
+                        </div>
+                        <div class="fr-modal__footer-card-cta">
+                          <span class="fr-modal__footer-card-cta-text">Saiba mais</span>
+                          <svg class="fr-modal__footer-card-cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" width="12" height="12">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                          </svg>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <script>
+              window.__FRConfig = {
+                videos: [
+                  {%- for fv_url in fr_videos -%}
+                    {%- if fv_url.url != blank -%}
+                      "{{ fv_url.url | escape }}"
+                    {%- else -%}
+                      "{{ fv_url | escape }}"
+                    {%- endif -%}
+                    {%- unless forloop.last -%},{%- endunless -%}
+                  {%- endfor -%}
+                ].filter(Boolean),
+                products: [
+                  {%- assign fr_products = product.metafields.custom.fitting_products.value -%}
+                  {%- for fp in fr_products -%}
+                    {
+                      "title": {{ fp.title | json }},
+                      "url": {{ fp.url | json }},
+                      "price": {{ fp.price | money | json }},
+                      "image": {{ fp.featured_image | image_url: width: 80 | json }}
+                    }
+                    {%- unless forloop.last -%},{%- endunless -%}
+                  {%- else -%}
+                    {
+                      "title": {{ product.title | json }},
+                      "url": {{ product.url | json }},
+                      "price": {{ product.price | money | json }},
+                      "image": {{ product.featured_image | image_url: width: 80 | json }}
+                    }
+                  {%- endfor -%}
+                ],
+                _debug: {
+                  fr_products_raw: {{ product.metafields.custom.fitting_products | json }},
+                  fr_products_value: {{ product.metafields.custom.fitting_products.value | json }}
+                }
+              };
+              console.log('[FR] Config:', JSON.stringify(window.__FRConfig._debug));
+            </script>
+            {{ 'fitting-room.js' | asset_url | script_tag }}
+          {%- endif -%}
+        {%- endif -%}
+        <div class="product-details">
+
+          {%- comment -%} Accordion 1: Envio & Devoluções {%- endcomment -%}
+          {%- assign shipping_page = pages[section.settings.shipping_page] -%}
+          {%- if section.settings.pages_display_mode == 'all' or section.settings.pages_display_mode == 'text_only' or shipping_page != blank -%}
+            <div class="product-details__item">
+              <button class="product-details__trigger">
+                Envio & Devoluções
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div class="product-details__content">
+                {%- if shipping_page != blank -%}
+                  <div class="rte">{{ shipping_page.content }}</div>
+                {%- else -%}
+                  <p>{{ section.settings.shipping_text }}</p>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+
+          {%- comment -%} Accordion 2: Métodos de Pagamento {%- endcomment -%}
+          {%- assign payment_page = pages[section.settings.payment_page] -%}
+          {%- if section.settings.pages_display_mode == 'all' or section.settings.pages_display_mode == 'text_only' or payment_page != blank -%}
+            <div class="product-details__item">
+              <button class="product-details__trigger">
+                Métodos de Pagamento
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div class="product-details__content">
+                {%- if payment_page != blank -%}
+                  <div class="rte">{{ payment_page.content }}</div>
+                {%- else -%}
+                  <p>{{ section.settings.payment_text }}</p>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+
+          {%- comment -%} Accordion 3: Página extra opcional {%- endcomment -%}
+          {%- assign extra_page = pages[section.settings.extra_page] -%}
+          {%- if extra_page != blank -%}
+            <div class="product-details__item">
+              <button class="product-details__trigger">
+                {{ extra_page.title }}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div class="product-details__content">
+                <div class="rte">{{ extra_page.content }}</div>
+              </div>
+            </div>
+          {%- endif -%}
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Seção Talvez Você Goste logo abaixo do grid -->
+
+  </div>
+</section>
+
+<!-- Seção: Talvez Você Goste -->
+{%- assign related_collection = product.collections.first -%}
+{%- if related_collection != blank -%}
+  {%- assign related_products = related_collection.products | where: 'id', '!=', product.id -%}
+  {%- if related_collection.products.size > 1 -%}
+    <section class="related-products-section">
+      <div class="page-width">
+
+        <div class="related-products__header">
+          <h2 class="related-products__title">Talvez Você Goste</h2>
+          <a href="{{ related_collection.url }}" class="related-products__link hover-underline">
+            Ver tudo
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+              <polyline points="9,18 15,12 9,6"></polyline>
+            </svg>
+          </a>
+        </div>
+
+        <div class="related-products__carousel" id="RelatedCarousel">
+          {%- assign shown = 0 -%}
+          {%- for p in related_collection.products limit: 9 -%}
+            {%- if p.id != product.id and shown < 8 -%}
+              <div class="related-products__item">
+                {%- render 'product-card',
+                  product: p,
+                  show_secondary_image: true,
+                  show_quick_add: true,
+                  show_wishlist: true,
+                  show_badge: true,
+                  show_category: true
+                -%}
+              </div>
+              {%- assign shown = shown | plus: 1 -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        <!-- Setas de navegação -->
+        <div class="related-products__nav">
+          <button class="related-products__nav-btn" id="RelatedPrev" aria-label="Anterior">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="20" height="20">
+              <polyline points="15,18 9,12 15,6"></polyline>
+            </svg>
+          </button>
+          <button class="related-products__nav-btn" id="RelatedNext" aria-label="Próximo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="20" height="20">
+              <polyline points="9,18 15,12 9,6"></polyline>
+            </svg>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <style>
+      .related-products-section {
+        padding: var(--space-16) 0;
+        border-top: 1px solid var(--color-border);
+        background-color: var(--color-bg-secondary);
+      }
+
+      .related-products__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: var(--space-8);
+      }
+
+      .related-products__title {
+        font-size: var(--font-size-2xl);
+        font-weight: var(--font-weight-extrabold);
+        text-transform: uppercase;
+        letter-spacing: -0.01em;
+      }
+
+      .related-products__link {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-1);
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-text);
+        text-decoration: none;
+      }
+
+      .related-products__carousel {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: calc(25% - var(--space-4));
+        gap: var(--space-5);
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        scroll-behavior: smooth;
+        touch-action: pan-x;
+        padding-bottom: var(--space-2);
+      }
+
+      .related-products__carousel::-webkit-scrollbar {
+        display: none;
+      }
+
+      .related-products__item {
+        scroll-snap-align: start;
+        min-width: 0;
+      }
+
+      .related-products__nav {
+        display: flex;
+        justify-content: flex-end;
+        gap: var(--space-2);
+        margin-top: var(--space-6);
+      }
+
+      .related-products__nav-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 1px solid var(--color-border);
+        background: var(--color-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+      }
+
+      .related-products__nav-btn:hover {
+        background: var(--color-primary);
+        border-color: var(--color-primary);
+        color: #fff;
+      }
+
+      @media (max-width: 991px) {
+        .related-products__carousel {
+          grid-auto-columns: calc(50% - var(--space-3));
+        }
+      }
+
+      @media (max-width: 540px) {
+        .related-products__carousel {
+          grid-auto-columns: calc(70% - var(--space-3));
+        }
+        .related-products__title {
+          font-size: var(--font-size-xl);
+        }
+      }
+    </style>
+
+    <script>
+      (function () {
+        var carousel = document.getElementById('RelatedCarousel');
+        var btnPrev  = document.getElementById('RelatedPrev');
+        var btnNext  = document.getElementById('RelatedNext');
+        if (!carousel || !btnPrev || !btnNext) return;
+
+        function getScrollAmount() {
+          var item = carousel.querySelector('.related-products__item');
+          return item ? item.offsetWidth + 20 : 280;
+        }
+
+        btnNext.addEventListener('click', function () {
+          carousel.scrollLeft += getScrollAmount();
+        });
+
+        btnPrev.addEventListener('click', function () {
+          carousel.scrollLeft -= getScrollAmount();
+        });
+      })();
+    </script>
+  {%- endif -%}
+{%- endif -%}
+
+<!-- Frontend Logic for Variant Selection, Thumbnails & Accordion -->
+<script>
+  (function() {
+    function initProductPage() {
+    
+    // Descrição expandir/colapsar
+    var descWrapper = document.getElementById('ProductDescContent');
+    descWrapper = descWrapper ? descWrapper.closest('.product-description-full__wrapper') : null;
+    var descBtn = document.getElementById('ProductDescToggle');
+    if (descWrapper && descBtn) {
+      descBtn.addEventListener('click', function () {
+        var isExpanded = descWrapper.classList.contains('expanded');
+        descWrapper.classList.toggle('expanded');
+        descBtn.classList.toggle('expanded');
+        descBtn.setAttribute('aria-expanded', String(!isExpanded));
+        descBtn.childNodes[0].textContent = isExpanded
+          ? 'Ver mais detalhes do produto'
+          : 'Ver menos ';
+      });
+    }
+
+    // Mobile: mover descrição para o final, abaixo das formas de pagamento (trust badges)
+    (function relocateDescriptionMobile(){
+      var descEl = document.querySelector('.product-gallery > .product-description-full');
+      var anchorEl = document.querySelector('.frete-calc') || document.querySelector('.product-trust');
+      var galleryEl = document.querySelector('.product-gallery');
+      if (!descEl || !anchorEl || !galleryEl) return;
+      var placeholder = document.createComment('desc-original-slot');
+      var originalParent = descEl.parentNode;
+      var originalNext = descEl.nextSibling;
+      originalParent.insertBefore(placeholder, descEl);
+      var mq = window.matchMedia('(max-width: 767px)');
+      function apply(e){
+        if (e.matches) {
+          if (descEl.previousSibling !== anchorEl) {
+            anchorEl.parentNode.insertBefore(descEl, anchorEl.nextSibling);
+          }
+
+        } else {
+          if (placeholder.parentNode) {
+            placeholder.parentNode.insertBefore(descEl, placeholder);
+          }
+        }
+      }
+      apply(mq);
+      (mq.addEventListener ? mq.addEventListener('change', apply) : mq.addListener(apply));
+    })();
+
+
+
+    // Product Gallery Image Swap
+    var mainImg = document.getElementById('ProductMainImage');
+    var thumbs = document.querySelectorAll('.product-gallery__thumb');
+    thumbs.forEach(function(thumb) {
+      thumb.addEventListener('click', function() {
+        thumbs.forEach(function(t) { t.classList.remove('active'); });
+        thumb.classList.add('active');
+        var newUrl = thumb.getAttribute('data-image-url');
+        if (mainImg && newUrl) {
+          mainImg.setAttribute('src', newUrl);
+        }
+      });
+    });
+
+    // Accordions
+    var accordionItems = document.querySelectorAll('.product-details__item');
+    accordionItems.forEach(function(item) {
+      var trigger = item.querySelector('.product-details__trigger');
+      if (trigger) {
+        trigger.addEventListener('click', function() {
+          var isActive = item.classList.contains('active');
+          accordionItems.forEach(function(i) { i.classList.remove('active'); });
+          if (!isActive) {
+            item.classList.add('active');
+          }
+        });
+      }
+    });
+
+    // Quantity selector buttons
+    var qtyInput = document.getElementById('ProductQuantity');
+    var qtyMinus = document.getElementById('QtyMinus');
+    var qtyPlus  = document.getElementById('QtyPlus');
+
+    // Shopify Variant Options Helper
+    var variants = [
+      {%- for variant in product.variants -%}
+        {
+          id: {{ variant.id }},
+          title: "{{ variant.title | escape }}",
+          options: {{ variant.options | json }},
+          available: {{ variant.available }},
+          inventory_quantity: {{ variant.inventory_quantity | default: 0 }},
+          inventory_policy: "{{ variant.inventory_policy }}",
+          price: "{{ variant.price | money }}",
+          price_cents: {{ variant.price }},
+          compare_at_price: {% if variant.compare_at_price %}"{{ variant.compare_at_price | money }}"{% else %}null{% endif %},
+          compare_at_price_cents: {% if variant.compare_at_price %}{{ variant.compare_at_price }}{% else %}null{% endif %}
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ];
+
+    // Product Gallery — Mobile Carousel (dots ↔ swipe)
+    (function initMobileGalleryCarousel(){
+      var carousel = document.getElementById('ProductMobileCarousel');
+      var dotsWrap = document.getElementById('ProductMobileDots');
+      if (!carousel || !dotsWrap) return;
+      var slides = carousel.querySelectorAll('.product-gallery__mobile-slide');
+      var dots = dotsWrap.querySelectorAll('.product-gallery__mobile-dot');
+      if (!slides.length) return;
+
+      function setActive(idx){
+        dots.forEach(function(d, i){ d.classList.toggle('active', i === idx); });
+      }
+
+      // Scroll → active dot
+      var scrollTO;
+      carousel.addEventListener('scroll', function(){
+        clearTimeout(scrollTO);
+        scrollTO = setTimeout(function(){
+          var w = carousel.clientWidth;
+          if (w > 0) setActive(Math.round(carousel.scrollLeft / w));
+        }, 60);
+      }, { passive: true });
+
+      // Dot click → scroll
+      dots.forEach(function(dot, i){
+        dot.addEventListener('click', function(){
+          carousel.scrollTo({ left: i * carousel.clientWidth, behavior: 'smooth' });
+          setActive(i);
+        });
+      });
+    })();
+
+    // Retorna o estoque máximo da variante atualmente selecionada
+    function getMaxStock() {
+      var variantIdInput = document.getElementById('ProductVariantId');
+      if (!variantIdInput) return 999;
+      var currentId = parseInt(variantIdInput.value);
+      var v = null;
+      for (var vi = 0; vi < variants.length; vi++) {
+        if (variants[vi].id === currentId) { v = variants[vi]; break; }
+      }
+      if (!v) return 999;
+      if (v.inventory_policy === 'continue') return 999;
+      return v.inventory_quantity > 0 ? v.inventory_quantity : 0;
+    }
+
+    function clampQty() {
+      if (!qtyInput) return;
+      var max = getMaxStock();
+      var val = parseInt(qtyInput.value) || 1;
+      if (val < 1) val = 1;
+      if (max > 0 && val > max) val = max;
+      qtyInput.value = val;
+      qtyInput.max = max > 0 ? max : 1;
+      if (qtyPlus) qtyPlus.disabled = (max <= 0 || val >= max);
+      if (qtyMinus) qtyMinus.disabled = (val <= 1);
+    }
+
+    if (qtyInput && qtyMinus && qtyPlus) {
+      qtyMinus.addEventListener('click', function() {
+        var val = parseInt(qtyInput.value) || 1;
+        if (val > 1) { qtyInput.value = val - 1; }
+        clampQty();
+      });
+      qtyPlus.addEventListener('click', function() {
+        var val = parseInt(qtyInput.value) || 1;
+        var max = getMaxStock();
+        if (max <= 0 || val < max) { qtyInput.value = val + 1; }
+        clampQty();
+      });
+      qtyInput.addEventListener('change', clampQty);
+      clampQty();
+    }
+
+    // Section settings para cálculos no JS
+    var sectionSettings = {
+      installments_enabled: {{ section.settings.installments_enabled | json }},
+      installments_max: {{ section.settings.installments_max }},
+      installments_no_interest: {{ section.settings.installments_no_interest | json }},
+      installments_text: {{ section.settings.installments_text | json }},
+      pix_discount_enabled: {{ section.settings.pix_discount_enabled | json }},
+      pix_discount_percent: {{ section.settings.pix_discount_percent }},
+      pix_discount_text: {{ section.settings.pix_discount_text | json }}
+    };
+
+    function parseCents(str) {
+      return parseInt(String(str).replace(/[^\d]/g, '')) || 0;
+    }
+    function fmtCents(cents) {
+      return 'R$ ' + (cents / 100).toFixed(2).replace('.', ',');
+    }
+
+    function updateInstallmentsPix(variant) {
+      if (!variant) return;
+      var priceCents = variant.price_cents || parseCents(variant.price);
+      // Installments
+      if (sectionSettings.installments_enabled) {
+        var instEl = document.querySelector('.product-info__installments');
+        if (instEl) {
+          var instCents = Math.round(priceCents / sectionSettings.installments_max);
+          var jurosTxt = sectionSettings.installments_no_interest ? 'sem juros' : '';
+          var instVal = fmtCents(instCents);
+          var instHtml = sectionSettings.installments_text
+            .replace('[parcelas]', sectionSettings.installments_max)
+            .replace('[valor]', instVal)
+            .replace('[juros]', jurosTxt);
+          instEl.textContent = instHtml;
+        }
+      }
+      // PIX
+      if (sectionSettings.pix_discount_enabled && sectionSettings.pix_discount_percent > 0) {
+        var pixEl = document.querySelector('.product-info__pix');
+        if (pixEl) {
+          var pixCents = Math.round(priceCents * (100 - sectionSettings.pix_discount_percent) / 100);
+          var pixVal = fmtCents(pixCents);
+          var pixHtml = sectionSettings.pix_discount_text
+            .replace('[valor]', pixVal)
+            .replace('[desconto]', sectionSettings.pix_discount_percent);
+          var pixSpan = pixEl.querySelector('span');
+          if (pixSpan) pixSpan.textContent = pixHtml;
+        }
+      }
+    }
+
+    var form = document.getElementById('AddToCartForm');
+    if (!form) {
+      console.warn('[ProductPage] Form #AddToCartForm não encontrado.');
+      return;
+    }
+
+    // AJAX add-to-cart: evita redirecionamento para /cart
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var addBtn = document.getElementById('AddToCartBtn');
+      if (!addBtn || addBtn.disabled) return;
+      var originalText = addBtn.textContent;
+      addBtn.disabled = true;
+      addBtn.textContent = 'Adicionando...';
+
+      var formData = new FormData(form);
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+        body: formData
+      })
+        .then(function (r) { return r.json().then(function (data) { return { ok: r.ok, data: data }; }); })
+        .then(function (res) {
+          if (!res.ok) {
+            addBtn.textContent = (res.data && res.data.description) || 'Erro';
+            setTimeout(function () { addBtn.disabled = false; addBtn.textContent = originalText; }, 1800);
+            return;
+          }
+          addBtn.textContent = 'Adicionado ✓';
+          // Atualiza contador do carrinho no header
+          fetch('/cart.js').then(function (r) { return r.json(); }).then(function (cart) {
+            document.querySelectorAll('.header__cart-count').forEach(function (el) {
+              el.textContent = cart.item_count;
+              el.style.display = cart.item_count > 0 ? 'flex' : 'none';
+            });
+          }).catch(function(){});
+          setTimeout(function () { addBtn.disabled = false; addBtn.textContent = originalText; }, 1500);
+        })
+        .catch(function () {
+          addBtn.textContent = 'Erro';
+          setTimeout(function () { addBtn.disabled = false; addBtn.textContent = originalText; }, 1800);
+        });
+    });
+
+
+    function getSelectedOptions() {
+      var selectedOptions = [];
+      var optionSelectors = form.querySelectorAll('.option-selector');
+      for (var i = 0; i < optionSelectors.length; i++) {
+        var selector = optionSelectors[i];
+        var activeVal = '';
+
+        // Size buttons
+        var sizeBtn = selector.querySelector('.size-button.active');
+        if (sizeBtn) activeVal = sizeBtn.getAttribute('data-value');
+
+        // Color swatches
+        var colorBtn = selector.querySelector('.color-swatch.active');
+        if (colorBtn) activeVal = colorBtn.getAttribute('data-value');
+
+        // Variant image swatches
+        var variantImgBtn = selector.querySelector('.variant-image-swatch.active');
+        if (variantImgBtn) activeVal = variantImgBtn.getAttribute('data-value');
+
+        // Default select
+        var selectEl = selector.querySelector('select');
+        if (selectEl) activeVal = selectEl.value;
+
+        selectedOptions.push(activeVal);
+      }
+      return selectedOptions;
+    }
+
+    function markUnavailableOptions() {
+      var currentSelected = getSelectedOptions();
+      var optionSelectors = form.querySelectorAll('.option-selector');
+
+      for (var idx = 0; idx < optionSelectors.length; idx++) {
+        var selector = optionSelectors[idx];
+        // Reúne todos os botões clicáveis desta opção
+        var allBtns = selector.querySelectorAll('.size-button, .color-swatch, .variant-image-swatch');
+
+        for (var b = 0; b < allBtns.length; b++) {
+          var btn = allBtns[b];
+          var val = btn.getAttribute('data-value');
+
+          // Verifica se existe alguma variante disponível onde esta opção
+          // tenha esse valor E as demais opções combinem com a seleção atual
+          var avail = false;
+          for (var vi = 0; vi < variants.length; vi++) {
+            var v = variants[vi];
+            if (v.options[idx] !== val) continue;
+            if (!v.available) continue;
+            // Verifica as outras opções selecionadas
+            var match = true;
+            for (var oi = 0; oi < currentSelected.length; oi++) {
+              if (oi === idx) continue; // pula a opção que estamos verificando
+              if (currentSelected[oi] && v.options[oi] !== currentSelected[oi]) {
+                match = false;
+                break;
+              }
+            }
+            if (match) { avail = true; break; }
+          }
+
+          if (avail) {
+            btn.classList.remove('unavailable');
+            btn.removeAttribute('disabled');
+          } else {
+            btn.classList.add('unavailable');
+            // Para cores: bloqueia completamente com disabled
+            if (btn.classList.contains('color-swatch') || btn.classList.contains('variant-image-swatch')) {
+              btn.setAttribute('disabled', 'disabled');
+            }
+          }
+        }
+
+        // Oculta a seção inteira se TODOS os botões estiverem esgotados (só para cores)
+        var optionName = selector.getAttribute('data-option-name');
+        var isColor = optionName && (optionName.indexOf('cor') === 0 || optionName.indexOf('color') === 0 || optionName.indexOf('colour') === 0);
+        if (isColor) {
+          var allUnavailable = true;
+          for (var b2 = 0; b2 < allBtns.length; b2++) {
+            if (!allBtns[b2].classList.contains('unavailable')) {
+              allUnavailable = false;
+              break;
+            }
+          }
+          if (allBtns.length > 0) {
+            selector.style.display = allUnavailable ? 'none' : '';
+          }
+        }
+      }
+    }
+
+    // Handle Option Click (Sizes, Colors, Dropdowns)
+    function updateSelectedOptions() {
+      var selectedOptions = getSelectedOptions();
+
+      // Update label display text
+      for (var i = 0; i < selectedOptions.length; i++) {
+        var labelDisplay = document.getElementById('SelectedOptionVal-' + i);
+        if (labelDisplay) {
+          labelDisplay.textContent = selectedOptions[i];
+        }
+      }
+
+      // Find matching variant
+      var matchedVariant = null;
+      for (var vi = 0; vi < variants.length; vi++) {
+        var variant = variants[vi];
+        var match = true;
+        for (var oi = 0; oi < variant.options.length; oi++) {
+          if (variant.options[oi] !== selectedOptions[oi]) {
+            match = false;
+            break;
+          }
+        }
+        if (match) { matchedVariant = variant; break; }
+      }
+
+      var variantIdInput = document.getElementById('ProductVariantId');
+      var addToCartBtn = document.getElementById('AddToCartBtn');
+      var productInfo = form.closest('.product-info');
+      var priceWrapper = productInfo ? productInfo.querySelector('.product-info__price-wrapper') : null;
+
+      if (matchedVariant) {
+        variantIdInput.value = matchedVariant.id;
+        
+        // Update Price Display
+        if (priceWrapper) {
+          if (matchedVariant.compare_at_price) {
+            var compareCents = parseCents(matchedVariant.compare_at_price);
+            var priceCentsVal = parseCents(matchedVariant.price);
+            var discountPct = compareCents > 0 ? Math.round((compareCents - priceCentsVal) / compareCents * 100) : 0;
+            priceWrapper.innerHTML = '<span class="price price--sale">' + matchedVariant.price + '</span>' +
+              '<span class="price price--compare">' + matchedVariant.compare_at_price + '</span>' +
+              '<span class="price price--discount">-' + discountPct + '%</span>';
+          } else {
+            priceWrapper.innerHTML = '<span class="price">' + matchedVariant.price + '</span>';
+          }
+        }
+
+        // Update button state
+        if (matchedVariant.available) {
+          addToCartBtn.disabled = false;
+          addToCartBtn.textContent = 'Adicionar à Sacola';
+        } else {
+          addToCartBtn.disabled = true;
+          addToCartBtn.textContent = 'Esgotado';
+        }
+
+        // Atualiza parcelamento e PIX com o preço da variante
+        updateInstallmentsPix(matchedVariant);
+
+        // Re-valida quantidade conforme estoque da nova variante
+        clampQty();
+
+      } else {
+        addToCartBtn.disabled = true;
+        addToCartBtn.textContent = 'Indisponível';
+      }
+
+      // Re-marca opções indisponíveis considerando contexto
+      markUnavailableOptions();
+    }
+
+    // Set up option event listeners
+    var optionSelectors = form.querySelectorAll('.option-selector');
+    for (var si = 0; si < optionSelectors.length; si++) {
+      (function(selector) {
+        // Size buttons
+        var sizeBtns = selector.querySelectorAll('.size-button');
+        for (var bi = 0; bi < sizeBtns.length; bi++) {
+          (function(btn) {
+            btn.addEventListener('click', function(e) {
+              e.preventDefault();
+              e.stopPropagation();
+              // Em modo block, cores esgotadas não devem ser clicáveis
+              var optionName = selector.getAttribute('data-option-name');
+              var isColor = optionName && (optionName.indexOf('cor') === 0 || optionName.indexOf('color') === 0 || optionName.indexOf('colour') === 0);
+              if (isColor && btn.classList.contains('unavailable')) return;
+              var allSizeBtns = selector.querySelectorAll('.size-button');
+              for (var ri = 0; ri < allSizeBtns.length; ri++) {
+                allSizeBtns[ri].classList.remove('active');
+              }
+              btn.classList.add('active');
+              updateSelectedOptions();
+            });
+          })(sizeBtns[bi]);
+        }
+
+        // Color swatches
+        var colorBtns = selector.querySelectorAll('.color-swatch');
+        for (var ci = 0; ci < colorBtns.length; ci++) {
+          (function(btn) {
+            btn.addEventListener('click', function(e) {
+              e.preventDefault();
+              e.stopPropagation();
+              // Cores esgotadas NÃO são clicáveis
+              if (btn.classList.contains('unavailable')) return;
+              var allColorBtns = selector.querySelectorAll('.color-swatch');
+              for (var ri = 0; ri < allColorBtns.length; ri++) {
+                allColorBtns[ri].classList.remove('active');
+              }
+              btn.classList.add('active');
+              updateSelectedOptions();
+            });
+          })(colorBtns[ci]);
+        }
+
+        // Variant image swatches
+        var imgBtns = selector.querySelectorAll('.variant-image-swatch');
+        for (var ii = 0; ii < imgBtns.length; ii++) {
+          (function(btn) {
+            btn.addEventListener('click', function(e) {
+              e.preventDefault();
+              e.stopPropagation();
+              if (btn.classList.contains('unavailable')) return;
+              var allImgBtns = selector.querySelectorAll('.variant-image-swatch');
+              for (var ri = 0; ri < allImgBtns.length; ri++) {
+                allImgBtns[ri].classList.remove('active');
+              }
+              btn.classList.add('active');
+              updateSelectedOptions();
+            });
+          })(imgBtns[ii]);
+        }
+
+        // Dropdown selector
+        var selectEl = selector.querySelector('select');
+        if (selectEl) {
+          selectEl.addEventListener('change', function() {
+            updateSelectedOptions();
+          });
+        }
+      })(optionSelectors[si]);
+    }
+
+    // Estado inicial
+    updateSelectedOptions();
+    markUnavailableOptions();
+
+    // Size Guide Modal
+    function initSizeGuideModal() {
+      var trigger = document.querySelector('[data-open-modal]');
+      var overlay = document.querySelector('[data-modal-overlay]');
+      var close = document.querySelector('[data-close-modal]');
+      if (!trigger || !overlay) return;
+
+      function open() {
+        overlay.classList.remove('closing');
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal() {
+        if (!overlay.classList.contains('open')) return;
+        overlay.classList.add('closing');
+        overlay.addEventListener('transitionend', function handler() {
+          overlay.removeEventListener('transitionend', handler);
+          overlay.classList.remove('open', 'closing');
+          document.body.style.overflow = '';
+        });
+      }
+
+      trigger.addEventListener('click', open);
+      if (close) close.addEventListener('click', closeModal);
+      overlay.addEventListener('click', function(e) { if (e.target === overlay) closeModal(); });
+      document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+    }
+    initSizeGuideModal();
+
+    } // end initProductPage
+
+    // Garante execução mesmo se DOMContentLoaded já disparou
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initProductPage);
+    } else {
+      initProductPage();
+    }
+  })();
+
+  document.body.setAttribute('data-variant-type', '{{ section.settings.variant_selector_type | default: settings.variant_selector_type | default: 'block' }}');
+</script>
+
+{% schema %}
+{
+  "name": "Main Product Details",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Provador Virtual"
+    },
+    {
+      "type": "checkbox",
+      "id": "fitting_room_enabled",
+      "label": "Ativar provador virtual",
+      "default": false
+    },
+    {
+      "type": "paragraph",
+      "content": "Os vídeos do provador são configurados via Meta Campos do produto. Crie o campo: namespace=custom, chave=fitting_videos, tipo=Lista de URLs."
+    },
+    {
+      "type": "header",
+      "content": "Seletor de Variantes"
+    },
+    {
+      "type": "select",
+      "id": "variant_selector_type",
+      "label": "Tipo de seletor",
+      "options": [
+        { "value": "block",         "label": "Bloco" },
+        { "value": "dropdown",      "label": "Suspenso" },
+        { "value": "swatch",        "label": "Cor da amostra" },
+        { "value": "variant_image", "label": "Imagem da variante" }
+      ],
+      "default": "block"
+    },
+    {
+      "type": "header",
+      "content": "Tabela de Medidas"
+    },
+    {
+      "type": "checkbox",
+      "id": "size_guide_enabled",
+      "label": "Mostrar tabela de medidas",
+      "default": true
+    },
+    {
+      "type": "paragraph",
+      "content": "Os dados vêm dos Metafields do produto (namespace: size_guide, chave: table). Configure em Shopify Admin > Configurações > Metafields > Produtos."
+    },
+    {
+      "type": "header",
+      "content": "Parcelamento"
+    },
+    {
+      "type": "checkbox",
+      "id": "installments_enabled",
+      "label": "Mostrar parcelamento",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "installments_max",
+      "label": "Número máximo de parcelas",
+      "min": 1,
+      "max": 24,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "type": "checkbox",
+      "id": "installments_no_interest",
+      "label": "Sem juros",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "installments_text",
+      "label": "Texto do parcelamento",
+      "default": "ou até [parcelas]x de [valor] [juros] no cartão",
+      "info": "Use [parcelas], [valor] e [juros] como variáveis."
+    },
+    {
+      "type": "header",
+      "content": "Desconto no PIX"
+    },
+    {
+      "type": "checkbox",
+      "id": "pix_discount_enabled",
+      "label": "Mostrar desconto no PIX",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "pix_discount_percent",
+      "label": "Percentual de desconto no PIX (%)",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "text",
+      "id": "pix_discount_text",
+      "label": "Texto do desconto PIX",
+      "default": "ou [valor] à vista no PIX ([desconto]% off)",
+      "info": "Use [valor] e [desconto] como variáveis."
+    },
+    {
+      "type": "color",
+      "id": "pix_discount_color",
+      "label": "Cor do destaque PIX",
+      "default": "#32BCAD"
+    },
+    {
+      "type": "header",
+      "content": "Páginas"
+    },
+    {
+      "type": "select",
+      "id": "pages_display_mode",
+      "label": "Modo de display",
+      "options": [
+        { "value": "all",       "label": "Mostre tudo" },
+        { "value": "text_only", "label": "Apenas texto padrão" },
+        { "value": "page_only", "label": "Apenas se página vinculada" }
+      ],
+      "default": "all"
+    },
+    {
+      "type": "page",
+      "id": "shipping_page",
+      "label": "Primeira página (Envio & Devoluções)"
+    },
+    {
+      "type": "textarea",
+      "id": "shipping_text",
+      "label": "Texto padrão — Envio & Devoluções",
+      "default": "Frete grátis em compras acima de R$ 399,90. Devoluções gratuitas em até 30 dias após o recebimento da compra para membros da marca."
+    },
+    {
+      "type": "page",
+      "id": "payment_page",
+      "label": "Segunda página (Métodos de Pagamento)"
+    },
+    {
+      "type": "textarea",
+      "id": "payment_text",
+      "label": "Texto padrão — Métodos de Pagamento",
+      "default": "Aceitamos Pix, cartões de crédito (Visa, Mastercard, Elo, Amex) com parcelamento em até 10x sem juros, ou boleto bancário à vista."
+    },
+    {
+      "type": "page",
+      "id": "extra_page",
+      "label": "Terceira página (opcional)"
+    },
+    {
+      "type": "header",
+      "content": "WhatsApp"
+    },
+    {
+      "type": "checkbox",
+      "id": "mostrar_btn_wtspp",
+      "label": "Botão Comprar pelo WhatsApp",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "background_whatsapp_btn",
+      "label": "Background",
+      "default": "#25D366"
+    },
+    {
+      "type": "color",
+      "id": "txt_whatsapp_btn",
+      "label": "Textos e bordas",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "text",
+      "id": "wtspp_text",
+      "label": "Texto do botão",
+      "default": "Comprar pelo WhatsApp"
+    },
+    {
+      "type": "text",
+      "id": "whatsapplinknumber",
+      "label": "Link para seu WhatsApp",
+      "info": "Crie seu link em https://wa.me/seunumero"
+    }
+  ]
+}
+{% endschema %}

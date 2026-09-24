@@ -1,0 +1,145 @@
+{%- comment -%}
+  Section: Membership Banner
+  ConectWhats Member signup banner with benefits grid and CTA
+{%- endcomment -%}
+
+<section class="membership-banner" id="membership-{{ section.id }}">
+  <div class="page-width">
+    <div class="membership-banner__container reveal">
+      {%- if section.settings.label != blank -%}
+        <span class="membership-banner__label">{{ section.settings.label }}</span>
+      {%- endif -%}
+
+      <h2 class="membership-banner__title">{{ section.settings.title | default: 'TORNE-SE CONECTWHATS MEMBER' }}</h2>
+
+      {%- if section.settings.subtitle != blank -%}
+        <p class="membership-banner__subtitle">{{ section.settings.subtitle }}</p>
+      {%- endif -%}
+
+      <!-- Benefits Grid -->
+      {%- if section.blocks.size > 0 -%}
+        <div class="membership-banner__benefits" data-stagger-container>
+          {%- for block in section.blocks -%}
+            <div class="membership-benefit card-hover" {{ block.shopify_attributes }}>
+              <div class="membership-benefit__icon">
+                {%- case block.settings.icon -%}
+                  {%- when 'shipping' -%}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <rect x="1" y="3" width="15" height="13" rx="1"></rect>
+                      <polygon points="16,8 20,10 20,16 16,16"></polygon>
+                      <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                      <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                    </svg>
+                  {%- when 'early_access' -%}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12,6 12,12 16,14"></polyline>
+                    </svg>
+                  {%- when 'discount' -%}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <line x1="19" y1="5" x2="5" y2="19"></line>
+                      <circle cx="6.5" cy="6.5" r="2.5"></circle>
+                      <circle cx="17.5" cy="17.5" r="2.5"></circle>
+                    </svg>
+                  {%- when 'returns' -%}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <polyline points="1,4 1,10 7,10"></polyline>
+                      <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                    </svg>
+                  {%- else -%}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                    </svg>
+                {%- endcase -%}
+              </div>
+              <span class="membership-benefit__text">{{ block.settings.text }}</span>
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.button_text != blank -%}
+        <a href="{{ section.settings.button_url | default: '/account/register' }}" class="membership-banner__cta btn-glow btn-ripple">
+          {{ section.settings.button_text }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Banner Membership",
+  "class": "membership-banner-section",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "ConectWhats Member"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "TORNE-SE CONECTWHATS MEMBER"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtítulo",
+      "default": "Cadastre-se gratuitamente e aproveite benefícios exclusivos, acesso antecipado a lançamentos e muito mais."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Texto do botão",
+      "default": "Cadastre-se Grátis"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Link do botão"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefício",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texto do benefício",
+          "default": "Frete grátis em todos os pedidos"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Ícone",
+          "options": [
+            { "value": "shipping", "label": "Frete/Entrega" },
+            { "value": "early_access", "label": "Acesso Antecipado" },
+            { "value": "discount", "label": "Desconto" },
+            { "value": "returns", "label": "Devoluções" },
+            { "value": "star", "label": "Estrela" }
+          ],
+          "default": "shipping"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Banner Membership",
+      "blocks": [
+        { "type": "benefit", "settings": { "text": "Frete grátis em todos os pedidos", "icon": "shipping" } },
+        { "type": "benefit", "settings": { "text": "Acesso antecipado a lançamentos", "icon": "early_access" } },
+        { "type": "benefit", "settings": { "text": "Ofertas exclusivas para membros", "icon": "discount" } },
+        { "type": "benefit", "settings": { "text": "Devoluções facilitadas em 30 dias", "icon": "returns" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

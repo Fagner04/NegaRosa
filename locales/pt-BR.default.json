@@ -1,0 +1,154 @@
+{
+  "general": {
+    "password_page": {
+      "title": "Em breve",
+      "subtitle": "Estamos preparando algo incrível."
+    },
+    "breadcrumbs": {
+      "home": "Início"
+    },
+    "search": {
+      "placeholder": "Buscar",
+      "submit": "Buscar",
+      "no_results": "Nenhum resultado encontrado para",
+      "results_count": "{{ count }} resultados"
+    },
+    "cart": {
+      "title": "Sacola",
+      "empty": "Sua sacola está vazia",
+      "continue_shopping": "Continuar Comprando",
+      "subtotal": "Subtotal",
+      "checkout": "Finalizar Compra",
+      "remove": "Remover",
+      "quantity": "Quantidade",
+      "add_to_cart": "Adicionar à Sacola",
+      "added": "Adicionado!",
+      "view_cart": "Ver Sacola"
+    },
+    "newsletter": {
+      "title": "Fique por dentro",
+      "subtitle": "Cadastre-se e receba as últimas novidades, lançamentos exclusivos e ofertas especiais.",
+      "email_placeholder": "Seu melhor e-mail",
+      "submit": "Cadastrar",
+      "success": "Obrigado por se cadastrar!"
+    },
+    "404": {
+      "title": "Página não encontrada",
+      "subtitle": "A página que você procura não existe ou foi movida.",
+      "button": "Voltar para o Início"
+    }
+  },
+  "accessibility": {
+    "skip_to_text": "Pular para o conteúdo",
+    "close": "Fechar",
+    "menu": "Menu",
+    "cart_count": "{{ count }} itens na sacola",
+    "search": "Buscar",
+    "account": "Conta",
+    "wishlist": "Lista de Desejos",
+    "previous_slide": "Slide anterior",
+    "next_slide": "Próximo slide",
+    "slide_of": "Slide {{ current }} de {{ total }}"
+  },
+  "sections": {
+    "header": {
+      "new_arrivals": "Lançamentos",
+      "men": "Masculino",
+      "women": "Feminino",
+      "kids": "Infantil",
+      "sale": "Ofertas",
+      "help": "Ajuda",
+      "find_store": "Encontrar Loja",
+      "join_us": "Cadastre-se",
+      "sign_in": "Entrar",
+      "search_placeholder": "Buscar produtos, categorias...",
+      "favorites": "Favoritos",
+      "cart": "Sacola"
+    },
+    "announcement": {
+      "free_shipping": "FRETE GRÁTIS acima de R$299",
+      "member_discount": "CONECTWHATS MEMBER: Cadastre-se e ganhe 15% OFF no primeiro pedido",
+      "new_arrivals": "NOVIDADES: Confira os últimos lançamentos"
+    },
+    "hero": {
+      "shop_now": "Comprar Agora",
+      "learn_more": "Saiba Mais",
+      "explore": "Explorar"
+    },
+    "featured_collection": {
+      "view_all": "Ver Tudo",
+      "new_badge": "Novo",
+      "exclusive_badge": "Exclusivo",
+      "quick_add": "Adicionar Rápido"
+    },
+    "categories": {
+      "title": "Explore por Categoria",
+      "shop_now": "Comprar",
+      "shoes": "Calçados",
+      "clothing": "Vestuário",
+      "accessories": "Acessórios",
+      "football": "Futebol",
+      "running": "Corrida",
+      "training": "Treino"
+    },
+    "trending": {
+      "title": "Em Alta Agora",
+      "subtitle": "Os produtos mais desejados do momento"
+    },
+    "drops": {
+      "title": "DROPS",
+      "subtitle": "Lançamentos Exclusivos",
+      "coming_soon": "Em Breve",
+      "available": "Disponível",
+      "sold_out": "Esgotado",
+      "notify_me": "Avise-me",
+      "days": "Dias",
+      "hours": "Horas",
+      "minutes": "Min",
+      "seconds": "Seg"
+    },
+    "membership": {
+      "title": "TORNE-SE CONECTWHATS MEMBER",
+      "subtitle": "Cadastre-se gratuitamente e aproveite benefícios exclusivos.",
+      "benefit_1": "Frete grátis em todos os pedidos",
+      "benefit_2": "Acesso antecipado a lançamentos",
+      "benefit_3": "Ofertas exclusivas para membros",
+      "benefit_4": "Devoluções facilitadas em 30 dias",
+      "cta": "Cadastre-se Grátis"
+    },
+    "footer": {
+      "help": "Ajuda",
+      "order_status": "Status do Pedido",
+      "shipping": "Envio e Entrega",
+      "returns": "Devoluções",
+      "payment_options": "Opções de Pagamento",
+      "contact_us": "Fale Conosco",
+      "about": "Sobre a ConectWhats",
+      "news": "Notícias",
+      "careers": "Carreiras",
+      "investors": "Investidores",
+      "sustainability": "Sustentabilidade",
+      "terms": "Termos de Uso",
+      "privacy": "Política de Privacidade",
+      "country": "Brasil",
+      "copyright": "© {{ year }} ConectWhats. Todos os direitos reservados."
+    },
+    "cart": {
+      "cart_error": "Ocorreu um erro ao atualizar a sacola.",
+      "cart_quantity_error": "Não é possível adicionar mais de [quantity] deste item."
+    },
+    "product": {
+      "add_to_cart": "Adicionar à Sacola",
+      "sold_out": "Esgotado",
+      "unavailable": "Indisponível",
+      "size": "Tamanho",
+      "color": "Cor",
+      "quantity": "Quantidade",
+      "description": "Descrição",
+      "details": "Detalhes",
+      "reviews": "Avaliações",
+      "select_size": "Selecione o Tamanho",
+      "size_guide": "Guia de Tamanhos"
+    }
+  }
+}

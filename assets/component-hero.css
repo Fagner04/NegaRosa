@@ -1,0 +1,455 @@
+/* ==========================================================================
+   ConectWhats - Hero Banner Component CSS
+   Fullwidth carousel, slides, progress, parallax
+   ========================================================================== */
+
+/* ---------- Hero Banner Container ---------- */
+.hero-banner {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--color-bg-secondary);
+}
+
+.hero-banner--fullscreen {
+  height: calc(100vh - var(--header-height) - var(--announcement-height));
+  min-height: 500px;
+  max-height: 900px;
+}
+
+.hero-banner--large {
+  height: 75vh;
+  min-height: 450px;
+  max-height: 750px;
+}
+
+.hero-banner--medium {
+  height: 60vh;
+  min-height: 400px;
+  max-height: 600px;
+}
+
+/* ---------- Slides ---------- */
+.hero-banner__slides {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-banner__slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 1s;
+  z-index: 1;
+}
+
+.hero-banner__slide.active {
+  opacity: 1;
+  visibility: visible;
+  z-index: 2;
+}
+
+/* Slide Image */
+.hero-banner__image-wrapper {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.hero-banner__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-banner__slide.active .hero-banner__image {
+  transform: scale(1.05);
+}
+
+/* Video background */
+.hero-banner__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Overlay gradient */
+.hero-banner__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.hero-banner__overlay--dark {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.2) 40%,
+    rgba(0, 0, 0, 0) 70%
+  );
+}
+
+.hero-banner__overlay--light {
+  background: linear-gradient(
+    to top,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0) 50%
+  );
+}
+
+.hero-banner__overlay--gradient {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0) 60%
+  );
+}
+
+/* ---------- Slide Content ---------- */
+.hero-banner__content {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: var(--space-16) var(--page-gutter);
+  max-width: var(--page-width);
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+}
+
+.hero-banner__content--center {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.hero-banner__content--left {
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.hero-banner__content--bottom-left {
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.hero-banner__content--bottom-center {
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Text animations */
+.hero-banner__tag {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-widest);
+  margin-bottom: var(--space-3);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+}
+
+.hero-banner__title {
+  font-size: var(--font-size-hero);
+  font-weight: var(--font-weight-black);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-4);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
+  max-width: 800px;
+}
+
+.hero-banner__subtitle {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+  margin-bottom: var(--space-8);
+  max-width: 500px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.5s;
+}
+
+.hero-banner__actions {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.7s;
+}
+
+/* Animate in when slide is active */
+.hero-banner__slide.active .hero-banner__tag,
+.hero-banner__slide.active .hero-banner__title,
+.hero-banner__slide.active .hero-banner__subtitle,
+.hero-banner__slide.active .hero-banner__actions {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Color variants for text */
+.hero-banner__content--dark {
+  color: var(--color-text);
+}
+
+.hero-banner__content--light {
+  color: var(--color-text-inverse);
+}
+
+.hero-banner__content--light .btn-primary {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  border-color: var(--color-bg);
+}
+
+.hero-banner__content--light .btn-primary:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+.hero-banner__content--light .btn-secondary {
+  background-color: var(--color-bg);
+  border-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+.hero-banner__content--light .btn-secondary:hover {
+  background-color: var(--color-bg-secondary);
+  border-color: var(--color-bg-secondary);
+  color: var(--color-text);
+}
+
+/* ---------- Navigation Arrows ---------- */
+.hero-banner__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  border: none;
+  opacity: 0;
+  box-shadow: var(--shadow-md);
+}
+
+.hero-banner:hover .hero-banner__nav {
+  opacity: 1;
+}
+
+.hero-banner__nav:hover {
+  background-color: var(--color-bg);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: var(--shadow-lg);
+}
+
+.hero-banner__nav--prev {
+  left: var(--space-6);
+}
+
+.hero-banner__nav--next {
+  right: var(--space-6);
+}
+
+.hero-banner__nav svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--color-primary);
+}
+
+/* ---------- Dots/Indicators ---------- */
+.hero-banner__dots {
+  position: absolute;
+  bottom: var(--space-8);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.hero-banner__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  padding: 0;
+}
+
+.hero-banner__dot:hover {
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.hero-banner__dot.active {
+  background-color: var(--color-bg);
+  border-color: var(--color-bg);
+  transform: scale(1.2);
+}
+
+/* Progress bar style dots */
+.hero-banner__progress-dots {
+  position: absolute;
+  bottom: var(--space-6);
+  left: var(--page-gutter);
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.hero-banner__progress-dot {
+  width: 40px;
+  height: 3px;
+  border-radius: var(--border-radius-full);
+  background-color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  overflow: hidden;
+  transition: all var(--transition-fast);
+  padding: 0;
+  border: none;
+}
+
+.hero-banner__progress-dot.active {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.hero-banner__progress-dot-fill {
+  width: 0;
+  height: 100%;
+  background-color: var(--color-bg);
+  border-radius: var(--border-radius-full);
+  transition: width 0.3s linear;
+}
+
+.hero-banner__progress-dot.active .hero-banner__progress-dot-fill {
+  animation: progressFill var(--slide-duration, 5s) linear forwards;
+}
+
+/* ---------- Scroll Indicator ---------- */
+.hero-banner__scroll-indicator {
+  position: absolute;
+  bottom: var(--space-6);
+  right: var(--page-gutter);
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-inverse);
+  font-size: var(--font-size-xs);
+  letter-spacing: var(--letter-spacing-wider);
+  text-transform: uppercase;
+  animation: bounceSubtle 2s infinite;
+}
+
+.hero-banner__scroll-indicator svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+/* ===== Mobile aspect ratio & object-fit ===== */
+@media (max-width: 749px) {
+  .hero-banner {
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    aspect-ratio: var(--hero-mobile-ratio, 3 / 4);
+  }
+
+  .hero-banner__slides,
+  .hero-banner__slide,
+  .hero-banner__image-wrapper {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-banner__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* Ratio variants */
+  .hero-banner--mobile-ratio-9-16 {
+    --hero-mobile-ratio: 9 / 16;
+  }
+  .hero-banner--mobile-ratio-3-4 {
+    --hero-mobile-ratio: 3 / 4;
+  }
+  .hero-banner--mobile-ratio-4-5 {
+    --hero-mobile-ratio: 4 / 5;
+  }
+  .hero-banner--mobile-ratio-1-1 {
+    --hero-mobile-ratio: 1 / 1;
+  }
+
+  /* Fullscreen = ocupa toda a tela do celular */
+  .hero-banner--mobile-ratio-fullscreen {
+    aspect-ratio: auto;
+    height: 100vh !important;
+    height: 100dvh !important;
+    min-height: 100vh !important;
+  }
+
+  /* Personalizada = usa a altura definida no customizer */
+  .hero-banner--mobile-ratio-custom {
+    aspect-ratio: auto;
+    height: var(--hero-mobile-custom-height, 90vh) !important;
+    min-height: var(--hero-mobile-custom-height, 90vh) !important;
+  }
+
+  /* Auto = show full image without cropping */
+  .hero-banner--mobile-ratio-auto {
+    aspect-ratio: auto;
+    min-height: auto;
+  }
+  .hero-banner--mobile-ratio-auto .hero-banner__image-wrapper {
+    position: relative;
+    inset: auto;
+    aspect-ratio: auto;
+    height: auto;
+  }
+  .hero-banner--mobile-ratio-auto .hero-banner__image {
+    position: relative;
+    inset: auto;
+    object-fit: contain;
+    height: auto;
+  }
+
+  /* Hide content/nav on mobile when configured */
+  .hero-banner--hide-content-mobile .hero-banner__content,
+  .hero-banner--hide-content-mobile .hero-banner__overlay,
+  .hero-banner--hide-content-mobile .hero-banner__nav,
+  .hero-banner--hide-content-mobile .hero-banner__progress-dots,
+  .hero-banner--hide-content-mobile .hero-banner__scroll-indicator {
+    display: none !important;
+  }
+}

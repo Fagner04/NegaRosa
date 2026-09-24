@@ -1,0 +1,567 @@
+{%- comment -%}
+  Section: Header
+  ConectWhats-style header with top nav, logo, main navigation, mega menu, search, cart, mobile menu
+{%- endcomment -%}
+{%- assign sticky_enabled = section.settings.sticky_header -%}
+
+<script>
+  (function() {
+    var sticky = {{ sticky_enabled | json }};
+    var apply = function() {
+      var wrap = document.querySelector('.fixed-top');
+      var spacer = document.querySelector('.header-spacer');
+      if (!wrap) return;
+      if (sticky) {
+        wrap.classList.remove('is-static');
+        if (spacer) spacer.style.display = '';
+      } else {
+        wrap.classList.add('is-static');
+        if (spacer) spacer.style.display = 'none';
+      }
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', apply);
+    } else { apply(); }
+  })();
+</script>
+<style>
+  .fixed-top.is-static { position: static !important; transform: none !important; }
+  .fixed-top.is-static .header.scrolled { background-color: var(--header-bg, var(--color-bg)) !important; backdrop-filter: none !important; box-shadow: none !important; }
+</style>
+
+<!-- Main Header -->
+
+<header class="header" id="header" data-section-id="{{ section.id }}">
+  <div class="page-width">
+    <div class="header__container">
+      <!-- Mobile Menu Button -->
+      <button class="header__menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
+        <div class="hamburger">
+          <span class="hamburger__line"></span>
+          <span class="hamburger__line"></span>
+          <span class="hamburger__line"></span>
+        </div>
+      </button>
+
+      <!-- Logo -->
+      <a href="/" class="header__logo" aria-label="{{ shop.name }}">
+        {%- if section.settings.logo != blank -%}
+          {%- assign logo_w = section.settings.logo_width | default: 140 -%}
+          <img
+            src="{{ section.settings.logo | image_url: width: 600 }}"
+            alt="{{ shop.name | escape }}"
+            width="{{ logo_w }}"
+            height="auto"
+            style="width: {{ logo_w }}px; height: auto; max-height: 48px; object-fit: contain;"
+            loading="eager"
+          >
+        {%- elsif shop.brand.logo != blank -%}
+          <img
+            src="{{ shop.brand.logo | image_url: width: 600 }}"
+            alt="{{ shop.name | escape }}"
+            style="height: 36px; width: auto; object-fit: contain;"
+            loading="eager"
+          >
+        {%- else -%}
+          <span style="font-weight: 700; font-size: 20px; letter-spacing: 0.02em;">{{ shop.name }}</span>
+        {%- endif -%}
+      </a>
+
+      <!-- Main Navigation -->
+      <nav class="header__nav" aria-label="Menu principal">
+        <ul class="header__nav-list">
+          {%- for link in section.settings.menu.links -%}
+            <li class="header__nav-item{% if link.active %} active{% endif %}" {% if link.links.size > 0 %}data-mega-menu{% endif %}>
+              <a href="{{ link.url }}" class="header__nav-link{% if link.title == 'Ofertas' %} header__nav-link--sale{% endif %}">
+                {{ link.title }}
+              </a>
+
+              {%- if link.links.size > 0 -%}
+                <div class="mega-menu">
+                  <div class="mega-menu__container">
+                    {%- for child_link in link.links -%}
+                      <div class="mega-menu__column">
+                        <a href="{{ child_link.url }}" class="mega-menu__link">{{ child_link.title }}</a>
+                        {%- if child_link.links.size > 0 -%}
+                          {%- for grandchild_link in child_link.links -%}
+                            <a href="{{ grandchild_link.url }}" class="mega-menu__link mega-menu__link--child">{{ grandchild_link.title }}</a>
+                          {%- endfor -%}
+                        {%- endif -%}
+                      </div>
+                    {%- endfor -%}
+
+                    {%- if section.settings.mega_menu_image != blank -%}
+                      <a href="{{ link.url }}" class="mega-menu__featured">
+                        <img src="{{ section.settings.mega_menu_image | image_url: width: 400 }}" alt="Destaque" loading="lazy">
+                        <span class="mega-menu__featured-label">Ver Tudo</span>
+                      </a>
+                    {%- endif -%}
+                  </div>
+                </div>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+
+      <!-- Right Actions -->
+      <div class="header__actions">
+        <!-- Search -->
+        <form action="/search" method="get" role="search" class="header__search">
+          <input type="search" name="q" class="header__search-input" placeholder="Buscar" aria-label="Buscar">
+          <button type="submit" class="header__action-btn header__search-btn" aria-label="Buscar">
+            {% render 'icon-search' %}
+          </button>
+        </form>
+
+        <!-- Rastrear Pedido (desktop only) -->
+        {%- assign track_href = section.settings.track_page.url | default: section.settings.track_url | default: '/pages/rastrear-pedido' -%}
+        <a href="{{ track_href }}" class="header__action-btn header__action-btn--desktop" aria-label="{{ section.settings.track_label | default: 'Rastrear Pedido' }}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          <span class="header__action-label">{{ section.settings.track_label | default: 'Rastrear' }}</span>
+        </a>
+
+        <!-- Entrar / Conta (desktop only) -->
+        {%- if customer -%}
+          <a href="/account" class="header__action-btn header__action-btn--desktop" aria-label="{{ section.settings.account_label | default: 'Minha Conta' }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+            <span class="header__action-label">{{ section.settings.account_label | default: 'Conta' }}</span>
+          </a>
+        {%- else -%}
+          {%- assign login_href = section.settings.login_page.url | default: section.settings.login_url | default: '/account/login' -%}
+          <a href="{{ login_href }}" class="header__action-btn header__action-btn--desktop" aria-label="{{ section.settings.login_label | default: 'Entrar ou cadastrar' }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true">
+              <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
+            </svg>
+            <span class="header__action-label">{{ section.settings.login_label | default: 'Entrar' }}</span>
+          </a>
+        {%- endif -%}
+
+
+
+        <!-- Wishlist -->
+        <button type="button" class="header__action-btn" aria-label="Favoritos" id="WishlistOpenBtn" data-wishlist-open>
+          {% render 'icon-heart' %}
+          <span class="header__wishlist-count" id="WishlistCount" style="display:none">0</span>
+        </button>
+
+        <!-- Cart (shopping bag) -->
+        <a href="/cart" class="header__action-btn header__cart-btn" aria-label="Sacola" data-cart-total="{{ cart.total_price | money }}" data-cart-count="{{ cart.item_count }}">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true">
+            <path d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"/>
+          </svg>
+          <span class="header__cart-count" style="{% if cart.item_count == 0 %}display:none{% endif %}">
+            {{ cart.item_count }}
+          </span>
+          <span class="header__cart-bubble" aria-hidden="true">
+            <span class="header__cart-bubble-label">Sacola</span>
+            <span class="header__cart-bubble-value">{{ cart.total_price | money }}</span>
+            <span class="header__cart-bubble-meta">{{ cart.item_count }} {% if cart.item_count == 1 %}item{% else %}itens{% endif %}</span>
+          </span>
+        </a>
+
+        <style>
+          .header__cart-btn { position: relative; }
+          .header__cart-bubble {
+            position: absolute;
+            top: calc(100% + 14px);
+            right: -6px;
+            min-width: 150px;
+            padding: 10px 14px;
+            background: #111;
+            color: #fff;
+            border-radius: 14px;
+            box-shadow: 0 12px 30px rgba(0,0,0,.18), 0 2px 6px rgba(0,0,0,.12);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+            opacity: 0;
+            transform: scale(.4) translateY(-14px);
+            transform-origin: 85% 0%;
+            pointer-events: none;
+            transition: opacity .18s ease, transform .35s cubic-bezier(.34,1.56,.64,1);
+            z-index: 60;
+            white-space: nowrap;
+          }
+          .header__cart-bubble::before {
+            content: "";
+            position: absolute;
+            top: -6px;
+            right: 16px;
+            width: 12px;
+            height: 12px;
+            background: #111;
+            border-radius: 2px;
+            transform: rotate(45deg);
+          }
+          .header__cart-bubble-label {
+            font-size: 10px;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            opacity: .65;
+          }
+          .header__cart-bubble-value {
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: .01em;
+          }
+          .header__cart-bubble-meta {
+            font-size: 11px;
+            opacity: .75;
+          }
+          @media (hover: hover) and (min-width: 901px) {
+            .header__cart-btn:hover .header__cart-bubble,
+            .header__cart-btn:focus-visible .header__cart-bubble {
+              opacity: 1;
+              transform: scale(1) translateY(0);
+              animation: cartBubblePop .5s cubic-bezier(.34,1.56,.64,1);
+            }
+          }
+          @media (max-width: 900px) {
+            .header__cart-bubble { display: none; }
+          }
+          @keyframes cartBubblePop {
+            0%   { transform: scale(.2) translateY(-18px); opacity: 0; }
+            55%  { transform: scale(1.08) translateY(2px); opacity: 1; }
+            80%  { transform: scale(.96) translateY(0); }
+            100% { transform: scale(1) translateY(0); }
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .header__cart-bubble { transition: opacity .15s ease; transform: none; }
+            .header__cart-btn:hover .header__cart-bubble { animation: none; transform: none; }
+          }
+        </style>
+
+        <script>
+        (function(){
+          function formatMoney(cents){
+            try {
+              return (cents/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+            } catch(e){ return 'R$ ' + (cents/100).toFixed(2).replace('.',','); }
+          }
+          function refreshCartBubble(cart){
+            var btn = document.querySelector('.header__cart-btn');
+            if(!btn) return;
+            var count = cart.item_count || 0;
+            var total = cart.total_price || 0;
+            var value = btn.querySelector('.header__cart-bubble-value');
+            var meta  = btn.querySelector('.header__cart-bubble-meta');
+            var badge = btn.querySelector('.header__cart-count');
+            if(value) value.textContent = formatMoney(total);
+            if(meta)  meta.textContent  = count + ' ' + (count===1?'item':'itens');
+            if(badge){
+              badge.textContent = count;
+              badge.style.display = count>0 ? '' : 'none';
+            }
+            btn.setAttribute('data-cart-count', count);
+            btn.setAttribute('data-cart-total', formatMoney(total));
+          }
+          function fetchCart(){
+            fetch('/cart.js',{headers:{'Accept':'application/json'}})
+              .then(function(r){return r.json();})
+              .then(refreshCartBubble)
+              .catch(function(){});
+          }
+          window.refreshCartBubble = fetchCart;
+
+          // Intercept fetch to refresh after cart mutations
+          var origFetch = window.fetch;
+          if(origFetch){
+            window.fetch = function(input, init){
+              var url = typeof input === 'string' ? input : (input && input.url) || '';
+              var p = origFetch.apply(this, arguments);
+              if(/\/cart\/(add|change|update|clear)(\.js)?/.test(url)){
+                p.then(function(){ setTimeout(fetchCart, 50); }).catch(function(){});
+              }
+              return p;
+            };
+          }
+          // Intercept XHR too
+          var OrigXHR = window.XMLHttpRequest;
+          if(OrigXHR){
+            var origOpen = OrigXHR.prototype.open;
+            var origSend = OrigXHR.prototype.send;
+            OrigXHR.prototype.open = function(m,u){ this.__cartUrl = u; return origOpen.apply(this, arguments); };
+            OrigXHR.prototype.send = function(){
+              var self = this;
+              this.addEventListener('load', function(){
+                if(self.__cartUrl && /\/cart\/(add|change|update|clear)/.test(self.__cartUrl)){
+                  setTimeout(fetchCart, 50);
+                }
+              });
+              return origSend.apply(this, arguments);
+            };
+          }
+          // Custom events some themes dispatch
+          ['cart:updated','cart:refresh','cart:build','cart:added'].forEach(function(ev){
+            document.addEventListener(ev, fetchCart);
+          });
+        })();
+        </script>
+
+      </div>
+    </div>
+
+    <!-- Mobile Search Bar (revealed by tapping the search icon on mobile) -->
+    <div class="header__search-mobile" id="header-search-mobile" aria-hidden="true">
+      <form action="/search" method="get" role="search" class="header__search-mobile-form">
+        <button type="submit" class="header__search-mobile-submit" aria-label="Buscar">
+          {% render 'icon-search' %}
+        </button>
+        <input type="search" name="q" class="header__search-mobile-input" placeholder="O que você procura?" aria-label="Buscar">
+        <button type="button" class="header__search-mobile-close" aria-label="Fechar busca">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+</header>
+
+<script>
+(function() {
+  var bar = document.getElementById('header-search-mobile');
+  if (!bar) return;
+  var btn = document.querySelector('.header__search-btn');
+  var closeBtn = bar.querySelector('.header__search-mobile-close');
+  var input = bar.querySelector('.header__search-mobile-input');
+  if (btn) {
+    btn.addEventListener('click', function(e) {
+      if (window.matchMedia('(max-width: 900px)').matches) {
+        e.preventDefault();
+        var open = bar.classList.toggle('is-open');
+        bar.setAttribute('aria-hidden', open ? 'false' : 'true');
+        if (open) setTimeout(function(){ input && input.focus(); }, 150);
+      }
+    });
+  }
+  if (closeBtn) {
+    closeBtn.addEventListener('click', function() {
+      bar.classList.remove('is-open');
+      bar.setAttribute('aria-hidden', 'true');
+    });
+  }
+})();
+</script>
+
+<!-- Mobile Menu Drawer -->
+<nav class="mobile-menu" id="mobile-menu" aria-label="Menu mobile">
+  <div class="mobile-menu__header">
+    <a href="/" class="header__logo" aria-label="{{ shop.name }}">
+      {%- if section.settings.logo != blank -%}
+        <img src="{{ section.settings.logo | image_url: width: 400 }}" alt="{{ shop.name | escape }}" style="height: 32px; width: auto; object-fit: contain;" loading="eager">
+      {%- elsif shop.brand.logo != blank -%}
+        <img src="{{ shop.brand.logo | image_url: width: 400 }}" alt="{{ shop.name | escape }}" style="height: 32px; width: auto; object-fit: contain;" loading="eager">
+      {%- else -%}
+        <span style="font-weight: 700; font-size: 18px;">{{ shop.name }}</span>
+      {%- endif -%}
+    </a>
+    <button class="mobile-menu__close" aria-label="Fechar menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  <div class="mobile-menu__nav">
+    {%- for link in section.settings.menu.links -%}
+      {%- if link.links.size > 0 -%}
+        <div class="mobile-menu__group">
+          <button type="button" class="mobile-menu__link mobile-menu__toggle{% if link.title == 'Ofertas' %} mobile-menu__link--sale{% endif %}" aria-expanded="false">
+            <span>{{ link.title }}</span>
+            <svg class="mobile-menu__chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="mobile-menu__submenu">
+            <a href="{{ link.url }}" class="mobile-menu__sublink mobile-menu__sublink--all">Ver tudo em {{ link.title }}</a>
+            {%- for child in link.links -%}
+              <a href="{{ child.url }}" class="mobile-menu__sublink">{{ child.title }}</a>
+              {%- if child.links.size > 0 -%}
+                {%- for grand in child.links -%}
+                  <a href="{{ grand.url }}" class="mobile-menu__sublink mobile-menu__sublink--grand">{{ grand.title }}</a>
+                {%- endfor -%}
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- else -%}
+        <a href="{{ link.url }}" class="mobile-menu__link mobile-menu__link--plain{% if link.title == 'Ofertas' %} mobile-menu__link--sale{% endif %}">
+          <span>{{ link.title }}</span>
+        </a>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+  <div class="mobile-menu__secondary">
+    {%- assign help_href = section.settings.help_page.url | default: section.settings.help_url | default: '/pages/ajuda' -%}
+    {%- assign store_href = section.settings.store_page.url | default: section.settings.store_url | default: '/pages/lojas' -%}
+    {%- assign track_href_m = section.settings.track_page.url | default: section.settings.track_url | default: '/pages/rastrear-pedido' -%}
+    {%- assign login_href_m = section.settings.login_page.url | default: section.settings.login_url | default: '/account/login' -%}
+    <a href="{{ help_href }}" class="mobile-menu__secondary-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      {{ section.settings.help_label | default: 'Ajuda' }}
+    </a>
+    <a href="{{ store_href }}" class="mobile-menu__secondary-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      {{ section.settings.store_label | default: 'Encontrar Loja' }}
+    </a>
+    <a href="{{ track_href_m }}" class="mobile-menu__secondary-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><rect x="1" y="3" width="15" height="13" rx="2"/><polyline points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      {{ section.settings.track_label | default: 'Rastrear Pedido' }}
+    </a>
+    {%- if customer -%}
+      <a href="/account" class="mobile-menu__secondary-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        {{ section.settings.account_label | default: 'Minha Conta' }}
+      </a>
+    {%- else -%}
+      <a href="{{ login_href_m }}" class="mobile-menu__secondary-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        {{ section.settings.login_label | default: 'Entrar' }}
+      </a>
+    {%- endif -%}
+  </div>
+
+</nav>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "header-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo da loja"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Largura da logo (px)",
+      "min": 60,
+      "max": 260,
+      "step": 10,
+      "default": 140
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu principal",
+      "default": "main-menu"
+    },
+    {
+      "type": "image_picker",
+      "id": "mega_menu_image",
+      "label": "Imagem do mega menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_header",
+      "label": "Header fixo ao scrollar",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Ajuda"
+    },
+    {
+      "type": "text",
+      "id": "help_label",
+      "label": "Rótulo",
+      "default": "Ajuda"
+    },
+    {
+      "type": "page",
+      "id": "help_page",
+      "label": "Página",
+      "info": "Selecione uma página da loja"
+    },
+    {
+      "type": "url",
+      "id": "help_url",
+      "label": "Link alternativo (URL)",
+      "info": "Usado se nenhuma página for selecionada"
+    },
+    {
+      "type": "header",
+      "content": "Encontrar Loja"
+    },
+    {
+      "type": "text",
+      "id": "store_label",
+      "label": "Rótulo",
+      "default": "Encontrar Loja"
+    },
+    {
+      "type": "page",
+      "id": "store_page",
+      "label": "Página",
+      "info": "Selecione uma página da loja"
+    },
+    {
+      "type": "url",
+      "id": "store_url",
+      "label": "Link alternativo (URL)",
+      "info": "Usado se nenhuma página for selecionada"
+    },
+    {
+      "type": "header",
+      "content": "Rastrear Pedido"
+    },
+    {
+      "type": "text",
+      "id": "track_label",
+      "label": "Rótulo",
+      "default": "Rastrear Pedido"
+    },
+    {
+      "type": "page",
+      "id": "track_page",
+      "label": "Página",
+      "info": "Selecione uma página da loja"
+    },
+    {
+      "type": "url",
+      "id": "track_url",
+      "label": "Link alternativo (URL)",
+      "info": "Usado se nenhuma página for selecionada"
+    },
+    {
+      "type": "header",
+      "content": "Entrar / Conta"
+    },
+    {
+      "type": "text",
+      "id": "login_label",
+      "label": "Rótulo",
+      "default": "Entrar"
+    },
+    {
+      "type": "page",
+      "id": "login_page",
+      "label": "Página",
+      "info": "Selecione uma página da loja"
+    },
+    {
+      "type": "url",
+      "id": "login_url",
+      "label": "Link alternativo (URL)",
+      "info": "Usado se nenhuma página for selecionada"
+    },
+    {
+      "type": "text",
+      "id": "account_label",
+      "label": "Rótulo (logado)",
+      "default": "Minha Conta"
+    }
+  ]
+}
+
+{% endschema %}
+

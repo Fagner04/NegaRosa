@@ -1,0 +1,126 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "settings": {
+        "fitting_room_enabled": true,
+        "variant_selector_type": "block",
+        "size_guide_enabled": true,
+        "installments_enabled": true,
+        "installments_max": 10,
+        "installments_no_interest": true,
+        "installments_text": "ou até [parcelas]x de [valor] [juros] no cartão",
+        "pix_discount_enabled": true,
+        "pix_discount_percent": 5,
+        "pix_discount_text": "ou [valor] à vista no PIX ([desconto]% off)",
+        "pix_discount_color": "#32bcad",
+        "pages_display_mode": "all",
+        "shipping_page": "",
+        "shipping_text": "Frete grátis em compras acima de R$ 399,90. Devoluções gratuitas em até 7 dias após o recebimento da compra para membros da marca.",
+        "payment_page": "",
+        "payment_text": "Aceitamos Pix, cartões de crédito (Visa, Mastercard, Elo, Amex) com parcelamento em até 10x sem juros, ou boleto bancário à vista.",
+        "extra_page": "",
+        "mostrar_btn_wtspp": false,
+        "background_whatsapp_btn": "#25d366",
+        "txt_whatsapp_btn": "#ffffff",
+        "wtspp_text": "Comprar pelo WhatsApp",
+        "whatsapplinknumber": ""
+      }
+    },
+    "lookbook_AaDxqt": {
+      "type": "lookbook",
+      "blocks": {
+        "video_zn83x3": {
+          "type": "video",
+          "settings": {
+            "video_type": "tiktok",
+            "video_id": "",
+            "product_title": "Olhar Conectado",
+            "tag": "Lançamento",
+            "link": ""
+          }
+        },
+        "video_WcNVex": {
+          "type": "video",
+          "settings": {
+            "video_type": "tiktok",
+            "video_id": "",
+            "product_title": "Estilo Urbano",
+            "tag": "Em alta",
+            "link": ""
+          }
+        },
+        "video_cQcBLf": {
+          "type": "video",
+          "settings": {
+            "video_type": "tiktok",
+            "video_id": "",
+            "product_title": "Clássico Moderno",
+            "tag": "Coleção Verão",
+            "link": ""
+          }
+        },
+        "video_kPnyHM": {
+          "type": "video",
+          "settings": {
+            "video_type": "tiktok",
+            "video_id": "",
+            "product_title": "Esportivo Chic",
+            "tag": "Novo",
+            "link": ""
+          }
+        },
+        "video_HMPDKC": {
+          "type": "video",
+          "settings": {
+            "video_type": "tiktok",
+            "video_id": "",
+            "product_title": "Minimalista",
+            "tag": "Essencial",
+            "link": ""
+          }
+        },
+        "video_kjP6CA": {
+          "type": "video",
+          "settings": {
+            "video_type": "tiktok",
+            "video_id": "",
+            "product_title": "Statement",
+            "tag": "Edição Limitada",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "video_zn83x3",
+        "video_WcNVex",
+        "video_cQcBLf",
+        "video_kPnyHM",
+        "video_HMPDKC",
+        "video_kjP6CA"
+      ],
+      "disabled": true,
+      "name": "Reels / Vídeos",
+      "settings": {
+        "title": "Reels",
+        "subtitle": "Inspire-se com nossos vídeos",
+        "columns": 4,
+        "cta_text": "",
+        "cta_url": ""
+      }
+    }
+  },
+  "order": [
+    "main",
+    "lookbook_AaDxqt"
+  ]
+}
