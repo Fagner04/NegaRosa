@@ -15,8 +15,6 @@
         "slide-1": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/CAPA_BANNER_SITE_1.svg",
-            "image_mobile": "shopify://shop_images/17.png",
             "tag": "Lançamento",
             "title": "CONECTE-SE AGORA",
             "subtitle": "Descubra os novos lançamentos e encontre sua próxima conquista. Performance e estilo sem limites.",
@@ -32,8 +30,6 @@
         "slide-2": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/CAPA_BANNER_SITE_1.svg",
-            "image_mobile": "shopify://shop_images/30.png",
             "tag": "ProConnect",
             "title": "PROCONNECT MAX",
             "subtitle": "Uma nova era de amortecimento. Experimente o futuro do conforto e da inovação.",
@@ -111,8 +107,8 @@
       "name": "Barra de Anúncios",
       "settings": {
         "speed": 40,
-        "background_color": "#FFFFFF",
-        "text_color": "#2A2727"
+        "background_color": "#ffffff",
+        "text_color": "#2a2727"
       }
     },
     "category-grid": {
@@ -122,7 +118,6 @@
           "type": "category",
           "settings": {
             "title": "Calçados",
-            "image": "shopify://shop_images/17.png",
             "link": "",
             "cta_text": "Comprar",
             "placeholder_color": "1a1a2e",
@@ -133,7 +128,6 @@
           "type": "category",
           "settings": {
             "title": "Vestuário",
-            "image": "shopify://shop_images/23.png",
             "link": "",
             "cta_text": "Comprar",
             "placeholder_color": "2d2d2d",
@@ -144,7 +138,6 @@
           "type": "category",
           "settings": {
             "title": "Acessórios",
-            "image": "shopify://shop_images/2_4c02c4ac-866c-4566-b0db-7f99baff74cb.png",
             "link": "",
             "cta_text": "Comprar",
             "placeholder_color": "3d1a1a",
@@ -197,7 +190,6 @@
         "video_46eRnJ": {
           "type": "video",
           "settings": {
-            "image": "shopify://shop_images/46.png",
             "video_type": "tiktok",
             "video_id": "https://cdn.shopify.com/videos/c/o/v/71cb371e8bbd48b3abba1c5618f401e3.mp4",
             "product_title": "Olhar Conectado",
@@ -208,7 +200,6 @@
         "video_7ChRmG": {
           "type": "video",
           "settings": {
-            "image": "shopify://shop_images/49.png",
             "video_type": "mp4",
             "video_id": "https://cdn.shopify.com/videos/c/o/v/71cb371e8bbd48b3abba1c5618f401e3.mp4",
             "product_title": "Estilo Urbano",
@@ -219,7 +210,6 @@
         "video_XFQHX6": {
           "type": "video",
           "settings": {
-            "image": "shopify://shop_images/54.png",
             "video_type": "mp4",
             "video_id": "https://cdn.shopify.com/videos/c/o/v/71cb371e8bbd48b3abba1c5618f401e3.mp4",
             "product_title": "Clássico Moderno",
@@ -230,7 +220,6 @@
         "video_XWz9ph": {
           "type": "video",
           "settings": {
-            "image": "shopify://shop_images/55.png",
             "video_type": "mp4",
             "video_id": "https://cdn.shopify.com/videos/c/o/v/71cb371e8bbd48b3abba1c5618f401e3.mp4",
             "product_title": "Esportivo Chic",
@@ -270,7 +259,6 @@
           "type": "release",
           "settings": {
             "name": "ConectWhats Elite Edition 'Chicago'",
-            "image": "shopify://shop_images/30.png",
             "price": "R$ 1.299,99",
             "launch_date": "01 Jul 2026",
             "countdown_date": "2026-07-01T10:00:00",
@@ -282,7 +270,6 @@
           "type": "release",
           "settings": {
             "name": "Nome aqui",
-            "image": "shopify://shop_images/19.png",
             "price": "R$ 999,99",
             "launch_date": "25 Jun 2026",
             "countdown_date": "2026-07-01T10:00:00",
@@ -294,7 +281,6 @@
           "type": "release",
           "settings": {
             "name": "Titulo aqui",
-            "image": "shopify://shop_images/49.png",
             "price": "R$ 799,99",
             "launch_date": "Body man",
             "countdown_date": "2026-07-01T10:00:00",
@@ -330,7 +316,6 @@
         "banner_xggQ6h": {
           "type": "banner",
           "settings": {
-            "image": "shopify://shop_images/17.png",
             "tag": "Masculino",
             "title": "NOVOS ESTILOS",
             "subtitle": "Performance e estilo para o seu treino",
@@ -343,7 +328,6 @@
         "banner_UzNb4t": {
           "type": "banner",
           "settings": {
-            "image": "shopify://shop_images/61.png",
             "tag": "Feminino",
             "title": "COLEÇÃO VERÃO",
             "subtitle": "Peças leves e confortáveis para o dia a dia",
@@ -443,7 +427,7 @@
       "settings": {
         "bg_color": "#FFFFFF",
         "show_badge": true,
-        "badge_color": "#CB7373",
+        "badge_color": "#EB76AC",
         "title": "Pouco De Nós",
         "description": "<p>Desenvolvidos para atender suas necessidades e prezar pela satisfação e segurança entregando produtos da mais alta qualidade da melhor forma possível!</p>",
         "subtitle": "Quer saber mais sobre nós e nossa equipe?",
