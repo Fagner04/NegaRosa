@@ -407,17 +407,17 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(157, 90, 90, 0.08);
-  color: var(--footer-heading, #9D5A5A);
-  transition: transform .2s ease, background .2s ease;
+  background: var(--footer-contact-icon-bg, #FDE8F1);
+  color: var(--footer-contact-icon-color, #D81B73);
+  transition: transform .2s ease, background .2s ease, filter .2s ease;
 }
 .footer__contact-item:hover .footer__contact-icon {
   transform: translateY(-2px) scale(1.05);
-  background: rgba(157, 90, 90, 0.15);
+  filter: brightness(0.94);
 }
 .footer__contact-icon svg { width: 18px; height: 18px; }
-.footer__contact-icon--wa { background: rgba(37, 211, 102, 0.12); color: #25D366; }
-.footer__contact-item:hover .footer__contact-icon--wa { background: rgba(37, 211, 102, 0.22); }
+.footer__contact-icon--wa { background: var(--footer-contact-wa-bg, #DCFCE7); color: var(--footer-contact-wa-color, #16A34A); }
+.footer__contact-item:hover .footer__contact-icon--wa { filter: brightness(0.94); }
 .footer__contact-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .footer__contact-label {
   font-size: 11px;

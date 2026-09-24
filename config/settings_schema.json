@@ -89,6 +89,34 @@
         "default": "#FFFFFF"
       },
       {
+        "type": "color",
+        "id": "footer_contact_icon_bg",
+        "label": "Cor de fundo dos ícones de atendimento",
+        "info": "Usada em: Bolinhas de e-mail, telefone, horário no card Atendimento ao Cliente",
+        "default": "#FDE8F1"
+      },
+      {
+        "type": "color",
+        "id": "footer_contact_icon_color",
+        "label": "Cor dos ícones de atendimento",
+        "info": "Cor do desenho dentro da bolinha (e-mail, telefone, horário)",
+        "default": "#D81B73"
+      },
+      {
+        "type": "color",
+        "id": "footer_contact_wa_bg",
+        "label": "Cor de fundo do ícone WhatsApp",
+        "info": "Fundo da bolinha do WhatsApp no atendimento",
+        "default": "#DCFCE7"
+      },
+      {
+        "type": "color",
+        "id": "footer_contact_wa_color",
+        "label": "Cor do ícone WhatsApp",
+        "info": "Cor do desenho do WhatsApp",
+        "default": "#16A34A"
+      },
+      {
         "type": "header",
         "content": "✏️ Texto"
       },
