@@ -71,10 +71,17 @@
         "height": "fullscreen",
         "autoplay": true,
         "autoplay_speed": 5,
-        "show_scroll_indicator": false,
+        "show_scroll_indicator": true,
         "hide_content_mobile": true,
-        "mobile_ratio": "4-5",
-        "mobile_custom_height": 70
+        "mobile_ratio": "1-1",
+        "mobile_custom_height": 70,
+        "btn_bg_color": "#F287B5",
+        "btn_text_color": "#FFFFFF",
+        "btn_gradient": false,
+        "btn_gradient_start": "#B6B0B0",
+        "btn_gradient_end": "#FDA7CC",
+        "btn_gradient_direction": "diagonal",
+        "btn_size": "medio"
       }
     },
     "announcement_bar_dD4ndD": {
