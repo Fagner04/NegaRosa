@@ -541,7 +541,8 @@ a.footer__contact-value:hover { color: var(--footer-heading, #9D5A5A); opacity: 
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0;
   width: 100%;
-  margin-top: var(--space-4);
+  max-width: 760px;
+  margin: var(--space-4) auto 0;
 }
 .footer__seal-card {
   background: #fff;
@@ -572,8 +573,8 @@ a.footer__contact-value:hover { color: var(--footer-heading, #9D5A5A); opacity: 
 }
 .footer__seal-flags .footer__payment-icon {
   width: 100%;
-  max-width: 56px;
-  height: 26px;
+  max-width: 46px;
+  height: 22px;
 }
 .footer__seal-google {
   font-size: 22px;
