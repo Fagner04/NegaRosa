@@ -107,15 +107,10 @@
               "subheading": "Receba novidades e ofertas exclusivas"
             }
           },
-          "security_seals_Ay8JhB": {
-            "type": "security-seals",
+          "google_reviews_UnGEeF": {
+            "type": "google-reviews",
             "settings": {
-              "title": "Informações úteis",
-              "transparent_bg": false,
-              "show_ssl": false,
-              "show_safe": false,
-              "safe_url": "",
-              "show_reviews": true,
+              "title": "Avaliações",
               "reviews_url": "",
               "reviews_stars": 4
             }
@@ -126,10 +121,12 @@
           "footer-0",
           "links_TLWnPR",
           "newsletter_apNfcc",
-          "security_seals_Ay8JhB"
+          "google_reviews_UnGEeF"
         ],
         "settings": {
-          "show_payment_icons": true
+          "show_payment_icons": true,
+          "trust_ssl": true,
+          "trust_safe": true
         }
       }
     },
