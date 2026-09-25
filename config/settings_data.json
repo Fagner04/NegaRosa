@@ -36,6 +36,8 @@
     "color_button_bg": "#CF528C",
     "color_button_text": "#FFFFFF",
     "color_button_secondary_bg": "#000000",
+    "addzap": true,
+    "colorzap": "#69AD5D",
     "coupon_enabled": true,
     "coupon_code": "NEGAROSA5",
     "coupon_discount_label": "5%Off",
