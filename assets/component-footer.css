@@ -478,10 +478,9 @@ a.footer__contact-value:hover { color: var(--footer-heading, #9D5A5A); opacity: 
 }
 .footer__payment-icon--pix svg { display: block; }
 
-/* Payment column inside footer top */
+/* Payment column inside footer top (sem order fixo: obedece o arrasto do Personalizar) */
 .footer__top > .footer__column--payments {
   flex: 0 1 230px;
-  order: 99;
   align-self: start;
 }
 .footer__column--payments .footer__payments {
@@ -491,7 +490,6 @@ a.footer__contact-value:hover { color: var(--footer-heading, #9D5A5A); opacity: 
 @media (max-width: 640px) {
   .footer__column--payments {
     flex: 1 1 100%;
-    order: 99;
     text-align: left;
     margin-top: 20px;
   }
