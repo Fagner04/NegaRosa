@@ -74,6 +74,25 @@
       "footer": {
         "type": "footer",
         "blocks": {
+          "seals_YBEQYe": {
+            "type": "seals",
+            "settings": {
+              "transparent_bg": true,
+              "show_payments": true,
+              "payments_title": "Formas de pagamento",
+              "flag_pix": true,
+              "flag_visa": true,
+              "flag_mastercard": true,
+              "flag_amex": false,
+              "flag_elo": true,
+              "flag_hipercard": false,
+              "show_reviews": true,
+              "reviews_url": "",
+              "reviews_stars": 5,
+              "show_safe": true,
+              "safe_url": ""
+            }
+          },
           "text_4GJMY8": {
             "type": "text",
             "settings": {
@@ -103,12 +122,13 @@
           }
         },
         "block_order": [
+          "seals_YBEQYe",
           "text_4GJMY8",
           "footer-0",
           "newsletter_apNfcc"
         ],
         "settings": {
-          "show_payment_icons": false
+          "show_payment_icons": true
         }
       }
     },
