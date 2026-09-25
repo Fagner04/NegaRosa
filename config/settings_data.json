@@ -11,7 +11,7 @@
   "current": {
     "color_background": "#FFFFFF",
     "color_background_secondary": "#F287B5",
-    "color_bg_gradient": true,
+    "color_bg_gradient": false,
     "header_bg_color": "#FFFFFF",
     "header_bg_gradient": true,
     "header_bg_gradient_start": "#FFFFFF",
