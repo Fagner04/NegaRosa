@@ -101,18 +101,18 @@
               "subheading": "Receba novidades e ofertas exclusivas"
             }
           },
-          "seals_9na4P4": {
+          "seals_J4xr47": {
             "type": "seals",
             "settings": {
-              "transparent_bg": true,
+              "transparent_bg": false,
               "show_payments": true,
               "payments_title": "Formas de pagamento",
               "flag_pix": true,
               "flag_visa": true,
               "flag_mastercard": true,
-              "flag_amex": false,
+              "flag_amex": true,
               "flag_elo": true,
-              "flag_hipercard": false,
+              "flag_hipercard": true,
               "show_reviews": true,
               "reviews_url": "",
               "reviews_stars": 5,
@@ -125,7 +125,7 @@
           "text_4GJMY8",
           "footer-0",
           "newsletter_apNfcc",
-          "seals_9na4P4"
+          "seals_J4xr47"
         ],
         "settings": {
           "show_payment_icons": false
