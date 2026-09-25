@@ -112,8 +112,8 @@
             "settings": {
               "title": "Informações úteis",
               "transparent_bg": false,
-              "show_ssl": false,
-              "show_safe": false,
+              "show_ssl": true,
+              "show_safe": true,
               "safe_url": "",
               "show_reviews": true,
               "reviews_url": "",
