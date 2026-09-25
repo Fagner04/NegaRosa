@@ -101,7 +101,7 @@
 }
 
 .carousel:hover {
-  cursor: grab;
+  cursor: default;
 }
 
 .carousel::-webkit-scrollbar {
