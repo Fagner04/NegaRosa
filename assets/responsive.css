@@ -287,6 +287,9 @@
   }
 
   /* Selos também não têm sanfona */
+  .footer__column--seals {
+    margin-top: var(--space-6);
+  }
   .footer__column--seals .footer__title {
     display: block;
     margin-bottom: var(--space-3);
