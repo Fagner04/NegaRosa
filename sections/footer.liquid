@@ -108,7 +108,7 @@
             {%- endunless -%}
 
           {%- when 'seals' -%}
-            <div class="footer__seals" {{ block.shopify_attributes }}>
+            <div class="footer__seals{% if block.settings.transparent_bg %} footer__seals--transparent{% endif %}" {{ block.shopify_attributes }}>
               {%- if block.settings.show_payments -%}
                 <div class="footer__seal-card footer__seal-card--payments">
                   <p class="footer__seal-title">{{ block.settings.payments_title | default: 'Formas de pagamento' }}</p>
@@ -465,6 +465,7 @@
       "type": "seals",
       "name": "Selos de confiança",
       "settings": [
+        { "type": "checkbox", "id": "transparent_bg", "label": "Fundo transparente nos cartões", "info": "Remove o branco e deixa só o conteúdo", "default": false },
         { "type": "header", "content": "Cartão: Formas de pagamento" },
         { "type": "checkbox", "id": "show_payments", "label": "Mostrar cartão de pagamento", "default": true },
         { "type": "text", "id": "payments_title", "label": "Título", "default": "Formas de pagamento" },
