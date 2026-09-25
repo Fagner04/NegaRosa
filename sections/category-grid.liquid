@@ -3,7 +3,7 @@
   Grid of category cards with image, overlay, and CTA
 {%- endcomment -%}
 
-<section class="section-spacing" id="categories-{{ section.id }}">
+<section class="section-spacing" id="categories-{{ section.id }}" style="--category-radius: {{ section.settings.card_radius | default: 8 }}px;">
   <div class="page-width">
     {%- if section.settings.title != blank -%}
       <div class="section-header reveal">
@@ -68,6 +68,17 @@
         { "value": "3", "label": "1 destaque + 4 menores" }
       ],
       "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Arredondamento dos cards (px)",
+      "info": "0 = quadrado, 24+ = bem redondo",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 8
     }
   ],
   "blocks": [
