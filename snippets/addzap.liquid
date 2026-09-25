@@ -1212,7 +1212,7 @@
     result.classList.remove('show'); error.classList.remove('show');
     result.innerHTML=''; error.textContent='';
     loading.classList.add('show');
-    var api = '{{ settings.sheets_frete_url }}';
+    var api = '{{ settings.frete_api_url }}';
     if(!api){ loading.classList.remove('show'); error.textContent='API não configurada.'; error.classList.add('show'); return; }
     fetch(api+'?codigo='+encodeURIComponent(code))
       .then(function(r){ return r.json(); })
@@ -1245,7 +1245,7 @@
     result.classList.remove('show'); error.classList.remove('show');
     result.innerHTML=''; error.textContent='';
     loading.classList.add('show');
-    var api = '{{ settings.sheets_frete_url }}';
+    var api = '{{ settings.frete_api_url }}';
     var orig= '{{ settings.correios_cep_origem | default: "74550050" }}'.replace(/\D/g,'');
     if(!api){ loading.classList.remove('show'); error.textContent='API de frete não configurada.'; error.classList.add('show'); return; }
     fetch(api+'?cep='+cep+'&cep_origem='+orig+'&peso=0.5')
