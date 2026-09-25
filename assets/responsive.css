@@ -294,19 +294,21 @@
     display: block;
     margin-bottom: var(--space-3);
   }
-  /* Selos responsivos: largura cheia proporcional */
+  /* Selos compactos no mobile */
   .footer__column--seals .footer__seals-col {
-    align-items: stretch;
+    align-items: flex-start;
   }
   .footer__column--seals .footer__seals-col > svg,
   .footer__column--seals .footer__seals-col > a svg {
-    width: 100%;
-    max-width: 300px;
-    height: auto;
+    width: auto;
+    max-width: 200px;
+    height: 34px;
   }
   .footer__column--seals .footer__seal-review {
-    width: 100%;
-    max-width: 300px;
+    width: auto;
+    max-width: 200px;
+    height: 34px;
+    padding: 2px 10px;
   }
 
   .footer__accordion-toggle {
