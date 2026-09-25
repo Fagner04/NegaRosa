@@ -104,18 +104,18 @@
           "seals_J4xr47": {
             "type": "seals",
             "settings": {
-              "transparent_bg": false,
+              "transparent_bg": true,
               "show_payments": true,
               "payments_title": "Formas de pagamento",
               "flag_pix": true,
               "flag_visa": true,
               "flag_mastercard": true,
-              "flag_amex": true,
+              "flag_amex": false,
               "flag_elo": true,
-              "flag_hipercard": true,
+              "flag_hipercard": false,
               "show_reviews": true,
               "reviews_url": "",
-              "reviews_stars": 5,
+              "reviews_stars": 4,
               "show_safe": true,
               "safe_url": ""
             }
