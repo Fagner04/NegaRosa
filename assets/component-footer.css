@@ -3,24 +3,11 @@
    ========================================================================== */
 
 /* ---------- Footer ---------- */
-.footer__wave {
-  line-height: 0;
-  margin-bottom: -1px;
-}
-.footer__wave svg {
-  width: 100%;
-  height: 60px;
-  display: block;
-  fill: var(--footer-bg, var(--color-bg-dark));
-}
 .footer {
   background-color: var(--footer-bg, var(--color-bg-dark));
   background-image: var(--footer-bg-image, none);
   color: var(--footer-text, var(--color-text-inverse));
   padding-top: var(--space-12);
-}
-.footer--with-wave {
-  padding-top: var(--space-8);
 }
 
 .footer a {
