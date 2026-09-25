@@ -539,7 +539,7 @@ a.footer__contact-value:hover { color: var(--footer-heading, #9D5A5A); opacity: 
 .footer__seals {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
+  gap: 0;
   width: 100%;
   margin-top: var(--space-4);
 }
@@ -547,19 +547,19 @@ a.footer__contact-value:hover { color: var(--footer-heading, #9D5A5A); opacity: 
   background: #fff;
   color: #111;
   border-radius: 16px;
-  padding: 12px;
+  padding: 8px 4px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   text-decoration: none;
   box-shadow: 0 6px 20px rgba(0,0,0,.08);
   min-height: 110px;
 }
 .footer__seal-title {
   margin: 0;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   text-align: center;
 }
@@ -572,11 +572,11 @@ a.footer__contact-value:hover { color: var(--footer-heading, #9D5A5A); opacity: 
 }
 .footer__seal-flags .footer__payment-icon {
   width: 100%;
-  max-width: 64px;
-  height: 30px;
+  max-width: 56px;
+  height: 26px;
 }
 .footer__seal-google {
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 500;
   letter-spacing: -1px;
   color: #4285F4;
@@ -596,7 +596,7 @@ a.footer__contact-value:hover { color: var(--footer-heading, #9D5A5A); opacity: 
 }
 .footer__seal-stars {
   color: #FBBC05;
-  font-size: 16px;
+  font-size: 14px;
   letter-spacing: 2px;
   line-height: 1;
 }
