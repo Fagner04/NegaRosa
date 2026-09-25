@@ -128,7 +128,7 @@
           "seals_9na4P4"
         ],
         "settings": {
-          "show_payment_icons": true
+          "show_payment_icons": false
         }
       }
     },
