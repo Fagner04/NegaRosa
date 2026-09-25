@@ -108,7 +108,7 @@
           "newsletter_apNfcc"
         ],
         "settings": {
-          "show_payment_icons": true
+          "show_payment_icons": false
         }
       }
     },
