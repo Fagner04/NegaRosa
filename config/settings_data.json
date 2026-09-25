@@ -110,13 +110,14 @@
           "security_seals_Ay8JhB": {
             "type": "security-seals",
             "settings": {
-              "title": "Segurança",
-              "show_ssl": true,
-              "show_safe": true,
+              "title": "Informações úteis",
+              "transparent_bg": false,
+              "show_ssl": false,
+              "show_safe": false,
               "safe_url": "",
               "show_reviews": true,
               "reviews_url": "",
-              "reviews_stars": 5
+              "reviews_stars": 4
             }
           }
         },
