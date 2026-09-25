@@ -94,7 +94,14 @@
               "menu": "footer"
             }
           },
-          "security_seals_Th6cWR": {
+          "newsletter_apNfcc": {
+            "type": "newsletter",
+            "settings": {
+              "title": "Newsletter",
+              "subheading": "Receba novidades e ofertas exclusivas"
+            }
+          },
+          "security_seals_Ay8JhB": {
             "type": "security-seals",
             "settings": {
               "title": "Segurança",
@@ -103,22 +110,15 @@
               "safe_url": "",
               "show_reviews": true,
               "reviews_url": "",
-              "reviews_stars": 4
-            }
-          },
-          "newsletter_apNfcc": {
-            "type": "newsletter",
-            "settings": {
-              "title": "Newsletter",
-              "subheading": "Receba novidades e ofertas exclusivas"
+              "reviews_stars": 5
             }
           }
         },
         "block_order": [
           "text_4GJMY8",
           "footer-0",
-          "security_seals_Th6cWR",
-          "newsletter_apNfcc"
+          "newsletter_apNfcc",
+          "security_seals_Ay8JhB"
         ],
         "settings": {
           "show_payment_icons": true
