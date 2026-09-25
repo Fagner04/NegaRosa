@@ -81,10 +81,10 @@
               "title": "ATENDIMENTO AO CLIENTE",
               "subtitle": "Estamos aqui para ajudar você",
               "email": "comercial@negarosafitness.com.br",
-              "phone": "(62) 99145-3008",
+              "phone": "",
               "whatsapp": "5562991453008",
               "hours": "Seg a Sex • 9h às 18h • Sáb 9h às 13h",
-              "address": "",
+              "address": "Av. Bernardo Sayão . N.762 - vila Heitor de Paula - inhumas-go 75403-500",
               "content": ""
             }
           },
@@ -100,12 +100,25 @@
               "title": "Newsletter",
               "subheading": "Receba novidades e ofertas exclusivas"
             }
+          },
+          "security_seals_Ay8JhB": {
+            "type": "security-seals",
+            "settings": {
+              "title": "Segurança",
+              "show_ssl": true,
+              "show_safe": true,
+              "safe_url": "",
+              "show_reviews": true,
+              "reviews_url": "",
+              "reviews_stars": 5
+            }
           }
         },
         "block_order": [
           "text_4GJMY8",
           "footer-0",
-          "newsletter_apNfcc"
+          "newsletter_apNfcc",
+          "security_seals_Ay8JhB"
         ],
         "settings": {
           "show_payment_icons": true
