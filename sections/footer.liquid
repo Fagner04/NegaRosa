@@ -107,6 +107,43 @@
               </div>
             {%- endunless -%}
 
+          {%- when 'security-seals' -%}
+            <div class="footer__column footer__column--seals" {{ block.shopify_attributes }}>
+              <h4 class="footer__title">{{ block.settings.title | default: 'Segurança' }}</h4>
+              <div class="footer__seals-col">
+                {%- if block.settings.show_ssl -%}
+                  <svg viewBox="0 0 120 44" width="120" height="44" role="img" aria-label="Site Seguro SSL">
+                    <rect x="1" y="1" width="118" height="42" rx="8" fill="#ffffff" stroke="#E5E5E5"/>
+                    <rect x="8" y="8" width="28" height="28" rx="6" fill="#FFC107"/>
+                    <rect x="16" y="22" width="12" height="9" rx="2" fill="#ffffff"/>
+                    <path d="M18.5 22v-2.5a3.5 3.5 0 0 1 7 0V22" stroke="#ffffff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                    <text x="42" y="21" font-family="Arial, sans-serif" font-size="11" font-weight="800" fill="#111111">SITE SEGURO</text>
+                    <text x="42" y="34" font-family="Arial, sans-serif" font-size="10" font-weight="800" fill="#16A34A">SSL ✓</text>
+                  </svg>
+                {%- endif -%}
+                {%- if block.settings.show_reviews -%}
+                  <a class="footer__seal-review" {% if block.settings.reviews_url != blank %}href="{{ block.settings.reviews_url }}" target="_blank" rel="noopener"{% endif %} aria-label="Avalie nossa loja no Google">
+                    <span class="footer__seal-google footer__seal-google--sm">G<span>o</span><span>o</span><span>g</span><span>l</span><span>e</span></span>
+                    <span class="footer__seal-review-text">
+                      <span class="footer__seal-review-stars">{% for i in (1..5) %}{% if i <= block.settings.reviews_stars %}★{% else %}☆{% endif %}{% endfor %}</span>
+                      <small>Avalie no Google</small>
+                    </span>
+                  </a>
+                {%- endif -%}
+                {%- if block.settings.show_safe -%}
+                  <a href="{% if block.settings.safe_url != blank %}{{ block.settings.safe_url }}{% else %}https://transparencyreport.google.com/safe-browsing/search?url={{ shop.domain }}{% endif %}" target="_blank" rel="noopener" aria-label="Google Safe Browsing">
+                    <svg viewBox="0 0 150 44" width="150" height="44" role="img" aria-label="Safe Browsing Google">
+                      <rect x="1" y="1" width="148" height="42" rx="8" fill="#ffffff" stroke="#E5E5E5"/>
+                      <path d="M20 6l-9 4v6c0 5.4 3.8 10.4 9 12 5.2-1.6 9-6.6 9-12v-6l-9-4z" fill="#34A853"/>
+                      <path d="M17.2 22.4l-3.4-3.4 1.6-1.6 1.8 1.8 5.4-5.4 1.6 1.6z" fill="#ffffff"/>
+                      <text x="38" y="20" font-family="Arial, sans-serif" font-size="12" font-weight="700" fill="#3c4043">Safe Browsing</text>
+                      <text x="38" y="35" font-family="Arial, sans-serif" font-size="13" font-weight="700"><tspan fill="#4285F4">G</tspan><tspan fill="#EA4335">o</tspan><tspan fill="#FBBC05">o</tspan><tspan fill="#4285F4">g</tspan><tspan fill="#34A853">l</tspan><tspan fill="#EA4335">e</tspan></text>
+                    </svg>
+                  </a>
+                {%- endif -%}
+              </div>
+            </div>
+
           {%- when 'connect' -%}
             <div class="footer__column footer__column--connect" {{ block.shopify_attributes }} style="--fc-bg: {{ block.settings.bg_color }}; --fc-text: {{ block.settings.text_color }}; --fc-btn-bg: {{ block.settings.btn_bg }}; --fc-btn-text: {{ block.settings.btn_text }}; --fc-input-bg: {{ block.settings.input_bg }}; --fc-input-text: {{ block.settings.input_text }}; --fc-input-placeholder: {{ block.settings.input_placeholder }};">
               <h4 class="footer__title footer__connect-title">{{ block.settings.title | default: 'CONECTE-SE' }}</h4>
@@ -431,6 +468,27 @@
         { "type": "url", "id": "legal_link_3_url", "label": "Link 3 - URL" }
       ]
     },
+    {
+      "type": "security-seals",
+      "name": "Selos de segurança",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Título", "default": "Segurança" },
+        { "type": "checkbox", "id": "show_ssl", "label": "Mostrar selo SSL Site Seguro", "default": true },
+        { "type": "checkbox", "id": "show_safe", "label": "Mostrar selo Google Safe Browsing", "default": true },
+        { "type": "url", "id": "safe_url", "label": "Link do selo (vazio = verificação Google automática)" },
+        { "type": "checkbox", "id": "show_reviews", "label": "Mostrar selo de avaliação", "default": true },
+        { "type": "url", "id": "reviews_url", "label": "Link para o cliente avaliar (perfil Google Business)" },
+        {
+          "type": "range",
+          "id": "reviews_stars",
+          "label": "Estrelas exibidas",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        }
+      ]
+    }
   ],
   "default": {
     "blocks": [

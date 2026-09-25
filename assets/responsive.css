@@ -286,6 +286,12 @@
     margin-bottom: var(--space-3);
   }
 
+  /* Selos também não têm sanfona */
+  .footer__column--seals .footer__title {
+    display: block;
+    margin-bottom: var(--space-3);
+  }
+
   .footer__accordion-toggle {
     display: flex;
     font-size: var(--font-size-base);

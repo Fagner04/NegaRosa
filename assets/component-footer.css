@@ -244,6 +244,57 @@
   }
 }
 
+/* Security seals column */
+.footer__seals-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+.footer__seals-col svg {
+  display: block;
+  height: 40px;
+  width: auto;
+}
+.footer__seal-google {
+  font-weight: 500;
+  letter-spacing: -1px;
+  color: #4285F4;
+  line-height: 1;
+}
+.footer__seal-google span:nth-child(1) { color: #EA4335; }
+.footer__seal-google span:nth-child(2) { color: #FBBC05; }
+.footer__seal-google span:nth-child(3) { color: #4285F4; }
+.footer__seal-google span:nth-child(4) { color: #34A853; }
+.footer__seal-google span:nth-child(5) { color: #EA4335; }
+.footer__seal-google--sm { font-size: 19px; }
+.footer__seal-review {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  box-sizing: border-box;
+  background: #fff;
+  border: 1px solid #E5E5E5;
+  border-radius: 8px;
+  padding: 4px 12px;
+  text-decoration: none;
+}
+.footer__seal-review-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+.footer__seal-review-stars {
+  color: #FBBC05;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+.footer__seal-review small {
+  font-size: 10px;
+  color: #5f6368;
+}
+
 /* Payment Icons */
 .footer__payments {
   display: flex;
