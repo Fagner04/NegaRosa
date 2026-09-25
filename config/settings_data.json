@@ -94,12 +94,6 @@
               "menu": "footer"
             }
           },
-          "links_TLWnPR": {
-            "type": "links",
-            "settings": {
-              "menu": "main-menu"
-            }
-          },
           "connect_HHzyd9": {
             "type": "connect",
             "settings": {
@@ -138,7 +132,6 @@
         "block_order": [
           "text_4GJMY8",
           "footer-0",
-          "links_TLWnPR",
           "connect_HHzyd9",
           "google_reviews_UnGEeF"
         ],
