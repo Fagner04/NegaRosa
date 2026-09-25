@@ -7,7 +7,7 @@
   background-color: var(--footer-bg, var(--color-bg-dark));
   background-image: var(--footer-bg-image, none);
   color: var(--footer-text, var(--color-text-inverse));
-  padding-top: var(--space-8);
+  padding-top: var(--space-12);
 }
 
 .footer a {
@@ -24,9 +24,13 @@
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: var(--space-6);
-  padding-bottom: var(--space-8);
+  gap: var(--space-8);
+  padding-bottom: var(--space-12);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer__top > .footer__column {
+  order: 1;
 }
 
 .footer__column--newsletter {
@@ -65,8 +69,7 @@
 .footer__column {
   display: flex;
   flex-direction: column;
-  flex: 1 1 150px;
-  min-width: 0;
+  flex: 1 1 180px;
 }
 
 .footer__title {
@@ -74,7 +77,7 @@
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   letter-spacing: var(--letter-spacing-wide);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-6);
   color: var(--footer-heading, var(--color-text-inverse));
 }
 
@@ -195,9 +198,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-5) 0;
+  padding: var(--space-8) 0;
   flex-wrap: wrap;
-  gap: var(--space-3);
+  gap: var(--space-4);
 }
 
 .footer__country {
@@ -534,7 +537,7 @@ a.footer__contact-value:hover { color: var(--footer-heading, #9D5A5A); opacity: 
 
 /* Payment column inside footer top (sem order fixo: obedece o arrasto do Personalizar) */
 .footer__top > .footer__column--payments {
-  flex: 0 1 190px;
+  flex: 0 1 230px;
   align-self: start;
 }
 .footer__column--payments .footer__payments {
