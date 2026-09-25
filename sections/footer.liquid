@@ -101,7 +101,26 @@
                 <h4 class="footer__title">{{ menu.title }}</h4>
                 <ul class="footer__links">
                   {%- for link in menu.links -%}
-                    <li><a href="{{ link.url }}" class="footer__link">{{ link.title }}</a></li>
+                    <li>
+                      <a href="{{ link.url }}" class="footer__link">
+                        {%- if block.settings.show_icons -%}
+                          {%- assign lt = link.title | downcase -%}
+                          {%- if lt contains 'busca' or lt contains 'search' -%}<i data-lucide="search" class="footer__link-icon"></i>
+                          {%- elsif lt contains 'entrega' or lt contains 'frete' or lt contains 'envio' or lt contains 'shipping' -%}<i data-lucide="truck" class="footer__link-icon"></i>
+                          {%- elsif lt contains 'privacidade' or lt contains 'privacy' -%}<i data-lucide="shield-check" class="footer__link-icon"></i>
+                          {%- elsif lt contains 'termo' or lt contains 'terms' or lt contains 'uso' -%}<i data-lucide="file-text" class="footer__link-icon"></i>
+                          {%- elsif lt contains 'troca' or lt contains 'devolu' or lt contains 'reembolso' -%}<i data-lucide="refresh-ccw" class="footer__link-icon"></i>
+                          {%- elsif lt contains 'contato' or lt contains 'fale' or lt contains 'ajuda' -%}<i data-lucide="message-circle" class="footer__link-icon"></i>
+                          {%- elsif lt contains 'sobre' or lt contains 'loja' or lt contains 'nós' -%}<i data-lucide="store" class="footer__link-icon"></i>
+                          {%- elsif lt contains 'pagamento' or lt contains 'payment' -%}<i data-lucide="credit-card" class="footer__link-icon"></i>
+                          {%- elsif lt contains 'rastre' or lt contains 'pedido' or lt contains 'entrega' -%}<i data-lucide="package-search" class="footer__link-icon"></i>
+                          {%- elsif lt contains 'inicio' or lt contains 'início' or lt contains 'home' -%}<i data-lucide="home" class="footer__link-icon"></i>
+                          {%- elsif lt contains 'catalogo' or lt contains 'catálogo' or lt contains 'coleção' -%}<i data-lucide="layout-grid" class="footer__link-icon"></i>
+                          {%- endif -%}
+                        {%- endif -%}
+                        {{ link.title }}
+                      </a>
+                    </li>
                   {%- endfor -%}
                 </ul>
               </div>
@@ -432,6 +451,13 @@
           "id": "menu",
           "label": "Menu",
           "info": "Crie seus menus em Configurações > Navegação"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_icons",
+          "label": "Mostrar ícones automáticos nos links",
+          "info": "Ícone conforme o nome (Busca, Entrega, Privacidade...)",
+          "default": true
         }
       ]
     },

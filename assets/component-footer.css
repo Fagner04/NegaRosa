@@ -84,9 +84,19 @@
 }
 
 .footer__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-size: var(--font-size-sm);
   color: var(--footer-text, rgba(255, 255, 255, 0.7));
   transition: color var(--transition-fast), padding-left var(--transition-fast);
+}
+.footer__link-icon,
+.footer__link svg.lucide {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  opacity: 0.75;
 }
 
 .footer__link:hover {
