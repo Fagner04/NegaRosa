@@ -104,7 +104,7 @@
           "seals_J4xr47": {
             "type": "seals",
             "settings": {
-              "transparent_bg": false,
+              "transparent_bg": true,
               "show_payments": true,
               "payments_title": "Formas de pagamento",
               "flag_pix": true,
