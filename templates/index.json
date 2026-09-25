@@ -144,6 +144,7 @@
           "type": "category",
           "settings": {
             "title": "Calçados",
+            "image": "shopify://shop_images/913_7131_20260921015420.jpg",
             "link": "",
             "cta_text": "Comprar",
             "placeholder_color": "1a1a2e",
@@ -154,6 +155,7 @@
           "type": "category",
           "settings": {
             "title": "Vestuário",
+            "image": "shopify://shop_images/913_7131_20260921015420.jpg",
             "link": "",
             "cta_text": "Comprar",
             "placeholder_color": "2d2d2d",
@@ -164,6 +166,7 @@
           "type": "category",
           "settings": {
             "title": "Acessórios",
+            "image": "shopify://shop_images/913_7131_20260921015420.jpg",
             "link": "",
             "cta_text": "Comprar",
             "placeholder_color": "3d1a1a",
@@ -178,7 +181,8 @@
       ],
       "settings": {
         "title": "Explore por Categoria",
-        "layout": "1"
+        "layout": "1",
+        "card_radius": 32
       }
     },
     "featured-launches": {
