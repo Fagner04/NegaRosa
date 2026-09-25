@@ -259,6 +259,11 @@
 }
 a.footer__trust-item:hover { opacity: 1; }
 .footer__trust-item svg { flex-shrink: 0; }
+.footer__trust-stars {
+  color: #FBBC05;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
 
 /* Payment Icons */
 .footer__payments {
