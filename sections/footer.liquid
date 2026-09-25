@@ -3,7 +3,12 @@
   Flexible footer with link_list blocks for easy editing via Shopify Navigation
 {%- endcomment -%}
 
-<footer class="footer" id="footer" role="contentinfo">
+{%- if section.settings.show_wave -%}
+<div class="footer__wave" aria-hidden="true">
+  <svg viewBox="0 0 1440 70" preserveAspectRatio="none"><path d="M0,40 C240,80 420,0 720,25 C1020,50 1200,80 1440,35 L1440,70 L0,70 Z"/></svg>
+</div>
+{%- endif -%}
+<footer class="footer{% if section.settings.show_wave %} footer--with-wave{% endif %}" id="footer" role="contentinfo">
   <div class="page-width">
     <!-- Footer Top -->
     <div class="footer__top">
@@ -362,6 +367,13 @@
       "id": "show_payment_icons",
       "label": "Mostrar ícones de pagamento",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wave",
+      "label": "Mostrar onda decorativa no topo",
+      "info": "Onda na cor do rodapé (estilo Footway)",
+      "default": false
     }
   ],
   "blocks": [
