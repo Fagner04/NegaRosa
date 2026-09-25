@@ -259,10 +259,41 @@
 }
 a.footer__trust-item:hover { opacity: 1; }
 .footer__trust-item svg { flex-shrink: 0; }
-.footer__trust-stars {
+
+/* Google Reviews block */
+.footer__review-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px 14px;
+  text-decoration: none;
+  max-width: 220px;
+}
+.footer__review-google {
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -1px;
+  color: #4285F4;
+  line-height: 1;
+}
+.footer__review-google span:nth-child(1) { color: #EA4335; }
+.footer__review-google span:nth-child(2) { color: #FBBC05; }
+.footer__review-google span:nth-child(3) { color: #4285F4; }
+.footer__review-google span:nth-child(4) { color: #34A853; }
+.footer__review-google span:nth-child(5) { color: #EA4335; }
+.footer__review-stars {
   color: #FBBC05;
+  font-size: 16px;
+  letter-spacing: 2px;
+  line-height: 1;
+}
+.footer__review-cta {
   font-size: 12px;
-  letter-spacing: 1px;
+  font-weight: 700;
+  color: #3c4043;
 }
 
 /* Payment Icons */

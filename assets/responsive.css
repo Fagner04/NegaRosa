@@ -291,6 +291,12 @@
     gap: 10px;
   }
 
+  /* Avaliações também não tem sanfona */
+  .footer__column--reviews .footer__title {
+    display: block;
+    margin-bottom: var(--space-3);
+  }
+
   .footer__accordion-toggle {
     display: flex;
     font-size: var(--font-size-base);

@@ -107,6 +107,16 @@
               </div>
             {%- endunless -%}
 
+          {%- when 'google-reviews' -%}
+            <div class="footer__column footer__column--reviews" {{ block.shopify_attributes }}>
+              <h4 class="footer__title">{{ block.settings.title | default: 'Avaliações' }}</h4>
+              <a class="footer__review-card" {% if block.settings.reviews_url != blank %}href="{{ block.settings.reviews_url }}" target="_blank" rel="noopener"{% endif %} aria-label="Avalie nossa loja no Google">
+                <span class="footer__review-google">G<span>o</span><span>o</span><span>g</span><span>l</span><span>e</span></span>
+                <span class="footer__review-stars">{% for i in (1..5) %}{% if i <= block.settings.reviews_stars %}★{% else %}☆{% endif %}{% endfor %}</span>
+                <span class="footer__review-cta">Avalie no Google</span>
+              </a>
+            </div>
+
           {%- when 'connect' -%}
             <div class="footer__column footer__column--connect" {{ block.shopify_attributes }} style="--fc-bg: {{ block.settings.bg_color }}; --fc-text: {{ block.settings.text_color }}; --fc-btn-bg: {{ block.settings.btn_bg }}; --fc-btn-text: {{ block.settings.btn_text }}; --fc-input-bg: {{ block.settings.input_bg }}; --fc-input-text: {{ block.settings.input_text }}; --fc-input-placeholder: {{ block.settings.input_placeholder }};">
               <h4 class="footer__title footer__connect-title">{{ block.settings.title | default: 'CONECTE-SE' }}</h4>
@@ -318,12 +328,6 @@
             Google Safe
           </a>
         {%- endif -%}
-        {%- if section.settings.trust_reviews -%}
-          <a class="footer__trust-item" {% if section.settings.trust_reviews_url != blank %}href="{{ section.settings.trust_reviews_url }}" target="_blank" rel="noopener"{% endif %}>
-            <span class="footer__trust-stars">★★★★★</span>
-            Avalie-nos
-          </a>
-        {%- endif -%}
       </div>
 
 
@@ -362,17 +366,6 @@
       "label": "Google Safe",
       "default": true
     },
-    {
-      "type": "checkbox",
-      "id": "trust_reviews",
-      "label": "Avalie-nos (estrelas)",
-      "default": true
-    },
-    {
-      "type": "url",
-      "id": "trust_reviews_url",
-      "label": "Link para avaliar (Google Business)"
-    }
   ],
   "blocks": [
     {
@@ -446,6 +439,23 @@
           "id": "subheading",
           "label": "Subtítulo",
           "default": "Receba novidades e ofertas exclusivas"
+        }
+      ]
+    },
+    {
+      "type": "google-reviews",
+      "name": "Avaliações Google",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Título", "default": "Avaliações" },
+        { "type": "url", "id": "reviews_url", "label": "Link para avaliar (Google Business)" },
+        {
+          "type": "range",
+          "id": "reviews_stars",
+          "label": "Estrelas exibidas",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
         }
       ]
     },
