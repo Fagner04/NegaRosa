@@ -64,7 +64,7 @@
           "store_page": "",
           "store_url": "",
           "track_label": "Rastrear Pedido",
-          "track_page": "",
+          "track_page": "rastrear-pedido",
           "track_url": "",
           "login_label": "Entrar",
           "login_page": "",
