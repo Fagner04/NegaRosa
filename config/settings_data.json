@@ -94,6 +94,12 @@
               "menu": "footer"
             }
           },
+          "links_TLWnPR": {
+            "type": "links",
+            "settings": {
+              "menu": "main-menu"
+            }
+          },
           "newsletter_apNfcc": {
             "type": "newsletter",
             "settings": {
@@ -117,6 +123,7 @@
         "block_order": [
           "text_4GJMY8",
           "footer-0",
+          "links_TLWnPR",
           "newsletter_apNfcc",
           "security_seals_Ay8JhB"
         ],
