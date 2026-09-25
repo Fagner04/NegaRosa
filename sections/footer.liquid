@@ -302,12 +302,13 @@
         <div class="footer__column footer__column--payments">
           <h4 class="footer__title">FORMAS DE PAGAMENTO</h4>
           <div class="footer__payments" aria-label="Formas de pagamento aceitas">
+            {%- render 'payment-flag', brand: 'pix' -%}
+            {%- render 'payment-flag', brand: 'boleto' -%}
             {%- render 'payment-flag', brand: 'visa' -%}
             {%- render 'payment-flag', brand: 'mastercard' -%}
             {%- render 'payment-flag', brand: 'amex' -%}
             {%- render 'payment-flag', brand: 'elo' -%}
             {%- render 'payment-flag', brand: 'hipercard' -%}
-            {%- render 'payment-flag', brand: 'pix' -%}
           </div>
         </div>
       {%- endif -%}

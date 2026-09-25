@@ -25,6 +25,8 @@
       assign payment_title = 'Hipercard'
     when 'pix'
       assign payment_title = 'Pix'
+    when 'boleto'
+      assign payment_title = 'Boleto'
   endcase
   assign asset_name = 'payment-' | append: brand_handle | append: '.svg'
 -%}
