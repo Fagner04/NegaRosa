@@ -302,13 +302,13 @@
         <div class="footer__column footer__column--payments">
           <h4 class="footer__title">FORMAS DE PAGAMENTO</h4>
           <div class="footer__payments" aria-label="Formas de pagamento aceitas">
-            {%- render 'payment-flag', brand: 'pix' -%}
-            {%- render 'payment-flag', brand: 'boleto' -%}
-            {%- render 'payment-flag', brand: 'visa' -%}
-            {%- render 'payment-flag', brand: 'mastercard' -%}
-            {%- render 'payment-flag', brand: 'amex' -%}
-            {%- render 'payment-flag', brand: 'elo' -%}
-            {%- render 'payment-flag', brand: 'hipercard' -%}
+            {%- if section.settings.flag_pix -%}{%- render 'payment-flag', brand: 'pix' -%}{%- endif -%}
+            {%- if section.settings.flag_boleto -%}{%- render 'payment-flag', brand: 'boleto' -%}{%- endif -%}
+            {%- if section.settings.flag_visa -%}{%- render 'payment-flag', brand: 'visa' -%}{%- endif -%}
+            {%- if section.settings.flag_mastercard -%}{%- render 'payment-flag', brand: 'mastercard' -%}{%- endif -%}
+            {%- if section.settings.flag_amex -%}{%- render 'payment-flag', brand: 'amex' -%}{%- endif -%}
+            {%- if section.settings.flag_elo -%}{%- render 'payment-flag', brand: 'elo' -%}{%- endif -%}
+            {%- if section.settings.flag_hipercard -%}{%- render 'payment-flag', brand: 'hipercard' -%}{%- endif -%}
           </div>
         </div>
       {%- endif -%}
@@ -367,10 +367,17 @@
     },
     {
       "type": "checkbox",
-      "id": "trust_safe",
-      "label": "Google Safe",
+      "id": "show_payment_icons",
+      "label": "Mostrar ícones de pagamento",
       "default": true
     },
+    { "type": "checkbox", "id": "flag_pix", "label": "Pix", "default": true },
+    { "type": "checkbox", "id": "flag_boleto", "label": "Boleto", "default": true },
+    { "type": "checkbox", "id": "flag_visa", "label": "Visa", "default": true },
+    { "type": "checkbox", "id": "flag_mastercard", "label": "Mastercard", "default": true },
+    { "type": "checkbox", "id": "flag_amex", "label": "American Express", "default": true },
+    { "type": "checkbox", "id": "flag_elo", "label": "Elo", "default": true },
+    { "type": "checkbox", "id": "flag_hipercard", "label": "Hipercard", "default": true }
   ],
   "blocks": [
     {
