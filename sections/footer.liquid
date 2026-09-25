@@ -107,6 +107,36 @@
               </div>
             {%- endunless -%}
 
+          {%- when 'seals' -%}
+            <div class="footer__seals" {{ block.shopify_attributes }}>
+              {%- if block.settings.show_payments -%}
+                <div class="footer__seal-card footer__seal-card--payments">
+                  <p class="footer__seal-title">{{ block.settings.payments_title | default: 'Formas de pagamento' }}</p>
+                  <div class="footer__seal-flags">
+                    {%- if block.settings.flag_pix -%}{% render 'payment-flag', brand: 'pix' %}{%- endif -%}
+                    {%- if block.settings.flag_visa -%}{% render 'payment-flag', brand: 'visa' %}{%- endif -%}
+                    {%- if block.settings.flag_mastercard -%}{% render 'payment-flag', brand: 'mastercard' %}{%- endif -%}
+                    {%- if block.settings.flag_amex -%}{% render 'payment-flag', brand: 'amex' %}{%- endif -%}
+                    {%- if block.settings.flag_elo -%}{% render 'payment-flag', brand: 'elo' %}{%- endif -%}
+                    {%- if block.settings.flag_hipercard -%}{% render 'payment-flag', brand: 'hipercard' %}{%- endif -%}
+                  </div>
+                </div>
+              {%- endif -%}
+              {%- if block.settings.show_reviews -%}
+                <a class="footer__seal-card footer__seal-card--reviews" {% if block.settings.reviews_url != blank %}href="{{ block.settings.reviews_url }}" target="_blank" rel="noopener"{% endif %} aria-label="Avaliações no Google">
+                  <span class="footer__seal-google">G<span>o</span><span>o</span><span>g</span><span>l</span><span>e</span></span>
+                  <span class="footer__seal-reviews-sub">My Business<br>Reviews</span>
+                  <span class="footer__seal-stars">{% for i in (1..5) %}{% if i <= block.settings.reviews_stars %}★{% else %}☆{% endif %}{% endfor %}</span>
+                </a>
+              {%- endif -%}
+              {%- if block.settings.show_safe -%}
+                <a class="footer__seal-card footer__seal-card--safe" href="{% if block.settings.safe_url != blank %}{{ block.settings.safe_url }}{% else %}https://transparencyreport.google.com/safe-browsing/search?url={{ shop.domain }}{% endif %}" target="_blank" rel="noopener" aria-label="Site seguro Google">
+                  <svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path fill="#5F6368" d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path fill="#fff" d="M10.2 15.6l-3.2-3.2 1.4-1.4 1.8 1.8 5.2-5.2 1.4 1.4z"/></svg>
+                  <span class="footer__seal-safe-text"><strong>Google</strong>Site Seguro</span>
+                </a>
+              {%- endif -%}
+            </div>
+
           {%- when 'connect' -%}
             <div class="footer__column footer__column--connect" {{ block.shopify_attributes }} style="--fc-bg: {{ block.settings.bg_color }}; --fc-text: {{ block.settings.text_color }}; --fc-btn-bg: {{ block.settings.btn_bg }}; --fc-btn-text: {{ block.settings.btn_text }}; --fc-input-bg: {{ block.settings.input_bg }}; --fc-input-text: {{ block.settings.input_text }}; --fc-input-placeholder: {{ block.settings.input_placeholder }};">
               <h4 class="footer__title footer__connect-title">{{ block.settings.title | default: 'CONECTE-SE' }}</h4>
@@ -429,6 +459,36 @@
         { "type": "url", "id": "legal_link_2_url", "label": "Link 2 - URL" },
         { "type": "text", "id": "legal_link_3_text", "label": "Link 3 - Texto", "default": "Cookies" },
         { "type": "url", "id": "legal_link_3_url", "label": "Link 3 - URL" }
+      ]
+    },
+    {
+      "type": "seals",
+      "name": "Selos de confiança",
+      "settings": [
+        { "type": "header", "content": "Cartão: Formas de pagamento" },
+        { "type": "checkbox", "id": "show_payments", "label": "Mostrar cartão de pagamento", "default": true },
+        { "type": "text", "id": "payments_title", "label": "Título", "default": "Formas de pagamento" },
+        { "type": "checkbox", "id": "flag_pix", "label": "Pix", "default": true },
+        { "type": "checkbox", "id": "flag_visa", "label": "Visa", "default": true },
+        { "type": "checkbox", "id": "flag_mastercard", "label": "Mastercard", "default": true },
+        { "type": "checkbox", "id": "flag_amex", "label": "American Express", "default": true },
+        { "type": "checkbox", "id": "flag_elo", "label": "Elo", "default": true },
+        { "type": "checkbox", "id": "flag_hipercard", "label": "Hipercard", "default": true },
+        { "type": "header", "content": "Cartão: Google Reviews" },
+        { "type": "checkbox", "id": "show_reviews", "label": "Mostrar cartão de avaliações", "default": true },
+        { "type": "url", "id": "reviews_url", "label": "Link do perfil Google Business" },
+        {
+          "type": "range",
+          "id": "reviews_stars",
+          "label": "Estrelas",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        { "type": "header", "content": "Cartão: Site Seguro" },
+        { "type": "checkbox", "id": "show_safe", "label": "Mostrar selo site seguro", "default": true },
+        { "type": "url", "id": "safe_url", "label": "Link do selo (vazio = verificação Google automática)" }
       ]
     }
   ],
