@@ -108,12 +108,12 @@
             {%- endunless -%}
 
           {%- when 'security-seals' -%}
-            <div class="footer__column footer__column--seals" {{ block.shopify_attributes }}>
+            <div class="footer__column footer__column--seals{% if block.settings.transparent_bg %} footer__column--seals-transparent{% endif %}" {{ block.shopify_attributes }}>
               <h4 class="footer__title">{{ block.settings.title | default: 'Segurança' }}</h4>
               <div class="footer__seals-col">
                 {%- if block.settings.show_ssl -%}
                   <svg viewBox="0 0 136 44" width="136" height="44" role="img" aria-label="Site Seguro SSL">
-                    <rect x="1" y="1" width="134" height="42" rx="8" fill="#ffffff" stroke="#E5E5E5"/>
+                    <rect class="footer__seal-bg" x="1" y="1" width="134" height="42" rx="8" fill="#ffffff" stroke="#E5E5E5"/>
                     <rect x="8" y="8" width="28" height="28" rx="6" fill="#FFC107"/>
                     <rect x="16" y="22" width="12" height="9" rx="2" fill="#ffffff"/>
                     <path d="M18.5 22v-2.5a3.5 3.5 0 0 1 7 0V22" stroke="#ffffff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
@@ -133,7 +133,7 @@
                 {%- if block.settings.show_safe -%}
                   <a href="{% if block.settings.safe_url != blank %}{{ block.settings.safe_url }}{% else %}https://transparencyreport.google.com/safe-browsing/search?url={{ shop.domain }}{% endif %}" target="_blank" rel="noopener" aria-label="Google Safe Browsing">
                     <svg viewBox="0 0 150 44" width="150" height="44" role="img" aria-label="Safe Browsing Google">
-                      <rect x="1" y="1" width="148" height="42" rx="8" fill="#ffffff" stroke="#E5E5E5"/>
+                      <rect class="footer__seal-bg" x="1" y="1" width="148" height="42" rx="8" fill="#ffffff" stroke="#E5E5E5"/>
                       <path d="M20 6l-9 4v6c0 5.4 3.8 10.4 9 12 5.2-1.6 9-6.6 9-12v-6l-9-4z" fill="#34A853"/>
                       <path d="M17.2 22.4l-3.4-3.4 1.6-1.6 1.8 1.8 5.4-5.4 1.6 1.6z" fill="#ffffff"/>
                       <text x="38" y="20" font-family="Arial, sans-serif" font-size="12" font-weight="700" fill="#3c4043">Safe Browsing</text>
@@ -473,6 +473,7 @@
       "name": "Selos de segurança",
       "settings": [
         { "type": "text", "id": "title", "label": "Título", "default": "Segurança" },
+        { "type": "checkbox", "id": "transparent_bg", "label": "Fundo transparente (sem branco e sem borda)", "default": false },
         { "type": "checkbox", "id": "show_ssl", "label": "Mostrar selo SSL Site Seguro", "default": true },
         { "type": "checkbox", "id": "show_safe", "label": "Mostrar selo Google Safe Browsing", "default": true },
         { "type": "url", "id": "safe_url", "label": "Link do selo (vazio = verificação Google automática)" },

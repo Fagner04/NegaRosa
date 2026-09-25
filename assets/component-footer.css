@@ -241,6 +241,14 @@
 }
 
 /* Security seals column */
+.footer__column--seals-transparent .footer__seal-bg {
+  fill: transparent;
+  stroke: none;
+}
+.footer__column--seals-transparent .footer__seal-review {
+  background: transparent;
+  border-color: transparent;
+}
 .footer__seals-col {
   display: flex;
   flex-direction: column;
