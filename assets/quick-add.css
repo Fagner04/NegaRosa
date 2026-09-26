@@ -221,9 +221,256 @@
 .quick-add-drawer__handle {
   width: 40px;
   height: 4px;
-  background: var(--color-border-dark);
+  background: rgba(255, 255, 255, 0.9);
   border-radius: var(--border-radius-full);
-  margin: 0 auto var(--space-5);
+  margin: 0 auto;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================================================================
+   DRAWER VITRINE (estilo referência) — mídia + corpo
+   ========================================================================== */
+.quick-add-drawer {
+  padding: 0;
+}
+
+.qa-sheet__media {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: var(--color-bg-secondary);
+  border-radius: 20px 20px 0 0;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.qa-sheet__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: var(--color-bg-secondary);
+}
+
+.qa-sheet__round-btn {
+  position: absolute;
+  top: 22px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #111;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+.qa-sheet__round-btn:active {
+  transform: scale(0.92);
+}
+
+.qa-sheet__back { left: 14px; }
+.qa-sheet__share { right: 14px; }
+
+.qa-sheet__thumbs {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 5;
+}
+
+.qa-sheet__thumb {
+  width: 54px;
+  height: 54px;
+  border-radius: 12px;
+  border: 2px solid #fff;
+  background-size: cover;
+  background-position: center;
+  background-color: #fff;
+  cursor: pointer;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+.qa-sheet__thumb.active {
+  border-color: #111;
+}
+
+.qa-sheet__badges {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  display: flex;
+  gap: 6px;
+  z-index: 5;
+}
+
+.qa-sheet__badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 999px;
+  line-height: 1;
+}
+
+.qa-sheet__badge--new {
+  background: #FFD9C2;
+  color: #B4441C;
+}
+
+.qa-sheet__badge--off {
+  background: #CFF3D2;
+  color: #15803D;
+}
+
+.qa-sheet__body {
+  padding: 18px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: #fff;
+}
+
+.qa-sheet__title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.qa-sheet__titles {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.qa-sheet__title {
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0;
+  color: var(--color-text);
+}
+
+.qa-sheet__subtitle {
+  font-size: 13px;
+  color: var(--color-text-light);
+}
+
+.qa-sheet__heart {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.qa-sheet__heart.is-active {
+  color: #E11D48;
+}
+
+.qa-sheet__heart.is-active svg {
+  fill: #E11D48;
+}
+
+.qa-sheet__prices {
+  gap: 4px;
+}
+
+.qa-sheet__buy-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.qa-sheet__label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 8px;
+}
+
+.qa-sheet__qty {
+  background: #F3F4F6;
+  border: none;
+  border-radius: 999px;
+  height: 48px;
+}
+
+.qa-sheet__qty .qa-qty__btn {
+  width: 46px;
+  height: 48px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.qa-sheet__total-block {
+  text-align: right;
+}
+
+.qa-sheet__total-block .qa-sheet__label {
+  color: var(--color-text-light);
+  font-weight: 500;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.qa-sheet__total {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.qa-sheet__cta {
+  margin-top: 2px;
+}
+
+.qa-sheet__cta .qa-add-btn {
+  height: 56px;
+  font-size: var(--font-size-base);
+  border-radius: 999px;
+  background: #111;
+}
+
+.qa-sheet__details {
+  margin-top: 2px;
+}
+
+/* Pílulas de tamanho/cor no drawer vitrine */
+.qa-sheet__body .qa-size-btn {
+  min-width: 52px;
+  height: 46px;
+  border-radius: 999px;
+  border-color: transparent;
+  background: #F3F4F6;
+}
+
+.qa-sheet__body .qa-size-btn.selected {
+  background: #111;
+  border-color: #111;
+  color: #fff;
 }
 
 .quick-add-drawer__header {
