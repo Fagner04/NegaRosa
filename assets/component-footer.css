@@ -565,6 +565,26 @@ a.footer__contact-value:hover { color: var(--footer-heading, #9D5A5A); opacity: 
     font-size: 12px;
     white-space: nowrap;
   }
+  /* Card newsletter: nunca estoura a tela */
+  .footer__column--connect {
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    padding: 20px 16px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+  .footer__connect-newsletter,
+  .footer__connect-form-wrap,
+  .footer__connect-form {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .footer__connect-btn {
+    padding: 10px 16px;
+    flex-shrink: 0;
+  }
   .footer__column--payments {
     flex: 1 1 100%;
     text-align: left;
