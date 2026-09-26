@@ -54,6 +54,12 @@
   will-change: opacity, transform;
 }
 
+/* Hover lift rapido apos o reveal (evita briga de transition/transform) */
+.product-card.is-visible:hover {
+  transform: translateY(-4px);
+  transition: transform 0.25s ease;
+}
+
 .product-card.is-visible,
 .snippet-card.is-visible,
 .trending__item.is-visible,

@@ -52,10 +52,10 @@
       entries.forEach(function (entry) {
         var el = entry.target;
         if (entry.isIntersecting && entry.intersectionRatio > 0.08) {
+          // Revela uma única vez e para de observar: evita re-animar
+          // (o card "subia para dentro") ao rolar com o mouse em cima
           el.classList.add('is-visible');
-        } else if (!entry.isIntersecting && entry.boundingClientRect.top > window.innerHeight * 0.5) {
-          // Só remove se saiu por baixo (para reaparecer ao rolar de volta pra cima)
-          el.classList.remove('is-visible');
+          observer.unobserve(el);
         }
       });
     }, {
