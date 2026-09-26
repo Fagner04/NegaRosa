@@ -625,6 +625,42 @@
     text-transform: uppercase;
   }
 
+  /* Quantidade ao lado do botão comprar */
+  .buy-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 992px) {
+    .buy-row {
+      flex-direction: row;
+      align-items: stretch;
+      gap: 12px;
+    }
+    .buy-row .buy-row__qty-label {
+      display: none;
+    }
+    .buy-row .qty-selector {
+      gap: 0;
+    }
+    .buy-row .qty-input-wrapper {
+      height: 56px;
+    }
+    .buy-row .qty-btn {
+      width: 46px;
+      height: 56px;
+    }
+    .buy-row .product-form__buttons {
+      flex: 1;
+      margin-top: 0;
+    }
+    .buy-row .btn-add-to-cart {
+      height: 100%;
+      min-height: 56px;
+    }
+  }
+
   /* Accordion details — estilo card com sombra cinza */
   .product-details {
     display: flex;
@@ -1535,25 +1571,26 @@
             {%- render 'size-guide-modal', product: product -%}
           {%- endif -%}
 
-          <!-- Quantity Selector -->
-          <div class="qty-selector">
-            <span class="option-selector__label" style="margin-bottom: 0;">Quantidade:</span>
-            <div class="qty-input-wrapper">
-              <button type="button" class="qty-btn" id="QtyMinus" aria-label="Diminuir">-</button>
-              <input type="number" name="quantity" id="ProductQuantity" class="qty-input" value="1" min="1">
-              <button type="button" class="qty-btn" id="QtyPlus" aria-label="Aumentar">+</button>
+          <!-- Quantity + Buy (lado a lado no desktop) -->
+          <div class="buy-row">
+            <div class="qty-selector">
+              <span class="option-selector__label buy-row__qty-label" style="margin-bottom: 0;">Quantidade:</span>
+              <div class="qty-input-wrapper">
+                <button type="button" class="qty-btn" id="QtyMinus" aria-label="Diminuir">-</button>
+                <input type="number" name="quantity" id="ProductQuantity" class="qty-input" value="1" min="1" aria-label="Quantidade">
+                <button type="button" class="qty-btn" id="QtyPlus" aria-label="Aumentar">+</button>
+              </div>
             </div>
-          </div>
 
-          <!-- Add & Buy Buttons -->
-          <div class="product-form__buttons">
-            <button type="submit" name="add" class="btn btn-primary btn-add-to-cart w-full btn-scale btn-ripple" id="AddToCartBtn" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
-              {%- if product.selected_or_first_available_variant.available -%}
-                Adicionar à Sacola
-              {%- else -%}
-                Esgotado
-              {%- endif -%}
-            </button>
+            <div class="product-form__buttons">
+              <button type="submit" name="add" class="btn btn-primary btn-add-to-cart w-full btn-scale btn-ripple" id="AddToCartBtn" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
+                {%- if product.selected_or_first_available_variant.available -%}
+                  Adicionar à Sacola
+                {%- else -%}
+                  Esgotado
+                {%- endif -%}
+              </button>
+            </div>
           </div>
 
           <!-- Widget de Frete (movido para logo abaixo do botão Adicionar à Sacola) -->
