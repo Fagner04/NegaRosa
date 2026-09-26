@@ -24,7 +24,7 @@
         "pix_discount_text": "ou [valor] à vista no PIX ([desconto]% off)",
         "pix_discount_color": "#32bcad",
         "pages_display_mode": "all",
-        "shipping_page": "",
+        "shipping_page": "trocas-e-devolucoes",
         "shipping_text": "Frete grátis em compras acima de R$ 399,90. Devoluções gratuitas em até 7 dias após o recebimento da compra para membros da marca.",
         "payment_page": "",
         "payment_text": "Aceitamos Pix, cartões de crédito (Visa, Mastercard, Elo, Amex) com parcelamento em até 10x sem juros, ou boleto bancário à vista.",
