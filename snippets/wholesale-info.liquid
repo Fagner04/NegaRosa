@@ -14,7 +14,7 @@
 
   Exibe somente quando houver preço de atacado válido.
   (No tema NegaRosa o equivalente nativo vive em sections/main-product.liquid,
-  bloco .wholesale-info — este snippet é para uso manual em outros templates.)
+  bloco .wholesale-card — este snippet é para uso manual em outros templates.)
 {%- endcomment -%}
 
 {%- assign ws_product = product | default: card_product -%}
@@ -55,24 +55,23 @@
 {%- endunless -%}
 
 {%- if ws_is_money or ws_cents > 0 -%}
-  <div class="wholesale-info" style="margin: 4px 0; font-size: 12px;">
-    <span style="color: #9A3412; font-weight: 600;">Atacado:</span>
-    <strong style="color: #C2410C; font-size: 14px;">
-      {%- if ws_is_money -%}{{ ws_value | money }}{%- else -%}{{ ws_cents | money }}{%- endif -%}
-    </strong>
-    {%- if ws_min_qty != blank -%}
-      <span style="color: #9A3412;">
-        (mín. {{ ws_min_qty }} un.)
-      </span>
-    {%- endif -%}
-    {%- if ws_min_value_is_money -%}
-      <br><span style="font-size: 11px; color: #B45309;">
-        Pedido mínimo: {{ ws_min_value | money }}
-      </span>
-    {%- elsif ws_min_value_cents > 0 -%}
-      <br><span style="font-size: 11px; color: #B45309;">
-        Pedido mínimo: {{ ws_min_value_cents | money }}
-      </span>
-    {%- endif -%}
+  <div class="wholesale-info wholesale-card" style="display: flex; align-items: flex-start; gap: 10px; margin: 8px 0 2px; padding: 10px 12px; background: #FFF7ED; border: 1px solid #FDBA74; border-radius: 12px; font-size: 12px;">
+    <span style="width: 30px; height: 30px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; background: rgba(194,65,12,0.12); color: #C2410C;" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+    </span>
+    <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0;">
+      <div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px; color: #9A3412;">
+        <span style="font-weight: 600;">Atacado:</span>
+        <strong style="color: #C2410C; font-size: 16px; font-weight: 800;">{%- if ws_is_money -%}{{ ws_value | money }}{%- else -%}{{ ws_cents | money }}{%- endif -%}</strong>
+        {%- if ws_min_qty != blank -%}
+          <span>(mín. {{ ws_min_qty }} un.)</span>
+        {%- endif -%}
+      </div>
+      {%- if ws_min_value_is_money -%}
+        <span style="font-size: 11px; color: #B45309;">Pedido mínimo: {{ ws_min_value | money }}</span>
+      {%- elsif ws_min_value_cents > 0 -%}
+        <span style="font-size: 11px; color: #B45309;">Pedido mínimo: {{ ws_min_value_cents | money }}</span>
+      {%- endif -%}
+    </div>
   </div>
 {%- endif -%}
