@@ -220,11 +220,12 @@
         "video_46eRnJ": {
           "type": "video",
           "settings": {
-            "video_type": "tiktok",
+            "image": "shopify://shop_images/913_7150_20260921132447.jpg",
+            "video_type": "mp4",
             "video_id": "https://cdn.shopify.com/videos/c/o/v/71cb371e8bbd48b3abba1c5618f401e3.mp4",
             "product_title": "Olhar Conectado",
             "tag": "Lançamento",
-            "link": "shopify://products/biquini-bandeira"
+            "link": "shopify://products/maio-rose"
           }
         },
         "video_7ChRmG": {
