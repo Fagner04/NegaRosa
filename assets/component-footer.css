@@ -588,6 +588,7 @@ a.footer__contact-value:hover { color: var(--footer-heading, #9D5A5A); opacity: 
   /* Desgruda o subtítulo de contato do card da newsletter */
   .footer__contact-subtitle {
     margin-top: 14px;
+    text-align: center;
   }
   .footer__column--payments {
     flex: 1 1 100%;
