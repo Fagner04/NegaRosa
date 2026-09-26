@@ -205,7 +205,7 @@
       "settings": {
         "title": "Ofertas",
         "subtitle": "Até 40% OFF em produtos selecionados",
-        "collection": "colecoes",
+        "collection": "fitness",
         "products_to_show": 7,
         "columns": "4",
         "layout": "carousel",
