@@ -177,7 +177,6 @@
       {%- if wholesale_price_number > 0 -%}
         {%- assign wholesale_price_cents = wholesale_price_number | times: 100 | round -%}
       {%- endif -%}
-      {%- assign wholesale_min_qty = product.metafields.custom.wholesale_min_qty.value | default: product.metafields.custom.wholesale_min_qty -%}
     {%- endif -%}
 
     <div class="product-card__price">
@@ -196,9 +195,6 @@
           <span class="product-card__price-label">ATACADO</span>
           {%- if wholesale_price_cents > 0 -%}
             <span class="product-card__price-current">{{ wholesale_price_cents | money }}</span>
-            {%- if wholesale_min_qty != blank -%}
-              <span class="product-card__price-min-qty" style="display:block;font-size:9px;color:#9A3412;font-weight:600;">mín. {{ wholesale_min_qty }} un.</span>
-            {%- endif -%}
           {%- else -%}
             <span class="product-card__price-dash">—</span>
           {%- endif -%}

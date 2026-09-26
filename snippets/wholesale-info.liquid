@@ -1,0 +1,78 @@
+{%- comment -%}
+  Snippet: wholesale-info — Snippet 2 (Página do Produto)
+  Versão detalhada com preço grande, quantidade mínima e valor mínimo do pedido.
+  Aparece quando o cliente abre o produto.
+
+  Uso:
+    {% render 'wholesale-info', product: product %}
+
+  Lê os metafields (criados pelo botão "Atacado → Shopify"):
+    custom.wholesale_price     — Preço de atacado (money, decimal ou texto)
+    custom.wholesale_min_qty   — Quantidade mínima (integer)
+    custom.wholesale_min_value — Valor mínimo do pedido (money ou decimal)
+  Aceita ainda o legado custom.preco_atacado como fallback.
+
+  Exibe somente quando houver preço de atacado válido.
+  (No tema NegaRosa o equivalente nativo vive em sections/main-product.liquid,
+  bloco .wholesale-info — este snippet é para uso manual em outros templates.)
+{%- endcomment -%}
+
+{%- assign ws_product = product | default: card_product -%}
+{%- assign ws_raw = ws_product.metafields.custom.wholesale_price | default: ws_product.metafields.custom.preco_atacado -%}
+{%- assign ws_value = ws_raw.value | default: ws_raw -%}
+{%- assign ws_is_money = false -%}
+{%- if ws_value.amount -%}
+  {%- assign ws_is_money = true -%}
+{%- endif -%}
+{%- assign ws_cents = 0 -%}
+{%- unless ws_is_money -%}
+  {%- assign ws_str = ws_value | append: '' | replace: ' ', '' | replace: 'R$', '' -%}
+  {%- if ws_str contains ',' -%}
+    {%- assign ws_str = ws_str | replace: '.', '' | replace: ',', '.' -%}
+  {%- endif -%}
+  {%- assign ws_num = ws_str | times: 1.0 -%}
+  {%- if ws_num > 0 -%}
+    {%- assign ws_cents = ws_num | times: 100 | round -%}
+  {%- endif -%}
+{%- endunless -%}
+{%- assign ws_min_qty = ws_product.metafields.custom.wholesale_min_qty.value | default: ws_product.metafields.custom.wholesale_min_qty -%}
+{%- assign ws_min_value_raw = ws_product.metafields.custom.wholesale_min_value -%}
+{%- assign ws_min_value = ws_min_value_raw.value | default: ws_min_value_raw -%}
+{%- assign ws_min_value_is_money = false -%}
+{%- if ws_min_value.amount -%}
+  {%- assign ws_min_value_is_money = true -%}
+{%- endif -%}
+{%- assign ws_min_value_cents = 0 -%}
+{%- unless ws_min_value_is_money -%}
+  {%- assign ws_mv_str = ws_min_value | append: '' | replace: ' ', '' | replace: 'R$', '' -%}
+  {%- if ws_mv_str contains ',' -%}
+    {%- assign ws_mv_str = ws_mv_str | replace: '.', '' | replace: ',', '.' -%}
+  {%- endif -%}
+  {%- assign ws_mv_num = ws_mv_str | times: 1.0 -%}
+  {%- if ws_mv_num > 0 -%}
+    {%- assign ws_min_value_cents = ws_mv_num | times: 100 | round -%}
+  {%- endif -%}
+{%- endunless -%}
+
+{%- if ws_is_money or ws_cents > 0 -%}
+  <div class="wholesale-info" style="margin: 4px 0; font-size: 12px;">
+    <span style="color: #9A3412; font-weight: 600;">Atacado:</span>
+    <strong style="color: #C2410C; font-size: 14px;">
+      {%- if ws_is_money -%}{{ ws_value | money }}{%- else -%}{{ ws_cents | money }}{%- endif -%}
+    </strong>
+    {%- if ws_min_qty != blank -%}
+      <span style="color: #9A3412;">
+        (mín. {{ ws_min_qty }} un.)
+      </span>
+    {%- endif -%}
+    {%- if ws_min_value_is_money -%}
+      <br><span style="font-size: 11px; color: #B45309;">
+        Pedido mínimo: {{ ws_min_value | money }}
+      </span>
+    {%- elsif ws_min_value_cents > 0 -%}
+      <br><span style="font-size: 11px; color: #B45309;">
+        Pedido mínimo: {{ ws_min_value_cents | money }}
+      </span>
+    {%- endif -%}
+  </div>
+{%- endif -%}

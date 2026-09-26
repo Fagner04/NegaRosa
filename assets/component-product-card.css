@@ -290,13 +290,20 @@
 .product-card__price-cols {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-3);
+  gap: var(--space-2);
+  align-items: stretch;
 }
 
 .product-card__price-col {
   display: flex;
   flex-direction: column;
   gap: 2px;
+}
+
+/* Coluna ATACADO separada por divisor vertical (modelo Varejo | Atacado) */
+.product-card__price-col--atacado {
+  border-left: 1px solid var(--color-border, #E5E7EB);
+  padding-left: var(--space-3);
 }
 
 .product-card__price-label {
@@ -308,7 +315,7 @@
 }
 
 .product-card__price-col--atacado .product-card__price-label {
-  color: #9333EA;
+  color: var(--color-text-light);
 }
 
 .product-card__price-current {
@@ -316,6 +323,11 @@
   font-weight: var(--font-weight-bold);
   color: var(--color-text);
   line-height: 1.1;
+}
+
+/* Valor do atacado em azul (modelo) */
+.product-card__price-col--atacado .product-card__price-current {
+  color: #4F46E5;
 }
 
 .product-card__price-compare {
@@ -331,7 +343,7 @@
 .product-card__price-dash {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
-  color: #B8A8FF;
+  color: var(--color-text-light);
   line-height: 1.1;
 }
 

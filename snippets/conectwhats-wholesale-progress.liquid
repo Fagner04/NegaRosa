@@ -1,0 +1,134 @@
+{%- comment -%}
+  Snippet: conectwhats-wholesale-progress — Snippet 3 (Carrinho)
+  Barra de progresso + cálculo total com preços de atacado.
+  Usa as settings do tema para ativar/configurar.
+
+  Uso (sections/main-cart.liquid):
+    {% render 'conectwhats-wholesale-progress',
+       enabled: section.settings.wholesale_enabled,
+       min_qty: section.settings.wholesale_min_qty %}
+
+  Parâmetros (opcionais):
+    enabled — liga/desliga a barra. Fallback: settings.conectwhats_atacado_enabled
+              → settings.wholesale_enabled. (false explícito é respeitado.)
+    min_qty — peças para ativar o atacado. Fallback:
+              settings.conectwhats_atacado_min_qty → 6.
+
+  Lê por item: product.metafields.custom.wholesale_price
+  (aceita money object, number ou string em reais — pt-BR "179,91" ou en "179.91",
+  com fallback para o legado custom.preco_atacado).
+  O desconto só entra se o preço de atacado for menor que o preço unitário atual.
+{%- endcomment -%}
+
+{%- assign cw_enabled = enabled -%}
+{%- if cw_enabled == nil -%}
+  {%- assign cw_enabled = settings.conectwhats_atacado_enabled -%}
+  {%- if cw_enabled == nil -%}
+    {%- assign cw_enabled = settings.wholesale_enabled -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- if cw_enabled -%}
+  {%- assign wholesale_min = min_qty -%}
+  {%- if wholesale_min == nil -%}
+    {%- assign wholesale_min = settings.conectwhats_atacado_min_qty -%}
+  {%- endif -%}
+  {%- if wholesale_min == nil or wholesale_min < 1 -%}
+    {%- assign wholesale_min = 6 -%}
+  {%- endif -%}
+
+  {%- comment -%} BARRA DE PROGRESSO ATACADO + CÁLCULO TOTAL {%- endcomment -%}
+  {%- assign total_items = cart.item_count -%}
+  {%- assign progress = total_items | times: 100 | divided_by: wholesale_min -%}
+  {%- if progress > 100 -%}
+    {%- assign progress = 100 -%}
+  {%- endif -%}
+  {%- assign wholesale_active = false -%}
+  {%- if total_items >= wholesale_min -%}
+    {%- assign wholesale_active = true -%}
+  {%- endif -%}
+
+  {%- comment -%} CALCULAR TOTAL COM ATACADO {%- endcomment -%}
+  {%- assign wholesale_total = 0 -%}
+  {%- assign original_total = 0 -%}
+  {%- assign has_wholesale_prices = false -%}
+  {%- for item in cart.items -%}
+    {%- assign ws_raw = item.product.metafields.custom.wholesale_price | default: item.product.metafields.custom.preco_atacado -%}
+    {%- assign ws_price_str = '' -%}
+    {%- if ws_raw != blank -%}
+      {%- if ws_raw.amount -%}
+        {%- assign ws_price_str = ws_raw.amount -%}
+      {%- elsif ws_raw.value.amount -%}
+        {%- assign ws_price_str = ws_raw.value.amount -%}
+      {%- elsif ws_raw.value -%}
+        {%- assign ws_price_str = ws_raw.value -%}
+      {%- else -%}
+        {%- assign ws_price_str = ws_raw -%}
+      {%- endif -%}
+    {%- endif -%}
+    {%- assign ws_price_str = ws_price_str | append: '' | replace: ' ', '' | replace: 'R$', '' -%}
+    {%- if ws_price_str contains ',' -%}
+      {%- assign ws_price_str = ws_price_str | replace: '.', '' | replace: ',', '.' -%}
+    {%- endif -%}
+    {%- assign ws_price = ws_price_str | times: 1.0 -%}
+    {%- assign unit_price_cents = item.final_price -%}
+    {%- if ws_price > 0 -%}
+      {%- assign ws_price_cents = ws_price | times: 100 | round -%}
+      {%- if ws_price_cents > 0 and ws_price_cents < unit_price_cents -%}
+        {%- assign has_wholesale_prices = true -%}
+        {%- assign item_ws_total = ws_price_cents | times: item.quantity -%}
+        {%- assign wholesale_total = wholesale_total | plus: item_ws_total -%}
+      {%- else -%}
+        {%- assign wholesale_total = wholesale_total | plus: item.final_line_price -%}
+      {%- endif -%}
+    {%- else -%}
+      {%- assign wholesale_total = wholesale_total | plus: item.final_line_price -%}
+    {%- endif -%}
+    {%- assign original_total = original_total | plus: item.final_line_price -%}
+  {%- endfor -%}
+  {%- assign savings = original_total | minus: wholesale_total -%}
+
+  <style>
+    .cw-wholesale-progress { box-sizing: border-box; width: 100%; max-width: 100%; overflow: hidden; }
+    .cw-new-total { background: #F0FDF4; border: 2px solid #86EFAC; border-radius: 8px; padding: 12px; margin: 12px 0 0; }
+    .cw-new-total-price { font-size: 20px; font-weight: 700; color: #15803D; }
+    .cw-new-total-savings { font-size: 13px; color: #166534; }
+    .cw-badge-atacado { background: #DCFCE7; color: #166534; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+    .cw-progress-track { margin-top: 6px; height: 6px; background: #FECACA; border-radius: 9999px; overflow: hidden; }
+    .cw-progress-fill { height: 100%; background: #EF4444; border-radius: 9999px; transition: width .3s; }
+    @media (max-width: 749px) {
+      .cw-wholesale-progress { padding: 12px !important; margin: 10px 0 !important; }
+      .cw-wholesale-progress > div { font-size: 12px !important; flex-wrap: wrap; max-width: 100%; word-break: break-word; }
+      .cw-new-total-price { font-size: 17px !important; }
+      .cw-new-total-savings { font-size: 12px !important; line-height: 1.3; }
+    }
+  </style>
+
+  {%- comment -%} BARRA + TOTAL ATACADO {%- endcomment -%}
+  <div class="cw-wholesale-progress" style="margin: 12px 0; padding: 10px 14px; border-radius: 8px;{% if wholesale_active %} background: #F0FDF4; border: 2px solid #86EFAC;{% else %} background: #FEF2F2; border: 2px solid #FECACA;{% endif %}">
+    {%- if wholesale_active -%}
+      <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #166534;">
+        <span>🎉</span>
+        <span>Atacado Ativo! ({{ total_items }}/{{ wholesale_min }} peças)</span>
+        <span class="cw-badge-atacado">ATACADO</span>
+      </div>
+      {%- if has_wholesale_prices and savings > 0 -%}
+        <div class="cw-new-total">
+          <div class="cw-new-total-savings">💰 Total no atacado:</div>
+          <div class="cw-new-total-price">{{ wholesale_total | money }}</div>
+          <div class="cw-new-total-savings">Você economiza {{ savings | money }}</div>
+        </div>
+      {%- endif -%}
+    {%- else -%}
+      {%- assign faltam = wholesale_min | minus: total_items -%}
+      <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #991B1B;">
+        <span>📦</span>
+        <span>Faltam {{ faltam }} peça(s) para o Atacado</span>
+      </div>
+      <div class="cw-progress-track">
+        <div class="cw-progress-fill" style="width: {{ progress }}%;"></div>
+      </div>
+      <div style="font-size: 10px; color: #DC2626; margin-top: 2px;">{{ total_items }}/{{ wholesale_min }} peças</div>
+    {%- endif -%}
+  </div>
+{%- endif -%}

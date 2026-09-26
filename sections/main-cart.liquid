@@ -485,24 +485,8 @@
             O valor total do frete será calculado na tela de finalização da compra. Para compras acima de R$ 399,90 o frete é grátis.
           </div>
 
-          {%- if section.settings.wholesale_enabled -%}
-            <div class="cw-wholesale-progress" style="margin:12px 0;padding:10px 14px;border-radius:8px;{% if wholesale_active %}background:#F0FDF4;border:2px solid #86EFAC{% else %}background:#FEF2F2;border:2px solid #FECACA{% endif %}">
-              {%- if wholesale_active -%}
-                <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#166534;">
-                  <span>🎉</span> Atacado Ativo! ({{ total_items }}/{{ wholesale_min }} peças)
-                </div>
-              {%- else -%}
-                {%- assign faltam = wholesale_min | minus: total_items -%}
-                <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#991B1B;">
-                  <span>📦</span> Faltam {{ faltam }} peça(s) para Atacado
-                </div>
-                <div style="margin-top:6px;height:6px;background:#FECACA;border-radius:9999px;overflow:hidden;">
-                  <div style="height:100%;width:{{ progress }}%;background:#EF4444;border-radius:9999px;transition:width .3s;"></div>
-                </div>
-                <div style="font-size:10px;color:#DC2626;margin-top:2px;">{{ total_items }}/{{ wholesale_min }} peças</div>
-              {%- endif -%}
-            </div>
-          {%- endif -%}
+          {%- comment -%} Snippet 3 — Barra de progresso + total atacado (recalcula de forma isolada) {%- endcomment -%}
+          {% render 'conectwhats-wholesale-progress', enabled: section.settings.wholesale_enabled, min_qty: section.settings.wholesale_min_qty %}
 
 
 

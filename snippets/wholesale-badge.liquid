@@ -1,0 +1,46 @@
+{%- comment -%}
+  Snippet: wholesale-badge — Snippet 1 (Listagens)
+  Badge compacto de atacado para coleções, busca e home.
+  Mostra apenas preço e quantidade mínima.
+
+  Uso:
+    {% render 'wholesale-badge', product: product %}
+
+  Lê os metafields (criados pelo botão "Atacado → Shopify"):
+    custom.wholesale_price    — Preço de atacado (money, decimal ou texto)
+    custom.wholesale_min_qty  — Quantidade mínima (integer)
+  Aceita ainda o legado custom.preco_atacado como fallback.
+
+  Exibe somente quando houver preço de atacado válido.
+  (No tema NegaRosa o equivalente nativo vive em snippets/product-card.liquid,
+  coluna ATACADO — este snippet é para uso manual em outras vitrines.)
+{%- endcomment -%}
+
+{%- assign ws_product = product | default: card_product -%}
+{%- assign ws_raw = ws_product.metafields.custom.wholesale_price | default: ws_product.metafields.custom.preco_atacado -%}
+{%- assign ws_value = ws_raw.value | default: ws_raw -%}
+{%- assign ws_is_money = false -%}
+{%- if ws_value.amount -%}
+  {%- assign ws_is_money = true -%}
+{%- endif -%}
+{%- assign ws_cents = 0 -%}
+{%- unless ws_is_money -%}
+  {%- assign ws_str = ws_value | append: '' | replace: ' ', '' | replace: 'R$', '' -%}
+  {%- if ws_str contains ',' -%}
+    {%- assign ws_str = ws_str | replace: '.', '' | replace: ',', '.' -%}
+  {%- endif -%}
+  {%- assign ws_num = ws_str | times: 1.0 -%}
+  {%- if ws_num > 0 -%}
+    {%- assign ws_cents = ws_num | times: 100 | round -%}
+  {%- endif -%}
+{%- endunless -%}
+{%- assign ws_min_qty = ws_product.metafields.custom.wholesale_min_qty.value | default: ws_product.metafields.custom.wholesale_min_qty -%}
+
+{%- if ws_is_money or ws_cents > 0 -%}
+  <span class="wholesale-badge" style="display: inline; font-size: 10px; color: #9A3412; line-height: 1.2; font-weight: 700;">
+    Atacado: <strong style="color: #C2410C;">{%- if ws_is_money -%}{{ ws_value | money }}{%- else -%}{{ ws_cents | money }}{%- endif -%}</strong>
+    {%- if ws_min_qty != blank -%}
+      (mín. {{ ws_min_qty }} un.)
+    {%- endif -%}
+  </span>
+{%- endif -%}
