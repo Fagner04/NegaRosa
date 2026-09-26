@@ -9,19 +9,70 @@
     padding-bottom: var(--space-16);
   }
 
+  /* Breadcrumb + anterior/próximo (só desktop) */
+  .product-topbar { display: none; }
+
+  @media (min-width: 750px) {
+    .product-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: var(--space-6);
+    }
+    .product-breadcrumb {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--color-text, #111);
+      min-width: 0;
+    }
+    .product-breadcrumb a {
+      color: var(--color-text, #111);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .product-breadcrumb a:hover { text-decoration: underline; }
+    .product-breadcrumb__sep { color: var(--color-text-light); }
+    .product-breadcrumb__current {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 320px;
+    }
+    .product-pn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .product-pn__link {
+      color: var(--color-text, #111);
+      text-decoration: none;
+    }
+    .product-pn__link:hover { text-decoration: underline; }
+    .product-pn__sep { color: var(--color-text-light); }
+    /* No desktop o Voltar dá lugar ao breadcrumb */
+    .product-back { display: none; }
+  }
+
   .product-back {
     margin-bottom: var(--space-6);
   }
   .product-back__btn {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-2) var(--space-4);
+    gap: 6px;
+    padding: 6px 12px;
     background: transparent;
     border: 1px solid var(--color-border, rgba(0,0,0,0.15));
     border-radius: var(--border-radius-full, 999px);
     color: var(--color-text, #111);
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
     cursor: pointer;
     text-decoration: none;
@@ -1133,6 +1184,48 @@
 
 <section class="product-section">
   <div class="page-width">
+    {%- comment -%} Breadcrumb + anterior/próximo (desktop) {%- endcomment -%}
+    {%- assign pn_col = collection | default: product.collections.first -%}
+    {%- assign pn_prev = nil -%}
+    {%- assign pn_next = nil -%}
+    {%- if pn_col != blank -%}
+      {%- assign pn_found = false -%}
+      {%- for p in pn_col.products -%}
+        {%- if pn_found -%}
+          {%- assign pn_next = p -%}
+          {%- break -%}
+        {%- endif -%}
+        {%- if p.id == product.id -%}
+          {%- assign pn_found = true -%}
+        {%- else -%}
+          {%- assign pn_prev = p -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+    <div class="product-topbar">
+      <nav class="product-breadcrumb" aria-label="Navegação estrutural">
+        <a href="{{ routes.root_url }}">Pagina inicial</a>
+        {%- if pn_col != blank -%}
+          <span class="product-breadcrumb__sep" aria-hidden="true">›</span>
+          <a href="{{ pn_col.url }}">{{ pn_col.title | upcase }}</a>
+        {%- endif -%}
+        <span class="product-breadcrumb__sep" aria-hidden="true">›</span>
+        <span class="product-breadcrumb__current">{{ product.title | upcase }}</span>
+      </nav>
+      {%- if pn_prev != blank or pn_next != blank -%}
+        <div class="product-pn">
+          {%- if pn_prev != blank -%}
+            <a href="{{ pn_prev.url | within: pn_col }}" class="product-pn__link" aria-label="Produto anterior">‹&nbsp;&nbsp;Anterior</a>
+          {%- endif -%}
+          {%- if pn_prev != blank and pn_next != blank -%}
+            <span class="product-pn__sep" aria-hidden="true">|</span>
+          {%- endif -%}
+          {%- if pn_next != blank -%}
+            <a href="{{ pn_next.url | within: pn_col }}" class="product-pn__link" aria-label="Próximo produto">Próximo&nbsp;&nbsp;›</a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
     <div class="product-back">
       <a href="{% if collection %}{{ collection.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}"
          class="product-back__btn"
