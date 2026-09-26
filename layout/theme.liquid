@@ -195,6 +195,7 @@
         </div>
         <div class="quick-add-price-group" style="display: flex; flex-direction: column; gap: 6px;">
           <div class="qa-price-row" data-qa-price></div>
+          <div class="qa-wholesale" data-qa-wholesale style="display: none;"></div>
           <div class="qa-pix" data-qa-pix></div>
           <div class="qa-installments" data-qa-installments></div>
         </div>
@@ -214,6 +215,7 @@
             <span data-btn-text>Adicionar à Sacola</span>
           </button>
         </div>
+        <a class="qa-details" data-qa-details href="#" aria-label="Ver página do produto">Ver todos os detalhes</a>
       </div>
     </div>
   </div>
@@ -221,6 +223,12 @@
   <!-- Quick Add Drawer (Mobile) -->
   <div class="quick-add-drawer" id="quick-add-drawer" role="dialog" aria-modal="true" aria-label="Adicionar Rápido" aria-hidden="true">
     <div class="quick-add-drawer__handle"></div>
+    <button type="button" class="quick-add-drawer__close" data-qa-close aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
     <div class="quick-add-drawer__header">
       <img class="quick-add-drawer__image" data-qa-thumb src="" alt="" width="90" height="90">
       <div class="quick-add-drawer__header-info">
@@ -228,6 +236,7 @@
         <h2 class="qa-title" data-qa-title>…</h2>
         <div class="quick-add-price-group" style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
           <div class="qa-price-row" data-qa-price></div>
+          <div class="qa-wholesale" data-qa-wholesale style="display: none;"></div>
           <div class="qa-pix" data-qa-pix></div>
         </div>
       </div>
@@ -248,8 +257,11 @@
           <line x1="3" y1="6" x2="21" y2="6"></line>
           <path d="M16 10a4 4 0 01-8 0"></path>
         </svg>
-        <span data-btn-text>Adicionar à Sacola</span>
-      </button>
+          <span data-btn-text>Adicionar à Sacola</span>
+          </button>
+        </div>
+      </div>
+      <a class="qa-details" data-qa-details href="#" aria-label="Ver página do produto">Ver todos os detalhes</a>
     </div>
   </div>
 

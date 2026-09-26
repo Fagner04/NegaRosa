@@ -25,6 +25,38 @@
   assign current_variant = product.selected_or_first_available_variant
   assign featured_image = product.featured_image
   assign secondary_image = product.images[1]
+
+  comment
+    Atacado: exibe a coluna quando o modo está ativo OU o produto tem preço de atacado (metafield).
+    Calculado aqui em cima para reaproveitar no botão quick-add (data attrs p/ o drawer mobile).
+  endcomment
+  assign wholesale_raw = product.metafields.custom.wholesale_price | default: product.metafields.custom.preco_atacado
+  assign wholesale_price_str = ''
+  if wholesale_raw != blank
+    if wholesale_raw.amount
+      assign wholesale_price_str = wholesale_raw.amount
+    elsif wholesale_raw.value.amount
+      assign wholesale_price_str = wholesale_raw.value.amount
+    elsif wholesale_raw.value
+      assign wholesale_price_str = wholesale_raw.value
+    else
+      assign wholesale_price_str = wholesale_raw
+    endif
+  endif
+  assign wholesale_price_str = wholesale_price_str | append: '' | replace: ' ', '' | replace: 'R$', ''
+  if wholesale_price_str contains ','
+    assign wholesale_price_str = wholesale_price_str | replace: '.', '' | replace: ',', '.'
+  endif
+  assign wholesale_price_number = wholesale_price_str | times: 1.0
+  assign wholesale_price_cents = 0
+  if wholesale_price_number > 0
+    assign wholesale_price_cents = wholesale_price_number | times: 100 | round
+  endif
+  assign wholesale_min_qty = product.metafields.custom.wholesale_min_qty.value | default: product.metafields.custom.wholesale_min_qty
+  assign show_wholesale = false
+  if settings.wholesale_enabled or wholesale_price_cents > 0
+    assign show_wholesale = true
+  endif
 -%}
 
 <div class="product-card reveal-zoom card-hover" data-product-id="{{ product.id }}" data-product-handle="{{ product.handle }}">
@@ -126,7 +158,7 @@
         assign cm_str = ''
       endif
     -%}
-    <button class="product-card__quick-add" data-variant-id="{{ current_variant.id }}" data-product-handle="{{ product.handle }}" data-color-map="{{ cm_str | escape }}">
+    <button class="product-card__quick-add" data-variant-id="{{ current_variant.id }}" data-product-handle="{{ product.handle }}" data-color-map="{{ cm_str | escape }}"{%- if wholesale_price_cents > 0 -%} data-wholesale-cents="{{ wholesale_price_cents }}"{%- if wholesale_min_qty != blank -%} data-wholesale-min-qty="{{ wholesale_min_qty }}"{%- endif -%}{%- endif -%}>
       {{ 'sections.featured_collection.quick_add' | t | default: 'Adicionar RÃ¡pido' }}
     </button>
   {%- endif -%}
@@ -154,33 +186,6 @@
     {%- assign pix_mult = 100 | minus: pix_pct -%}
     {%- assign pix_price = product.price | times: pix_mult | divided_by: 100 -%}
     {%- assign parcela = product.price | divided_by: max_parcelas -%}
-    {%- comment -%} Atacado: exibe a coluna quando o modo está ativo OU o produto tem preço de atacado (metafield) {%- endcomment -%}
-    {%- assign wholesale_raw = product.metafields.custom.wholesale_price | default: product.metafields.custom.preco_atacado -%}
-      {%- assign wholesale_price_str = '' -%}
-      {%- if wholesale_raw != blank -%}
-        {%- if wholesale_raw.amount -%}
-          {%- assign wholesale_price_str = wholesale_raw.amount -%}
-        {%- elsif wholesale_raw.value.amount -%}
-          {%- assign wholesale_price_str = wholesale_raw.value.amount -%}
-        {%- elsif wholesale_raw.value -%}
-          {%- assign wholesale_price_str = wholesale_raw.value -%}
-        {%- else -%}
-          {%- assign wholesale_price_str = wholesale_raw -%}
-        {%- endif -%}
-      {%- endif -%}
-      {%- assign wholesale_price_str = wholesale_price_str | append: '' | replace: ' ', '' | replace: 'R$', '' -%}
-      {%- if wholesale_price_str contains ',' -%}
-        {%- assign wholesale_price_str = wholesale_price_str | replace: '.', '' | replace: ',', '.' -%}
-      {%- endif -%}
-      {%- assign wholesale_price_number = wholesale_price_str | times: 1.0 -%}
-      {%- assign wholesale_price_cents = 0 -%}
-      {%- if wholesale_price_number > 0 -%}
-        {%- assign wholesale_price_cents = wholesale_price_number | times: 100 | round -%}
-      {%- endif -%}
-      {%- assign show_wholesale = false -%}
-      {%- if settings.wholesale_enabled or wholesale_price_cents > 0 -%}
-        {%- assign show_wholesale = true -%}
-      {%- endif -%}
 
     <div class="product-card__price">
       <div class="product-card__price-cols">

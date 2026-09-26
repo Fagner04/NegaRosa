@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', function () {
   var selectedOptions = {};
   var isOpen          = false;
   var qaColorMap      = null;
+  var qaWholesale     = null; /* { cents, minQty } — lido do card */
+  var qaHandle        = '';
 
   function parseColorMap(val) {
     var map = {};
@@ -124,6 +126,38 @@ document.addEventListener('DOMContentLoaded', function () {
              '<span class="qa-price--badge">-' + pct + '%</span>';
     }
     return '<span class="qa-price">' + money(price) + '</span>';
+  }
+
+  /* ---------- Render atacado (metafield do card) ---------- */
+  function readWholesaleFromCard(card) {
+    if (!card) return null;
+    var btn = card.querySelector('.product-card__quick-add');
+    var cents = btn ? parseInt(btn.dataset.wholesaleCents || btn.getAttribute('data-wholesale-cents') || '0', 10) : 0;
+    if (!cents) return null;
+    var minQty = btn ? (btn.dataset.wholesaleMinQty || btn.getAttribute('data-wholesale-min-qty') || '') : '';
+    return { cents: cents, minQty: minQty };
+  }
+
+  function renderWholesale(panel) {
+    var el = panel.querySelector('[data-qa-wholesale]');
+    if (!el) return;
+    if (qaWholesale && qaWholesale.cents > 0) {
+      el.innerHTML = '<span class="qa-wholesale__label">Atacado:</span> ' +
+        '<strong class="qa-wholesale__price">' + money(qaWholesale.cents) + '</strong>' +
+        (qaWholesale.minQty ? ' <span class="qa-wholesale__min">(mín. ' + esc(qaWholesale.minQty) + ' un.)</span>' : '');
+      el.style.display = '';
+    } else {
+      el.innerHTML = '';
+      el.style.display = 'none';
+    }
+  }
+
+  function syncDetailsLinks() {
+    var url = qaHandle ? '/products/' + qaHandle : '#';
+    [modal, drawer].forEach(function (panel) {
+      var link = panel.querySelector('[data-qa-details]');
+      if (link) link.setAttribute('href', url);
+    });
   }
 
   /* ---------- Render options (sempre bloco) ---------- */
@@ -249,8 +283,9 @@ document.addEventListener('DOMContentLoaded', function () {
     var variant = findVariant() || currentVariants[0];
     var t = panel.querySelector('[data-qa-type]');    if (t) t.textContent = product.type || '';
     var ti = panel.querySelector('[data-qa-title]');  if (ti) ti.textContent = product.title;
-    
+
     updatePriceInfo(panel, variant);
+    renderWholesale(panel);
     
     var oe = panel.querySelector('[data-qa-options]'); if (oe) renderOptions(oe);
     setButton(panel, variant);
@@ -380,8 +415,11 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   /* ---------- Open ---------- */
-  function openQuickAdd(handle) {
+  function openQuickAdd(handle, wholesale) {
     isOpen = true;
+    qaHandle = handle || '';
+    qaWholesale = wholesale || null;
+    syncDetailsLinks();
     overlay.classList.add('active');
     document.body.classList.add('modal-open');
 
@@ -456,6 +494,8 @@ document.addEventListener('DOMContentLoaded', function () {
     currentProduct = null;
     selectedOptions = {};
     qaColorMap = null;
+    qaWholesale = null;
+    qaHandle = '';
   }
 
   /* ---------- Add to cart ---------- */
@@ -512,6 +552,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   drawer.addEventListener('click', function (e) {
     e.stopPropagation();
+    if (e.target.closest('[data-qa-close]')) { closeQuickAdd(); return; }
     var btn = e.target.closest('.qa-add-btn');
     if (btn && !btn.disabled) handleAddToCart(btn);
   });
@@ -525,8 +566,29 @@ document.addEventListener('DOMContentLoaded', function () {
       e.stopPropagation();
       var handle = qaBtn.dataset.productHandle;
       qaColorMap = parseColorMap(qaBtn.dataset.colorMap);
-      if (handle) openQuickAdd(handle);
+      if (handle) openQuickAdd(handle, readWholesaleFromCard(qaBtn.closest('.product-card')));
       return;
+    }
+
+    /* Mobile: tocar no produto (foto/título) abre o drawer em vez de navegar */
+    if (isMobile()) {
+      var prodLink = e.target.closest('.product-card a[href*="/products/"]');
+      if (prodLink && !e.target.closest('.product-card__wishlist')) {
+        var card = prodLink.closest('.product-card');
+        var cardHandle = card && card.dataset ? card.dataset.productHandle : '';
+        if (!cardHandle) {
+          var m = (prodLink.getAttribute('href') || '').match(/\/products\/([^\/?#]+)/);
+          if (m) cardHandle = m[1];
+        }
+        if (cardHandle) {
+          e.preventDefault();
+          e.stopPropagation();
+          var cardQaBtn = card ? card.querySelector('.product-card__quick-add') : null;
+          qaColorMap = parseColorMap(cardQaBtn && cardQaBtn.dataset.colorMap);
+          openQuickAdd(cardHandle, readWholesaleFromCard(card));
+          return;
+        }
+      }
     }
 
     /* Close on overlay click */
