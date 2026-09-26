@@ -286,6 +286,12 @@
   stroke: var(--color-primary);
 }
 
+/* Coração dos favoritos com altura 23 */
+#WishlistOpenBtn svg {
+  width: 23px;
+  height: 23px;
+}
+
 /* Track Order button — label on desktop, icon only on mobile */
 .header__track-btn {
   gap: 6px;
