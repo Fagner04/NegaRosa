@@ -131,10 +131,16 @@ document.addEventListener('DOMContentLoaded', function () {
   /* ---------- Render atacado (metafield do card) ---------- */
   function readWholesaleFromCard(card) {
     if (!card) return null;
-    var btn = card.querySelector('.product-card__quick-add');
-    var cents = btn ? parseInt(btn.dataset.wholesaleCents || btn.getAttribute('data-wholesale-cents') || '0', 10) : 0;
-    if (!cents) return null;
-    var minQty = btn ? (btn.dataset.wholesaleMinQty || btn.getAttribute('data-wholesale-min-qty') || '') : '';
+    /* 1) raiz do card (funciona até em produto esgotado, sem botão quick-add) */
+    var cents = parseInt(card.dataset.wholesaleCents || card.getAttribute('data-wholesale-cents') || '0', 10);
+    var minQty = card.dataset.wholesaleMinQty || card.getAttribute('data-wholesale-min-qty') || '';
+    /* 2) fallback: botão quick-add */
+    if (!cents) {
+      var btn = card.querySelector('.product-card__quick-add');
+      cents = btn ? parseInt(btn.dataset.wholesaleCents || btn.getAttribute('data-wholesale-cents') || '0', 10) : 0;
+      if (!cents) return null;
+      minQty = btn.dataset.wholesaleMinQty || btn.getAttribute('data-wholesale-min-qty') || '';
+    }
     return { cents: cents, minQty: minQty };
   }
 
