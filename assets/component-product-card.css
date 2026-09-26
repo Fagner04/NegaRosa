@@ -18,6 +18,16 @@
   transform: none;
 }
 
+/* Neutraliza lift/zoom vindos das classes utilitárias (desktop) */
+.product-card.card-hover:hover {
+  transform: none;
+}
+
+.product-card .img-zoom:hover img,
+.product-card .img-zoom:hover .img-zoom-target {
+  transform: none;
+}
+
 /* Card Image */
 .product-card__image-outer {
   position: relative;
