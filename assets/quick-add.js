@@ -593,6 +593,7 @@ document.addEventListener('DOMContentLoaded', function () {
   /* ---------- Close ---------- */
   function closeQuickAdd() {
     isOpen = false;
+    closeQaSizeGuide();
     overlay.classList.remove('active');
     modal.classList.remove('active');
     modal.setAttribute('aria-hidden', 'true');
@@ -695,6 +696,9 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       return;
     }
+    if (e.target.closest('[data-qa-sg-close]')) { closeQaSizeGuide(); return; }
+    var sgBtn = e.target.closest('[data-qa-size-guide]');
+    if (sgBtn) { openQaSizeGuide(); return; }
     var btn = e.target.closest('.qa-add-btn');
     if (btn && !btn.disabled) handleAddToCart(btn);
   });
@@ -739,8 +743,97 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  /* Escape */
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen) closeQuickAdd(); });
+  /* Escape (fecha popup do guia antes do drawer) */
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    var sg = drawer.querySelector('[data-qa-sg]');
+    if (sg && sg.classList.contains('open')) { closeQaSizeGuide(); return; }
+    if (isOpen) closeQuickAdd();
+  });
+
+  /* ---------- Tabela de Medidas (popup dentro do drawer) ---------- */
+  var qaSgCache = {};
+
+  function openQaSizeGuide() {
+    var wrap = drawer.querySelector('[data-qa-sg]');
+    var body = drawer.querySelector('[data-qa-sg-body]');
+    if (!wrap || !body || !qaHandle) return;
+    if (wrap.classList.contains('open')) return;
+    wrap.classList.add('open');
+    wrap.setAttribute('aria-hidden', 'false');
+    if (qaSgCache[qaHandle] !== undefined) { renderQaSizeGuide(qaSgCache[qaHandle]); return; }
+    body.innerHTML = '<div class="qa-sg__loading">Carregando medidas…</div>';
+    fetch('/products/' + qaHandle + '?view=sizeguide')
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (data) { qaSgCache[qaHandle] = data; renderQaSizeGuide(data); })
+      .catch(function () { renderQaSizeGuide(null); });
+  }
+
+  function renderQaSizeGuide(raw) {
+    var body = drawer.querySelector('[data-qa-sg-body]');
+    if (!body) return;
+    if (typeof raw === 'string') {
+      raw = raw.trim();
+      try { raw = JSON.parse(raw); } catch (e) { /* mantém como texto */ }
+    }
+    if (raw && Array.isArray(raw)) raw = { categories: raw };
+    if (raw && raw.categories && raw.categories.length) {
+      var html = '';
+      if (raw.categories.length > 1) {
+        html += '<div class="sg-tabs">';
+        raw.categories.forEach(function (cat, i) {
+          html += '<button type="button" class="sg-tab' + (i === 0 ? ' active' : '') + '" data-qa-sg-tab="' + i + '">' + esc(cat.name) + '</button>';
+        });
+        html += '</div>';
+      }
+      raw.categories.forEach(function (cat, ci) {
+        html += '<div class="sg-table-wrap' + (ci === 0 ? ' active' : '') + '" data-qa-sg-table="' + ci + '">';
+        html += '<table class="sg-table">';
+        if (cat.headers && cat.headers.length) {
+          html += '<thead><tr>';
+          cat.headers.forEach(function (h) { html += '<th>' + esc(h) + '</th>'; });
+          html += '</tr></thead>';
+        }
+        if (cat.rows && cat.rows.length) {
+          html += '<tbody>';
+          cat.rows.forEach(function (row) {
+            html += '<tr>';
+            row.forEach(function (cell) { html += '<td>' + esc(cell) + '</td>'; });
+            html += '</tr>';
+          });
+          html += '</tbody>';
+        }
+        html += '</table>';
+        if (cat.footnote) html += '<p class="sg-footnote">' + esc(cat.footnote) + '</p>';
+        html += '</div>';
+      });
+      body.innerHTML = html;
+      body.querySelectorAll('[data-qa-sg-tab]').forEach(function (tab) {
+        tab.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var idx = tab.getAttribute('data-qa-sg-tab');
+          body.querySelectorAll('[data-qa-sg-tab]').forEach(function (t) { t.classList.remove('active'); });
+          body.querySelectorAll('[data-qa-sg-table]').forEach(function (t) { t.classList.remove('active'); });
+          tab.classList.add('active');
+          var table = body.querySelector('[data-qa-sg-table="' + idx + '"]');
+          if (table) table.classList.add('active');
+        });
+      });
+      return;
+    }
+    if (typeof raw === 'string' && raw) {
+      body.innerHTML = '<pre class="qa-sg__text">' + esc(raw) + '</pre>';
+      return;
+    }
+    body.innerHTML = '<div class="qa-sg__empty"><p>Este produto ainda não possui tabela de medidas.</p></div>';
+  }
+
+  function closeQaSizeGuide() {
+    var wrap = drawer.querySelector('[data-qa-sg]');
+    if (!wrap) return;
+    wrap.classList.remove('open');
+    wrap.setAttribute('aria-hidden', 'true');
+  }
 
   /* Swipe down to close drawer */
   var ty = 0, tx = 0;

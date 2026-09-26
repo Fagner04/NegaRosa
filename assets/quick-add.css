@@ -220,6 +220,39 @@
   transform: translateY(0);
 }
 
+/* Efeito de abertura: mídia assenta + conteúdo sobe em cascata */
+.quick-add-drawer.active .qa-sheet__media {
+  animation: qaSheetMediaIn 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.quick-add-drawer.active .qa-sheet__body > * {
+  animation: qaSheetRise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.quick-add-drawer.active .qa-sheet__body > *:nth-child(2) { animation-delay: 0.05s; }
+.quick-add-drawer.active .qa-sheet__body > *:nth-child(3) { animation-delay: 0.1s; }
+.quick-add-drawer.active .qa-sheet__body > *:nth-child(4) { animation-delay: 0.15s; }
+.quick-add-drawer.active .qa-sheet__body > *:nth-child(5) { animation-delay: 0.2s; }
+.quick-add-drawer.active .qa-sheet__body > *:nth-child(6) { animation-delay: 0.25s; }
+.quick-add-drawer.active .qa-sheet__body > *:nth-child(7) { animation-delay: 0.3s; }
+
+@keyframes qaSheetMediaIn {
+  from { transform: scale(1.04); }
+  to { transform: scale(1); }
+}
+
+@keyframes qaSheetRise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quick-add-drawer.active .qa-sheet__media,
+  .quick-add-drawer.active .qa-sheet__body > * {
+    animation: none;
+  }
+}
+
 .quick-add-drawer__handle {
   width: 40px;
   height: 4px;
@@ -458,6 +491,180 @@
 
 .qa-sheet__details {
   margin-top: 2px;
+}
+
+/* Botão Tabela de Medidas */
+.qa-sheet__size-guide {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Popup Tabela de Medidas (dentro do drawer) */
+.qa-sg {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.qa-sg.open {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.qa-sg__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.qa-sg.open .qa-sg__overlay {
+  opacity: 1;
+}
+
+.qa-sg__panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 78%;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 20px 20px 0 0;
+  padding: 8px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.qa-sg.open .qa-sg__panel {
+  transform: translateY(0);
+}
+
+.qa-sg__handle {
+  width: 40px;
+  height: 4px;
+  background: var(--color-border, #E5E7EB);
+  border-radius: 999px;
+  margin: 4px auto 10px;
+  flex-shrink: 0;
+}
+
+.qa-sg__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--color-border, #E5E7EB);
+  flex-shrink: 0;
+}
+
+.qa-sg__title {
+  font-size: 16px;
+  font-weight: 800;
+  margin: 0;
+  color: var(--color-text);
+}
+
+.qa-sg__close {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--color-bg-secondary);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text);
+}
+
+.qa-sg__body {
+  overflow-y: auto;
+  padding-top: 12px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.qa-sg__body .sg-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.qa-sg__body .sg-tab {
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-light);
+  border: none;
+  cursor: pointer;
+}
+
+.qa-sg__body .sg-tab.active {
+  background: #111;
+  color: #fff;
+}
+
+.qa-sg__body .sg-table-wrap { display: none; }
+.qa-sg__body .sg-table-wrap.active { display: block; }
+
+.qa-sg__body .sg-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.qa-sg__body .sg-table th,
+.qa-sg__body .sg-table td {
+  padding: 10px 8px;
+  text-align: center;
+  border-bottom: 1px solid var(--color-border, #E5E7EB);
+}
+
+.qa-sg__body .sg-table th {
+  font-weight: 700;
+  background: var(--color-bg-secondary);
+}
+
+.qa-sg__body .sg-footnote {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--color-text-light);
+  font-style: italic;
+}
+
+.qa-sg__loading,
+.qa-sg__empty {
+  text-align: center;
+  padding: 28px 12px;
+  color: var(--color-text-light);
+  font-size: 14px;
+}
+
+.qa-sg__text {
+  white-space: pre-wrap;
+  font-size: 13px;
+  line-height: 1.6;
+  font-family: inherit;
+  margin: 0;
 }
 
 /* Pílulas de tamanho/cor no drawer vitrine */

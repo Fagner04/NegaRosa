@@ -253,6 +253,10 @@
         <div class="qa-installments" data-qa-installments></div>
       </div>
       <div data-qa-options></div>
+      <button type="button" class="qa-sheet__size-guide" data-qa-size-guide aria-label="Abrir tabela de medidas">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        Tabela de Medidas
+      </button>
       <div class="qa-sheet__buy-row">
         <div class="qa-sheet__qty-block">
           <span class="qa-sheet__label">Qty</span>
@@ -278,6 +282,20 @@
         </button>
       </div>
       <a class="qa-details qa-sheet__details" data-qa-details href="#" aria-label="Ver página do produto">Ver todos os detalhes</a>
+    </div>
+    <!-- Popup Tabela de Medidas (dentro do drawer) -->
+    <div class="qa-sg" data-qa-sg aria-hidden="true">
+      <div class="qa-sg__overlay" data-qa-sg-close></div>
+      <div class="qa-sg__panel" role="dialog" aria-modal="true" aria-label="Tabela de Medidas">
+        <div class="qa-sg__handle"></div>
+        <div class="qa-sg__header">
+          <h3 class="qa-sg__title">Guia de Medidas</h3>
+          <button type="button" class="qa-sg__close" data-qa-sg-close aria-label="Fechar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="qa-sg__body" data-qa-sg-body></div>
+      </div>
     </div>
   </div>
 

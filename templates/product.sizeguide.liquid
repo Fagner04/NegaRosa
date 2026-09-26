@@ -1,0 +1,20 @@
+{% layout none %}
+{%- comment -%}
+  Alternate template: /products/<handle>?view=sizeguide
+  Retorna a tabela de medidas (JSON) para o drawer mobile.
+  Mesmas fontes do snippet size-guide-modal.
+{%- endcomment -%}
+{%- liquid
+  assign sg_raw = product.metafields.size_guide.table
+  if sg_raw == blank
+    assign sg_raw = product.metafields.custom.size_guide_table
+  endif
+  if sg_raw == blank
+    assign sg_raw = product.metafields.custom.size_guide
+  endif
+  if sg_raw == blank
+    assign sg_raw = product.metafields.custom.tabela_medidas
+  endif
+  assign sg_val = sg_raw.value | default: sg_raw
+-%}
+{{- sg_val | json -}}
