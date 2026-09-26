@@ -54,10 +54,9 @@
   will-change: opacity, transform;
 }
 
-/* Hover lift rapido apos o reveal (evita briga de transition/transform) */
+/* Card estático no hover: sem lift (só troca de foto e botões) */
 .product-card.is-visible:hover {
-  transform: translateY(-4px);
-  transition: transform 0.25s ease;
+  transform: translateY(0);
 }
 
 .product-card.is-visible,

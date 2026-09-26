@@ -13,8 +13,9 @@
   transition: transform var(--transition-base);
 }
 
+/* Sem movimento no hover (card estático; só troca a foto e exibe botões) */
 .product-card:hover {
-  transform: translateY(-2px);
+  transform: none;
 }
 
 /* Card Image */
@@ -53,7 +54,7 @@
 }
 
 .product-card:hover .product-card__image {
-  transform: scale(1.03);
+  transform: none;
 }
 
 /* Badges */
