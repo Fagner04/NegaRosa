@@ -576,14 +576,20 @@
     text-transform: uppercase;
   }
 
-  /* Accordion details */
+  /* Accordion details — estilo card com sombra cinza */
   .product-details {
     display: flex;
     flex-direction: column;
+    gap: 12px;
   }
 
   .product-details__item {
-    border-bottom: 1px solid var(--color-border);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: var(--border-radius-md, 12px);
+    background: var(--color-bg, #fff);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    padding: 0 var(--space-4);
+    overflow: hidden;
   }
 
   .product-details__trigger {
