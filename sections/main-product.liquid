@@ -1163,7 +1163,7 @@
             </div>
           {%- endif -%}
 
-          {%- if settings.wholesale_enabled -%}
+          {%- comment -%} Atacado: exibe quando o produto tem preço de atacado (metafield), com ou sem o modo ativo {%- endcomment -%}
             {%- assign wholesale_raw = product.metafields.custom.wholesale_price | default: product.metafields.custom.preco_atacado -%}
             {%- assign wholesale_price_str = '' -%}
             {%- if wholesale_raw != blank -%}
@@ -1188,19 +1188,36 @@
             {%- endif -%}
             {%- if wholesale_price_cents > 0 -%}
               {%- assign wholesale_min_qty = product.metafields.custom.wholesale_min_qty.value | default: product.metafields.custom.wholesale_min_qty -%}
-              {%- assign wholesale_min_value = product.metafields.custom.wholesale_min_value.value | default: product.metafields.custom.wholesale_min_value -%}
+              {%- assign wholesale_mv_raw = product.metafields.custom.wholesale_min_value -%}
+              {%- assign wholesale_mv_val = wholesale_mv_raw.value | default: wholesale_mv_raw -%}
+              {%- assign wholesale_mv_is_money = false -%}
+              {%- if wholesale_mv_val.amount -%}
+                {%- assign wholesale_mv_is_money = true -%}
+              {%- endif -%}
+              {%- assign wholesale_mv_cents = 0 -%}
+              {%- unless wholesale_mv_is_money -%}
+                {%- assign wholesale_mv_str = wholesale_mv_val | append: '' | replace: ' ', '' | replace: 'R$', '' -%}
+                {%- if wholesale_mv_str contains ',' -%}
+                  {%- assign wholesale_mv_str = wholesale_mv_str | replace: '.', '' | replace: ',', '.' -%}
+                {%- endif -%}
+                {%- assign wholesale_mv_num = wholesale_mv_str | times: 1.0 -%}
+                {%- if wholesale_mv_num > 0 -%}
+                  {%- assign wholesale_mv_cents = wholesale_mv_num | times: 100 | round -%}
+                {%- endif -%}
+              {%- endunless -%}
               <div class="wholesale-info" style="margin:4px 0;font-size:12px;">
                 <span style="color:#9A3412;font-weight:600;">Atacado:</span>
                 <strong style="color:#C2410C;font-size:14px;">{{ wholesale_price_cents | money }}</strong>
                 {%- if wholesale_min_qty != blank -%}
                   <span style="color:#9A3412;">(mín. {{ wholesale_min_qty }} un.)</span>
                 {%- endif -%}
-                {%- if wholesale_min_value != blank -%}
-                  <br><span style="font-size:11px;color:#B45309;">Pedido mínimo: {{ wholesale_min_value | money }}</span>
+                {%- if wholesale_mv_is_money -%}
+                  <br><span style="font-size:11px;color:#B45309;">Pedido mínimo: {{ wholesale_mv_val | money }}</span>
+                {%- elsif wholesale_mv_cents > 0 -%}
+                  <br><span style="font-size:11px;color:#B45309;">Pedido mínimo: {{ wholesale_mv_cents | money }}</span>
                 {%- endif -%}
               </div>
             {%- endif -%}
-          {%- endif -%}
         </div>
 
         <!-- Add to Cart Form -->

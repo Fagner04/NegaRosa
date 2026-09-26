@@ -154,8 +154,8 @@
     {%- assign pix_mult = 100 | minus: pix_pct -%}
     {%- assign pix_price = product.price | times: pix_mult | divided_by: 100 -%}
     {%- assign parcela = product.price | divided_by: max_parcelas -%}
-    {%- if settings.wholesale_enabled -%}
-      {%- assign wholesale_raw = product.metafields.custom.wholesale_price | default: product.metafields.custom.preco_atacado -%}
+    {%- comment -%} Atacado: exibe a coluna quando o modo está ativo OU o produto tem preço de atacado (metafield) {%- endcomment -%}
+    {%- assign wholesale_raw = product.metafields.custom.wholesale_price | default: product.metafields.custom.preco_atacado -%}
       {%- assign wholesale_price_str = '' -%}
       {%- if wholesale_raw != blank -%}
         {%- if wholesale_raw.amount -%}
@@ -177,7 +177,10 @@
       {%- if wholesale_price_number > 0 -%}
         {%- assign wholesale_price_cents = wholesale_price_number | times: 100 | round -%}
       {%- endif -%}
-    {%- endif -%}
+      {%- assign show_wholesale = false -%}
+      {%- if settings.wholesale_enabled or wholesale_price_cents > 0 -%}
+        {%- assign show_wholesale = true -%}
+      {%- endif -%}
 
     <div class="product-card__price">
       <div class="product-card__price-cols">
@@ -190,7 +193,7 @@
             <span class="product-card__price-current">{{ product.price | money }}</span>
           {%- endif -%}
         </div>
-        {%- if settings.wholesale_enabled -%}
+        {%- if show_wholesale -%}
         <div class="product-card__price-col product-card__price-col--atacado">
           <span class="product-card__price-label">ATACADO</span>
           {%- if wholesale_price_cents > 0 -%}
