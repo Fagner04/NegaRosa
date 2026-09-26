@@ -1495,6 +1495,9 @@
           <!-- Widget de Frete (movido para logo abaixo do botão Adicionar à Sacola) -->
           {%- render 'frete-calculator', product: product -%}
 
+          <!-- Card frete/devolução (padrão EmporioBody) -->
+          {%- render 'shipping-info' -%}
+
 
 
           {% if section.settings.mostrar_btn_wtspp %}

@@ -1,0 +1,54 @@
+{%- comment -%}
+  Snippet: shipping-info
+  Card de frete/devolução copiado da EmporioBody (shipping-free-mod-2).
+  Uso: {% render 'shipping-info' %}
+{%- endcomment -%}
+
+<div class="si-card">
+  <div class="si-row">
+    <svg class="si-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path fill="#00b75b" fill-rule="nonzero" d="M10.587 14.805H7.01a2.452 2.452 0 1 1-4.452-1.937l-1.56-.003.002-1.2 3.6.008v.025h.048c1.167 0 2.143.815 2.39 1.907h3.52a2.455 2.455 0 0 1 1.836-1.844l2.423-6.352a.6.6 0 0 0-.56-.814H4.6v-1.2h9.658a1.8 1.8 0 0 1 1.697 2.4h1.677l1.409 4.225-2.027 4.787-1.701-.007a2.452 2.452 0 0 1-4.726.005zm4.751-1.205l.883.004 1.538-3.634-.991-2.975h-1.27l-1.835 4.809c.834.253 1.48.939 1.675 1.796zM7 5.79v1.2H1v-1.2h6zM4.6 8.222v1.2H2.2v-1.2h2.4zm.049 7.178a1.251 1.251 0 1 0 0-2.502 1.251 1.251 0 0 0 0 2.502zm8.3 0a1.251 1.251 0 1 0 0-2.502 1.251 1.251 0 0 0 0 2.502z"></path></svg>
+    <p class="si-text">
+      <span class="si-green">Frete Sedex</span>
+      <svg style="fill:#00b75b;margin-left:5px;vertical-align:-1px;" width="41" height="13" viewBox="0 0 41 13" xmlns="http://www.w3.org/2000/svg" aria-label="FULL"><path fill-rule="nonzero" d="M2.628 0h5.255L5.255 4.643h4.38L2.628 13l1.751-5.571H0L2.628 0zm11.589 9.533h-1.959l1.674-7.515H19.5l-.376 1.69h-3.61l-.25 1.172h3.519l-.376 1.69h-3.53l-.66 2.963zm9.468.136c-2.334 0-3.484-1.105-3.484-2.682 0-.124.034-.383.057-.496l1.002-4.473h1.992l-.99 4.428c-.012.057-.034.18-.034.316.011.62.49 1.217 1.457 1.217 1.048 0 1.583-.654 1.776-1.533l.991-4.428h1.981l-.99 4.462c-.41 1.825-1.412 3.189-3.758 3.189zm10.118-.136h-5.01l1.673-7.515h1.959l-1.287 5.825h3.04l-.375 1.69zm6.678 0h-5.01l1.674-7.515h1.959l-1.287 5.825h3.04l-.376 1.69z"></path></svg>
+      <span class="si-blue"> • Disponível</span>
+    </p>
+  </div>
+  <p class="si-sub">
+    <span>Enviado pelos</span>
+    <img src="//cdn.shopify.com/s/files/1/0624/5040/1530/files/266.webp?v=1652577922" width="97" height="20" alt="Correios" loading="lazy">
+  </p>
+  <div class="si-row">
+    <svg class="si-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="16" viewBox="0 0 14 12" aria-hidden="true"><path fill="#6c6c6c" d="M2.474 7.2h7.225a2.7 2.7 0 1 0 0-5.4H7V.6h2.7a3.9 3.9 0 1 1 0 7.8H2.473l2.45 2.389-.839.859L.14 7.8l3.945-3.848.838.859L2.473 7.2z"></path></svg>
+    <p class="si-text">
+      <span class="si-blue">Devolução.</span>
+      <span class="si-gray">Até 7 dias a partir do recebimento</span>
+    </p>
+  </div>
+</div>
+
+<style>
+  .si-card {
+    background: #F1F2F4;
+    border-radius: 16px;
+    padding: 16px 18px;
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .si-row { display: flex; align-items: flex-start; gap: 10px; }
+  .si-icon { flex-shrink: 0; margin-top: 1px; }
+  .si-text { margin: 0; font-size: 14px; line-height: 1.45; color: #111; }
+  .si-green { color: #00b75b; font-weight: 500; }
+  .si-blue { color: #0086ff; font-weight: 500; }
+  .si-gray { color: #6c6c6c; }
+  .si-sub {
+    margin: 0 0 0 30px;
+    font-size: 13px;
+    color: #6c6c6c;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .si-sub img { display: block; }
+</style>
