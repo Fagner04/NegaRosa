@@ -25,10 +25,13 @@
   position: absolute;
   top: 12px;
   left: 12px;
-  z-index: 10;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  pointer-events: auto;
+  /* Garante que não vaze para fora do container da galeria */
+  contain: layout style;
 }
 
 .fr-bubble {
@@ -59,26 +62,6 @@
   object-fit: cover;
   display: block;
   pointer-events: none;
-}
-
-.fr-bubble__ring {
-  display: none;
-}
-
-.fr-bubble__ring-track {
-  fill: none;
-  stroke: rgba(255,255,255,0.25);
-  stroke-width: 3;
-}
-
-.fr-bubble__ring-fill {
-  fill: none;
-  stroke: #fff;
-  stroke-width: 3;
-  stroke-linecap: round;
-  transform-origin: center;
-  transform: rotate(-90deg);
-  transition: stroke-dashoffset 0.12s linear;
 }
 
 .fr-bubble__play {
