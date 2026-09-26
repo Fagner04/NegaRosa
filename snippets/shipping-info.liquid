@@ -38,7 +38,16 @@
   }
   .si-row { display: flex; align-items: flex-start; gap: 10px; }
   .si-icon { flex-shrink: 0; margin-top: 1px; }
-  .si-text { margin: 0; font-size: 14px; line-height: 1.45; color: #111; }
+  .si-text {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.45;
+    color: #111;
+    white-space: nowrap;
+  }
+  @media (max-width: 380px) {
+    .si-text { font-size: 12px; }
+  }
   .si-green { color: #00b75b; font-weight: 500; }
   .si-blue { color: #0086ff; font-weight: 500; }
   .si-gray { color: #6c6c6c; }
