@@ -75,26 +75,6 @@
       "footer": {
         "type": "footer",
         "blocks": {
-          "text_4GJMY8": {
-            "type": "text",
-            "settings": {
-              "logo_width": 50,
-              "title": "ATENDIMENTO AO CLIENTE",
-              "subtitle": "Estamos aqui para ajudar você",
-              "email": "comercial@negarosafitness.com.br",
-              "phone": "+55(62)991453008",
-              "whatsapp": "",
-              "hours": "Seg a Sex • 8h às 18h • Sáb 9h às 13h",
-              "address": "Av. Bernardo Sayão . N.762 - vila Heitor de Paula - inhumas-go 75403-500",
-              "content": ""
-            }
-          },
-          "footer-0": {
-            "type": "links",
-            "settings": {
-              "menu": "footer"
-            }
-          },
           "connect_HHzyd9": {
             "type": "connect",
             "settings": {
@@ -121,6 +101,26 @@
               "legal_link_3_url": ""
             }
           },
+          "text_4GJMY8": {
+            "type": "text",
+            "settings": {
+              "logo_width": 50,
+              "title": "ATENDIMENTO AO CLIENTE",
+              "subtitle": "Estamos aqui para ajudar você",
+              "email": "comercial@negarosafitness.com.br",
+              "phone": "+55(62)991453008",
+              "whatsapp": "",
+              "hours": "Seg a Sex • 8h às 18h • Sáb 9h às 13h",
+              "address": "Av. Bernardo Sayão . N.762 - vila Heitor de Paula - inhumas-go 75403-500",
+              "content": ""
+            }
+          },
+          "footer-0": {
+            "type": "links",
+            "settings": {
+              "menu": "footer"
+            }
+          },
           "google_reviews_UnGEeF": {
             "type": "google-reviews",
             "settings": {
@@ -131,9 +131,9 @@
           }
         },
         "block_order": [
+          "connect_HHzyd9",
           "text_4GJMY8",
           "footer-0",
-          "connect_HHzyd9",
           "google_reviews_UnGEeF"
         ],
         "settings": {
