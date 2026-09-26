@@ -61,10 +61,11 @@
   .product-gallery {
     display: grid;
     grid-template-columns: 80px 1fr;
-    grid-template-rows: auto auto;
+    grid-template-rows: auto auto auto;
     grid-template-areas:
       "thumbs main"
-      "desc desc";
+      "desc desc"
+      "acc acc";
     gap: var(--space-3);
     align-items: start;
     direction: ltr;
@@ -127,7 +128,8 @@
     grid-template-columns: 1fr;
     grid-template-areas:
       "main"
-      "desc";
+      "desc"
+      "acc";
   }
   .product-gallery--single .product-gallery__main {
     grid-area: main;
@@ -153,7 +155,8 @@
       grid-template-columns: 1fr;
       grid-template-areas:
         "main"
-        "desc";
+        "desc"
+        "acc";
     }
     .product-gallery__thumbs { display: none; }
     .product-gallery__main {
@@ -627,6 +630,12 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+  }
+
+  /* Acordeão na coluna esquerda, abaixo da descrição */
+  .product-gallery > .product-details {
+    grid-area: acc;
+    margin-top: var(--space-3);
   }
 
   .product-details__item {
@@ -1178,6 +1187,61 @@
             </button>
           </div>
         {%- endif -%}
+
+        <!-- Acordeão abaixo da descrição (coluna esquerda) -->
+        <div class="product-details">
+
+          {%- comment -%} Accordion 1: Envio & Devoluções {%- endcomment -%}
+          {%- assign shipping_page = pages[section.settings.shipping_page] -%}
+          {%- if section.settings.pages_display_mode == 'all' or section.settings.pages_display_mode == 'text_only' or shipping_page != blank -%}
+            <div class="product-details__item">
+              <button class="product-details__trigger">
+                Envio & Devoluções
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div class="product-details__content">
+                {%- if shipping_page != blank -%}
+                  <div class="rte">{{ shipping_page.content }}</div>
+                {%- else -%}
+                  <p>{{ section.settings.shipping_text }}</p>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+
+          {%- comment -%} Accordion 2: Métodos de Pagamento {%- endcomment -%}
+          {%- assign payment_page = pages[section.settings.payment_page] -%}
+          {%- if section.settings.pages_display_mode == 'all' or section.settings.pages_display_mode == 'text_only' or payment_page != blank -%}
+            <div class="product-details__item">
+              <button class="product-details__trigger">
+                Métodos de Pagamento
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div class="product-details__content">
+                {%- if payment_page != blank -%}
+                  <div class="rte">{{ payment_page.content }}</div>
+                {%- else -%}
+                  <p>{{ section.settings.payment_text }}</p>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+
+          {%- comment -%} Accordion 3: Página extra opcional {%- endcomment -%}
+          {%- assign extra_page = pages[section.settings.extra_page] -%}
+          {%- if extra_page != blank -%}
+            <div class="product-details__item">
+              <button class="product-details__trigger">
+                {{ extra_page.title }}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div class="product-details__content">
+                <div class="rte">{{ extra_page.content }}</div>
+              </div>
+            </div>
+          {%- endif -%}
+
+        </div>
 
       </div>
 
@@ -1930,60 +1994,6 @@
             {{ 'fitting-room.js' | asset_url | script_tag }}
           {%- endif -%}
         {%- endif -%}
-        <div class="product-details">
-
-          {%- comment -%} Accordion 1: Envio & Devoluções {%- endcomment -%}
-          {%- assign shipping_page = pages[section.settings.shipping_page] -%}
-          {%- if section.settings.pages_display_mode == 'all' or section.settings.pages_display_mode == 'text_only' or shipping_page != blank -%}
-            <div class="product-details__item">
-              <button class="product-details__trigger">
-                Envio & Devoluções
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-              </button>
-              <div class="product-details__content">
-                {%- if shipping_page != blank -%}
-                  <div class="rte">{{ shipping_page.content }}</div>
-                {%- else -%}
-                  <p>{{ section.settings.shipping_text }}</p>
-                {%- endif -%}
-              </div>
-            </div>
-          {%- endif -%}
-
-          {%- comment -%} Accordion 2: Métodos de Pagamento {%- endcomment -%}
-          {%- assign payment_page = pages[section.settings.payment_page] -%}
-          {%- if section.settings.pages_display_mode == 'all' or section.settings.pages_display_mode == 'text_only' or payment_page != blank -%}
-            <div class="product-details__item">
-              <button class="product-details__trigger">
-                Métodos de Pagamento
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-              </button>
-              <div class="product-details__content">
-                {%- if payment_page != blank -%}
-                  <div class="rte">{{ payment_page.content }}</div>
-                {%- else -%}
-                  <p>{{ section.settings.payment_text }}</p>
-                {%- endif -%}
-              </div>
-            </div>
-          {%- endif -%}
-
-          {%- comment -%} Accordion 3: Página extra opcional {%- endcomment -%}
-          {%- assign extra_page = pages[section.settings.extra_page] -%}
-          {%- if extra_page != blank -%}
-            <div class="product-details__item">
-              <button class="product-details__trigger">
-                {{ extra_page.title }}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-              </button>
-              <div class="product-details__content">
-                <div class="rte">{{ extra_page.content }}</div>
-              </div>
-            </div>
-          {%- endif -%}
-
-        </div>
-
       </div>
 
     </div>
