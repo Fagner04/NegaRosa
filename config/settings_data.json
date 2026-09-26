@@ -36,6 +36,7 @@
     "color_button_bg": "#CF528C",
     "color_button_text": "#FFFFFF",
     "color_button_secondary_bg": "#000000",
+    "section_spacing": 30,
     "frete_api_url": "https://script.google.com/macros/s/AKfycbzR-PxNU7OlxvcNfOaNAR6sPXx_aeavUiPFIPx9dTWpM5DVB0wiZ0rnV8rMJaUTZyy7nQ/exec",
     "addzap": true,
     "colorzap": "#69AD5D",
@@ -47,7 +48,12 @@
     "social_instagram_link": "https://okj",
     "social_facebook_link": "https://ok",
     "social_tiktok_link": "https://ok",
-    "wholesale_enabled": false,
+    "social_proof_enabled": true,
+    "social_proof_collection": "frontpage",
+    "social_proof_initial_delay": 60,
+    "social_proof_interval": 300,
+    "social_proof_duration": 9,
+    "wholesale_enabled": true,
     "sections": {
       "header": {
         "type": "header",
