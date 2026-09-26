@@ -1530,6 +1530,11 @@
             {%- endfor -%}
           {%- endif -%}
 
+          <!-- Size Guide (acima da quantidade) -->
+          {%- if section.settings.size_guide_enabled -%}
+            {%- render 'size-guide-modal', product: product -%}
+          {%- endif -%}
+
           <!-- Quantity Selector -->
           <div class="qty-selector">
             <span class="option-selector__label" style="margin-bottom: 0;">Quantidade:</span>
@@ -1539,11 +1544,6 @@
               <button type="button" class="qty-btn" id="QtyPlus" aria-label="Aumentar">+</button>
             </div>
           </div>
-
-          <!-- Size Guide -->
-          {%- if section.settings.size_guide_enabled -%}
-            {%- render 'size-guide-modal', product: product -%}
-          {%- endif -%}
 
           <!-- Add & Buy Buttons -->
           <div class="product-form__buttons">
