@@ -10,7 +10,9 @@
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease;
-  z-index: 800;
+  /* Acima dos flutuantes (Whats 9999, voltar-ao-topo 10000, favoritos 10050),
+     abaixo do banner de cookies (99999) */
+  z-index: 10060;
 }
 
 .quick-add-overlay.active {
@@ -33,7 +35,7 @@
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
-  z-index: 801;
+  z-index: 10061;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
@@ -182,7 +184,7 @@
   padding: var(--space-6) var(--space-6) calc(var(--space-8) + env(safe-area-inset-bottom, 0px));
   transform: translateY(100%);
   transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
-  z-index: 801;
+  z-index: 10061;
   max-height: 92vh;
   max-height: 92dvh;
   min-height: 60vh;
