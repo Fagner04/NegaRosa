@@ -556,6 +556,15 @@ a.footer__contact-value:hover { color: var(--footer-heading, #9D5A5A); opacity: 
   gap: 8px;
 }
 @media (max-width: 640px) {
+  /* Links legais cabem em uma linha sem cortar */
+  .footer__connect-legal {
+    gap: 6px 14px;
+    justify-content: flex-start;
+  }
+  .footer__connect-legal a {
+    font-size: 12px;
+    white-space: nowrap;
+  }
   .footer__column--payments {
     flex: 1 1 100%;
     text-align: left;

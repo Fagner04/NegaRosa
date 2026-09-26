@@ -280,6 +280,14 @@
       gap: var(--space-3);
       flex-wrap: wrap;
     }
+    /* Preço em uma linha (não quebra R$ / valor) */
+    .cart-item__price-wrapper {
+      flex-shrink: 0;
+    }
+    .cart-item__price {
+      white-space: nowrap;
+      font-size: 15px;
+    }
 
     /* Wholesale progress card - mobile */
     .cw-wholesale-progress {
