@@ -11,6 +11,17 @@
   padding: 12px 0;
 }
 
+/* Respiro no topo (notch/status bar) + alinhamento vertical no mobile */
+@media (max-width: 749px) {
+  .top-bar {
+    padding-top: calc(14px + env(safe-area-inset-top, 0px));
+    padding-bottom: 14px;
+  }
+  .top-bar__container {
+    align-items: center;
+  }
+}
+
 .top-bar__container {
   display: flex;
   align-items: center;
