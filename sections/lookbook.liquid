@@ -5,7 +5,11 @@
 
 {{ 'section-lookbook.css' | asset_url | stylesheet_tag }}
 
-<section class="reels section-spacing" id="reels-{{ section.id }}">
+<section
+  class="reels section"
+  id="reels-{{ section.id }}"
+  style="{% assign ov_bg = section.settings.overlay_bg | default: '#000000' %}{% assign ov_a = section.settings.overlay_opacity | default: 70 | divided_by: 100.0 %}--reels-card-bg: {{ section.settings.card_bg | default: '#FFFFFF' }}; --reels-card-text: {{ section.settings.card_text | default: '#1A1A1A' }}; --reels-tag-bg: {{ section.settings.tag_bg | default: '#1A1A1A' }}; --reels-tag-text: {{ section.settings.tag_text | default: '#FFFFFF' }}; --reels-btn-bg: {{ section.settings.btn_bg | default: '#1A1A1A' }}; --reels-btn-text: {{ section.settings.btn_text | default: '#FFFFFF' }}; --reels-overlay-rgb: {{ ov_bg | color_extract: 'red' }}, {{ ov_bg | color_extract: 'green' }}, {{ ov_bg | color_extract: 'blue' }}; --reels-overlay-a: {{ ov_a }}; --reels-title-color: {{ section.settings.title_color | default: '#FFFFFF' }};"
+>
   <div class="page-width">
     {%- if section.settings.title != blank -%}
       <div class="section-header reveal">
@@ -47,13 +51,8 @@
               </div>
             {%- endif -%}
 
-            {%- if block.settings.product_title != blank -%}
-              <div class="reels__overlay">
-                <span class="reels__product-title">{{ block.settings.product_title }}</span>
-                {%- if block.settings.tag != blank -%}
-                  <span class="reels__tag">{{ block.settings.tag }}</span>
-                {%- endif -%}
-              </div>
+            {%- if block.settings.tag != blank -%}
+              <span class="reels__tag">{{ block.settings.tag }}</span>
             {%- endif -%}
 
             {%- if block.settings.video_id != blank or block.settings.video_url != blank -%}
@@ -63,35 +62,45 @@
                 </svg>
               </div>
             {%- endif -%}
-          </div>
 
-          <div class="reels__info">
-            {%- if block.settings.product_title != blank -%}
-              <span class="reels__name">{{ block.settings.product_title }}</span>
-            {%- endif -%}
-            {%- if block.settings.tag != blank -%}
-              <span class="reels__tag-label">{{ block.settings.tag }}</span>
-            {%- endif -%}
-            {%- if block.settings.link != blank -%}
-              <a href="{{ block.settings.link }}" class="reels__link btn btn-primary btn-sm">Ver Produto</a>
-            {%- endif -%}
-          </div>
+            <div class="reels__overlay">
+              {%- if block.settings.product_title != blank -%}
+                <div class="reels__id-row">
+                  <span class="reels__product-title">{{ block.settings.product_title }}</span>
+                  {%- if block.settings.show_badge -%}
+                    <span class="reels__badge" aria-label="Verificado">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" width="11" height="11">
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                    </span>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
 
-          <!-- Social Bar -->
-          <div class="reels__social" data-reels-social>
-            <button type="button" class="reels__action reels__action--like" data-reels-like aria-label="Curtir">
-              <svg class="reels__heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-              </svg>
-              <span class="reels__count" data-reels-like-count>0</span>
-            </button>
+              {%- if block.settings.info_text != blank -%}
+                <p class="reels__desc">{{ block.settings.info_text }}</p>
+              {%- endif -%}
 
-            <button type="button" class="reels__action reels__action--comment" data-reels-comment-toggle aria-label="Comentar">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-              </svg>
-              <span class="reels__count" data-reels-comment-count>0</span>
-            </button>
+              <div class="reels__stats" data-reels-social>
+                <button type="button" class="reels__stat reels__stat--like" data-reels-like aria-label="Curtir">
+                  <svg class="reels__heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                  <span data-reels-like-count>0</span>
+                </button>
+
+                <button type="button" class="reels__stat" data-reels-comment-toggle aria-label="Comentar">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                  </svg>
+                  <span data-reels-comment-count>0</span>
+                </button>
+
+                {%- if block.settings.link != blank -%}
+                  <a href="{{ block.settings.link }}" class="reels__follow">Ver Produto <span class="reels__follow-plus">+</span></a>
+                {%- endif -%}
+              </div>
+            </div>
           </div>
 
         </div>
@@ -372,6 +381,72 @@
     },
     {
       "type": "header",
+      "content": "Gradiente da foto"
+    },
+    {
+      "type": "color",
+      "id": "overlay_bg",
+      "label": "Cor do gradiente",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Intensidade",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 70
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Cor do título (na foto)",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Cores do card"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Fundo do card",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "card_text",
+      "label": "Texto do card",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "color",
+      "id": "tag_bg",
+      "label": "Fundo da tag (na foto)",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "color",
+      "id": "tag_text",
+      "label": "Texto da tag (na foto)",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg",
+      "label": "Fundo do botão",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "color",
+      "id": "btn_text",
+      "label": "Texto do botão",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
       "content": "Rodapé"
     },
     {
@@ -418,7 +493,20 @@
         {
           "type": "text",
           "id": "product_title",
-          "label": "Nome do produto / Look"
+          "label": "Nome do produto / Look",
+          "info": "Aparece sobre a foto"
+        },
+        {
+          "type": "text",
+          "id": "info_text",
+          "label": "Descrição (na foto)",
+          "info": "Opcional: frase curta sobre o look/produto"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_badge",
+          "label": "Mostrar selo verificado",
+          "default": true
         },
         {
           "type": "text",
