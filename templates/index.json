@@ -86,7 +86,7 @@
         "height": "fullscreen",
         "autoplay": true,
         "autoplay_speed": 5,
-        "show_scroll_indicator": true,
+        "show_scroll_indicator": false,
         "hide_content_mobile": false,
         "show_buttons_mobile": true,
         "mobile_ratio": "custom",
@@ -224,6 +224,8 @@
             "video_type": "mp4",
             "video_id": "https://cdn.shopify.com/videos/c/o/v/71cb371e8bbd48b3abba1c5618f401e3.mp4",
             "product_title": "Olhar Conectado",
+            "info_text": "",
+            "show_badge": true,
             "tag": "Lançamento",
             "link": "shopify://products/maio-rose"
           }
@@ -234,6 +236,8 @@
             "video_type": "mp4",
             "video_id": "https://cdn.shopify.com/videos/c/o/v/71cb371e8bbd48b3abba1c5618f401e3.mp4",
             "product_title": "Estilo Urbano",
+            "info_text": "",
+            "show_badge": true,
             "tag": "Em alta",
             "link": "shopify://products/short-comfy"
           }
@@ -244,6 +248,8 @@
             "video_type": "mp4",
             "video_id": "https://cdn.shopify.com/videos/c/o/v/71cb371e8bbd48b3abba1c5618f401e3.mp4",
             "product_title": "Clássico Moderno",
+            "info_text": "",
+            "show_badge": true,
             "tag": "Coleção Verão",
             "link": "shopify://products/bone-brasil"
           }
@@ -254,6 +260,8 @@
             "video_type": "mp4",
             "video_id": "https://cdn.shopify.com/videos/c/o/v/71cb371e8bbd48b3abba1c5618f401e3.mp4",
             "product_title": "Esportivo Chic",
+            "info_text": "",
+            "show_badge": true,
             "tag": "Novo",
             "link": "shopify://products/short-comfy"
           }
@@ -270,6 +278,15 @@
         "title": "Reels",
         "subtitle": "Inspire-se com nossos vídeos",
         "columns": 4,
+        "overlay_bg": "#000000",
+        "overlay_opacity": 70,
+        "title_color": "#ffffff",
+        "card_bg": "#ffffff",
+        "card_text": "#1a1a1a",
+        "tag_bg": "#1a1a1a",
+        "tag_text": "#ffffff",
+        "btn_bg": "#1a1a1a",
+        "btn_text": "#ffffff",
         "cta_text": "",
         "cta_url": ""
       }
