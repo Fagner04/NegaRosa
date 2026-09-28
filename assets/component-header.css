@@ -937,3 +937,8 @@ a[aria-label="Favoritos"]:hover svg {
 /* Ripple sutil no click */
 .header__action-btn:active svg,
 .header__action-btn--desktop:active svg { transform: scale(.88); transition: transform .1s ease; }
+
+/* Padding extra no header mobile */
+@media (max-width: 749px) {
+  .header__container { padding: 5px; }
+}
