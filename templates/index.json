@@ -307,6 +307,7 @@
           "type": "release",
           "settings": {
             "name": "ConectWhats Elite Edition 'Chicago'",
+            "image": "shopify://shop_images/913_7151_20260921132450.jpg",
             "price": "R$ 1.299,99",
             "launch_date": "01 Jul 2026",
             "countdown_date": "2026-07-01T10:00:00",
@@ -318,6 +319,7 @@
           "type": "release",
           "settings": {
             "name": "Nome aqui",
+            "image": "shopify://shop_images/913_7131_20260921015420.jpg",
             "price": "R$ 999,99",
             "launch_date": "25 Jun 2026",
             "countdown_date": "2026-07-01T10:00:00",
@@ -329,6 +331,7 @@
           "type": "release",
           "settings": {
             "name": "Titulo aqui",
+            "image": "shopify://shop_images/MOBILE.png",
             "price": "R$ 799,99",
             "launch_date": "Body man",
             "countdown_date": "2026-07-01T10:00:00",
@@ -344,13 +347,13 @@
       ],
       "settings": {
         "bg_color": "#fff",
-        "card_bg_color": "#f2efef",
+        "card_bg_color": "#FFFFFF",
         "text_color": "#615656",
         "heading_color": "#060505",
         "accent_color": "#010101",
-        "btn_bg_color": "#c87a7a",
-        "btn_text_color": "#0a0a0a",
-        "btn_hover_bg_color": "#d4af37",
+        "btn_bg_color": "#F287B5",
+        "btn_text_color": "#F1F1F1",
+        "btn_hover_bg_color": "#0F0F0F",
         "btn_hover_text_color": "#0a0a0a",
         "btn_border_color": "#ffffff",
         "title": "DROPS",
