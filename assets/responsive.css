@@ -272,8 +272,9 @@
 
   /* Footer */
   .footer__top {
-    grid-template-columns: 1fr;
-    gap: 0;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: var(--space-6);
   }
 
   .footer__column:last-child {
