@@ -8,11 +8,11 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  border-radius: var(--border-radius-md);
+  border-radius: 20px;
   overflow: hidden;
   background: var(--color-bg, #fff);
   border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  box-shadow: none;
   transition: transform var(--transition-base), box-shadow var(--transition-base);
 }
 
@@ -41,7 +41,7 @@
   aspect-ratio: 1;
   overflow: hidden;
   background-color: var(--color-bg-secondary);
-  border-radius: var(--border-radius-md);
+  border-radius: 20px 20px 0 0;
   display: block;
 }
 
@@ -246,12 +246,27 @@
   color: var(--color-text-inverse);
 }
 
-/* Card Info */
+/* Card Info — estilo drawer sobre a foto */
 .product-card__info {
-  padding: var(--space-3) var(--space-1);
+  padding: 10px 12px 12px;
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+  background: var(--color-bg, #fff);
+  border-radius: 20px 20px 0 0;
+  margin-top: -18px;
+  position: relative;
+  z-index: 2;
+}
+
+.product-card__info::before {
+  content: '';
+  display: block;
+  width: 36px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--color-border, #E5E7EB);
+  margin: 0 auto 8px;
 }
 
 .product-card__category {

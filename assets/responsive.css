@@ -458,16 +458,24 @@
   }
 
   .product-card {
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-    border-radius: 12px;
+    box-shadow: none;
+    border-radius: 20px;
   }
 
   .product-card__image-wrapper {
-    border-radius: 12px 12px 0 0;
+    border-radius: 20px 20px 0 0;
   }
 
   .product-card__info {
-    padding: 10px 10px 12px;
+    padding: 8px 10px 12px;
+    border-radius: 20px 20px 0 0;
+    margin-top: -18px;
+  }
+
+  .product-card__info::before {
+    width: 32px;
+    height: 4px;
+    margin-bottom: 6px;
   }
 
   .product-card__title {
