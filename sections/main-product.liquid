@@ -219,8 +219,8 @@
       background: transparent;
       padding: 0;
     }
-    /* Hide the single static image on mobile — carousel takes over */
-    .product-gallery__main > #ProductMainImage { display: none; }
+    /* Hide the static image on mobile only when the swipe carousel takes over */
+    .product-gallery__main--has-carousel > #ProductMainImage { display: none; }
 
     .product-gallery__mobile-carousel {
       display: flex;
@@ -1286,7 +1286,7 @@
         {%- endif -%}
 
         <!-- Foto principal -->
-        <div class="product-gallery__main">
+        <div class="product-gallery__main{% if product.images.size > 1 %} product-gallery__main--has-carousel{% endif %}">
           {%- if product.featured_image != blank -%}
             <img id="ProductMainImage"
                  src="{{ product.featured_image | image_url: width: 1000 }}"
