@@ -478,6 +478,18 @@
   grid-template-columns: repeat(2, 1fr);
 }
 
+/* Cards estáticos: sem animação de scroll (reveal-zoom + scroll-reveal) */
+.product-card,
+.product-card.reveal-zoom,
+.product-card.reveal-zoom.revealed,
+.product-card.is-visible {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+  transition: none !important;
+  will-change: auto !important;
+}
+
 /* ---------- Section Header ---------- */
 .section-header {
   display: flex;

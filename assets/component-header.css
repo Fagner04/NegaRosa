@@ -751,6 +751,13 @@ body.menu-open .overlay {
   -webkit-backdrop-filter: blur(3px);
 }
 
+/* WhatsApp e CUPOM ficam por baixo do drawer + overlay no mobile */
+body.menu-open .zap-widget,
+body.menu-open .coupon-tab,
+body.menu-open .coupon-card {
+  z-index: 250 !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .mobile-menu,
   .mobile-menu__header,
