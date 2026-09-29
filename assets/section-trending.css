@@ -90,10 +90,11 @@
   scrollbar-width: none;
   -ms-overflow-style: none;
   cursor: default;
-  /* pan-y: allows the browser to handle vertical page scroll normally.
-     The horizontal swipe on touch is handled natively by overflow-x: auto.
-     JS drag (mousedown/mousemove) handles desktop only. */
-  touch-action: pan-y;
+  /* pan-x: swipe horizontal passa os cards no dedo.
+     pan-y: scroll vertical da página continua normal.
+     O JS arrasta só com mouse no desktop; no touch o navegador rola nativo. */
+  touch-action: pan-x pan-y;
+  overscroll-behavior-x: contain;
   user-select: none;
   -webkit-user-select: none;
   padding-bottom: var(--space-2);
@@ -143,6 +144,12 @@
   }
   .carousel {
     padding-right: 30px;
+  }
+}
+
+@media (pointer: coarse) {
+  .carousel {
+    scroll-snap-type: x proximity;
   }
 }
 
