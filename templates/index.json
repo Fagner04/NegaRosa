@@ -88,7 +88,7 @@
         "autoplay_speed": 5,
         "show_scroll_indicator": false,
         "hide_content_mobile": false,
-        "show_buttons_mobile": true,
+        "show_buttons_mobile": false,
         "mobile_ratio": "custom",
         "mobile_custom_height": 85,
         "btn_bg_color": "#f287b5",
