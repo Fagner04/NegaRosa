@@ -162,8 +162,7 @@
   }
 
   .product-card__quick-add {
-    opacity: 1;
-    transform: translateY(0);
+    display: none !important;
   }
 
   .product-card__wishlist {

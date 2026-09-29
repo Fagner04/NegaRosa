@@ -73,6 +73,7 @@
     if (!mobileMenu) return;
     mobileMenu.classList.add('open');
     document.body.classList.add('menu-open');
+    overlay?.classList.add('active');
     menuBtn?.setAttribute('aria-expanded', 'true');
   }
 
@@ -80,6 +81,7 @@
     if (!mobileMenu) return;
     mobileMenu.classList.remove('open');
     document.body.classList.remove('menu-open');
+    overlay?.classList.remove('active');
     menuBtn?.setAttribute('aria-expanded', 'false');
   }
 
