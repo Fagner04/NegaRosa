@@ -10,7 +10,10 @@
   flex-direction: column;
   border-radius: var(--border-radius-md);
   overflow: hidden;
-  transition: transform var(--transition-base);
+  background: var(--color-bg, #fff);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
 }
 
 /* Sem movimento no hover (card estático; só troca a foto e exibe botões) */
