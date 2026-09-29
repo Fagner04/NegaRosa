@@ -2205,6 +2205,15 @@
         background: #EAEAEA;
       }
 
+      /* Desativa o reveal dentro do carrossel — evita card "entrando pra dentro" no scroll */
+      .related-products-section .product-card,
+      .related-products-section .related-products__item {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+        will-change: auto !important;
+      }
+
       .related-products__header {
         display: flex;
         align-items: center;
