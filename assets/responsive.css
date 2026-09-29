@@ -419,28 +419,37 @@
   }
 
   .hero-banner__actions {
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
+    justify-content: center;
     width: 100%;
     gap: 10px;
+    flex-wrap: nowrap;
   }
 
   .hero-banner__actions .btn {
-    width: 100%;
-    max-width: 280px;
-    padding: 12px 24px;
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    padding: 12px 16px;
     font-size: 14px;
+    white-space: nowrap;
   }
 
   .hero-banner--btn-pequeno .hero-banner__actions .btn {
-    max-width: 230px;
-    padding: 9px 20px;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: none;
+    padding: 9px 12px;
     font-size: 12.5px;
   }
 
   .hero-banner--btn-grande .hero-banner__actions .btn {
-    max-width: 320px;
-    padding: 14px 28px;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: none;
+    padding: 14px 16px;
     font-size: 15px;
   }
 
