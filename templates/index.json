@@ -347,13 +347,13 @@
       ],
       "settings": {
         "bg_color": "#fff",
-        "card_bg_color": "#FFFFFF",
+        "card_bg_color": "#ffffff",
         "text_color": "#615656",
         "heading_color": "#060505",
         "accent_color": "#010101",
-        "btn_bg_color": "#F287B5",
-        "btn_text_color": "#F1F1F1",
-        "btn_hover_bg_color": "#0F0F0F",
+        "btn_bg_color": "#f287b5",
+        "btn_text_color": "#f1f1f1",
+        "btn_hover_bg_color": "#0f0f0f",
         "btn_hover_text_color": "#0a0a0a",
         "btn_border_color": "#ffffff",
         "title": "DROPS",
@@ -367,11 +367,12 @@
         "banner_xggQ6h": {
           "type": "banner",
           "settings": {
+            "image": "shopify://shop_images/emporiobody-076_cfaa929e-7878-4ab3-981e-dccb32228680.jpg",
             "tag": "Masculino",
             "title": "NOVOS ESTILOS",
             "subtitle": "Performance e estilo para o seu treino",
             "button_text": "Comprar",
-            "link": "",
+            "link": "shopify://collections/fitness",
             "bg_color": "0d1b2a",
             "bg_color_2": "1b263b"
           }
@@ -379,6 +380,7 @@
         "banner_UzNb4t": {
           "type": "banner",
           "settings": {
+            "image": "shopify://shop_images/Editedimage_1787949633285.jpg",
             "tag": "Feminino",
             "title": "COLEÇÃO VERÃO",
             "subtitle": "Peças leves e confortáveis para o dia a dia",
