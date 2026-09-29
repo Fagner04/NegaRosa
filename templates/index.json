@@ -345,6 +345,7 @@
         "release-2",
         "release-3"
       ],
+      "disabled": true,
       "settings": {
         "bg_color": "#fff",
         "card_bg_color": "#ffffff",
