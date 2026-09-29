@@ -798,7 +798,20 @@
 
 /* Mobile */
 @media (max-width: 640px) {
-  .zap-widget { bottom: 12px; right: 12px; }
+  .zap-widget {
+    bottom: 12px; right: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(16px);
+    transition: opacity .35s ease, transform .35s ease, visibility .35s;
+    pointer-events: none;
+  }
+  .zap-widget--visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
   .zap-box {
     width: calc(100vw - 24px);
     max-width: 360px;
@@ -1187,11 +1200,27 @@
     var open = box.classList.toggle('open');
     fab.classList.toggle('open', open);
     if(open){ updateStatus(); hideExternal(); }
+    updateZapVisibility();
   });
   if(closeBtn) closeBtn.addEventListener('click', function(){
     box.classList.remove('open');
     fab.classList.remove('open');
+    updateZapVisibility();
   });
+
+  // ── Mobile: botão aparece só depois de descer um pouco ──
+  var widget = fab ? fab.closest('.zap-widget') : null;
+  var zapMQ = window.matchMedia('(max-width: 640px)');
+  var ZAP_SHOW_AFTER = 300;
+  function updateZapVisibility() {
+    if (!widget) return;
+    if (!zapMQ.matches) { widget.classList.add('zap-widget--visible'); return; }
+    var show = window.scrollY > ZAP_SHOW_AFTER || (box && box.classList.contains('open'));
+    widget.classList.toggle('zap-widget--visible', show);
+  }
+  updateZapVisibility();
+  window.addEventListener('scroll', function(){ updateZapVisibility(); }, { passive: true });
+  if (zapMQ.addEventListener) { zapMQ.addEventListener('change', updateZapVisibility); }
 
   // ── Enviar mensagem ──
   var msgForm  = document.getElementById('zap-msg-form');
