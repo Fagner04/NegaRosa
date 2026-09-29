@@ -24,6 +24,14 @@
   // Update on load and on resize
   updateSpacerHeight();
   window.addEventListener('resize', updateSpacerHeight);
+  window.addEventListener('load', updateSpacerHeight);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(updateSpacerHeight);
+  }
+  // Re-sync on any fixed-top height change (announcement close, logo/font load)
+  if ('ResizeObserver' in window && fixedTop && headerSpacer) {
+    new ResizeObserver(updateSpacerHeight).observe(fixedTop);
+  }
 
   function updateHeader() {
     const currentScrollY = window.scrollY;
