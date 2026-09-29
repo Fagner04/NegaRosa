@@ -2190,8 +2190,19 @@
     <style>
       .related-products-section {
         padding: var(--space-16) 0;
-        border-top: 1px solid var(--color-border);
-        background-color: var(--color-bg-secondary);
+        border-top: none;
+        background-color: var(--color-bg, #fff);
+        position: relative;
+      }
+
+      .related-products-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: #EAEAEA;
       }
 
       .related-products__header {
