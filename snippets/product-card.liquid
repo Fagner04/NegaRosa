@@ -176,6 +176,23 @@
       <p class="product-card__subtitle">{{ product.metafields.custom.subtitle }}</p>
     {%- endif -%}
 
+    {%- comment -%} Tamanhos disponíveis em bolinha {%- endcomment -%}
+    {%- assign size_option = nil -%}
+    {%- for option in product.options_with_values -%}
+      {%- assign on = option.name | downcase -%}
+      {%- if on contains 'tamanho' or on contains 'size' -%}
+        {%- assign size_option = option -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if size_option -%}
+      <div class="product-card__sizes" aria-label="Tamanhos disponíveis">
+        {%- for value in size_option.values -%}
+          <span class="product-card__size">{{ value }}</span>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
     <!-- Price block (Varejo / Atacado / PIX / Parcelamento) -->
     {%- assign pix_pct = 5 -%}
     {%- assign max_parcelas = 6 -%}

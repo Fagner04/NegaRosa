@@ -477,6 +477,18 @@
     text-overflow: ellipsis;
   }
 
+  .product-card__sizes {
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  .product-card__size {
+    min-width: 22px;
+    height: 22px;
+    padding: 0 5px;
+    font-size: 10px;
+  }
+
   .product-card__price-current {
     font-size: var(--font-size-sm);
   }

@@ -65,9 +65,16 @@
 
   /* ---------- Mobile Menu ---------- */
   const menuBtn = document.querySelector('.header__menu-btn');
-  const mobileMenu = document.querySelector('.mobile-menu');
+  let mobileMenu = document.querySelector('.mobile-menu');
   const menuClose = document.querySelector('.mobile-menu__close');
   const overlay = document.getElementById('overlay');
+
+  // Tira o drawer de dentro do .fixed-top (que tem will-change/transform e
+  // quebra o position:fixed). Como filho do body, bottom:0 = base da viewport.
+  if (mobileMenu && mobileMenu.parentElement !== document.body) {
+    document.body.appendChild(mobileMenu);
+    mobileMenu = document.querySelector('.mobile-menu');
+  }
 
   function openMenu() {
     if (!mobileMenu) return;
