@@ -176,10 +176,6 @@
       <p class="product-card__subtitle">{{ product.metafields.custom.subtitle }}</p>
     {%- endif -%}
 
-    {%- if show_colors and product.options_by_name['Cor'] -%}
-      <span class="product-card__colors">{{ product.options_by_name['Cor'].values.size }} cores</span>
-    {%- endif -%}
-
     <!-- Price block (Varejo / Atacado / PIX / Parcelamento) -->
     {%- assign pix_pct = 5 -%}
     {%- assign max_parcelas = 6 -%}
