@@ -472,7 +472,9 @@
 
   .product-card__title {
     font-size: var(--font-size-sm);
-    -webkit-line-clamp: 2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .product-card__price-current {

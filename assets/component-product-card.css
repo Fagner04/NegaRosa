@@ -267,14 +267,18 @@
   font-weight: var(--font-weight-semibold);
   color: var(--color-text);
   line-height: var(--line-height-snug);
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+  display: block;
+  white-space: nowrap;
   overflow: hidden;
-  word-break: break-word;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .product-card__title a {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   transition: color var(--transition-fast);
 }
 
