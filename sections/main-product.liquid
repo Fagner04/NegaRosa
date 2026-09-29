@@ -1171,6 +1171,31 @@
     /* Descrição completa */
     .product-description-full { margin-top: var(--space-6); padding-top: var(--space-4); }
     .product-description-full__title { font-size: 13px; }
+
+    /* Info como drawer moderno sobre a foto (só mobile) */
+    .product-container { gap: 0; }
+    .product-gallery__mobile-carousel { border-radius: var(--border-radius-lg, 12px) var(--border-radius-lg, 12px) 0 0; }
+    .product-info {
+      background: var(--color-bg, #fff);
+      border-radius: 22px 22px 0 0;
+      margin-top: -26px;
+      position: relative;
+      z-index: 2;
+      padding: 10px 16px 20px;
+      box-shadow: none;
+    }
+    .product-info::before {
+      content: '';
+      display: block;
+      width: 44px;
+      height: 5px;
+      border-radius: 999px;
+      background: var(--color-border);
+      margin: 0 auto 10px;
+    }
+    .product-details__item {
+      box-shadow: none;
+    }
   }
 
   @media (max-width: 480px) {
