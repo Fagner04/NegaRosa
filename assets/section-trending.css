@@ -110,7 +110,7 @@
 }
 
 .carousel.dragging {
-  cursor: grabbing;
+  cursor: default;
   scroll-snap-type: none;
   scroll-behavior: auto;
 }
