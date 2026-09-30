@@ -120,7 +120,7 @@
         "announcement_RDPeTE": {
           "type": "announcement",
           "settings": {
-            "text": "Atacado acima de 12 peças",
+            "text": "Atacado acima de 8 peças",
             "link": ""
           }
         }
@@ -217,6 +217,19 @@
     "lookbook_Jy9ERX": {
       "type": "lookbook",
       "blocks": {
+        "video_Rh7fGR": {
+          "type": "video",
+          "settings": {
+            "image": "shopify://shop_images/WhatsApp_Image_2026-09-30_at_16.48.22.jpg",
+            "video_type": "tiktok",
+            "video_id": "https://vt.tiktok.com/ZSbDSGtJD/",
+            "product_title": "Conjunto Momentum",
+            "info_text": "",
+            "show_badge": true,
+            "tag": "",
+            "link": ""
+          }
+        },
         "video_46eRnJ": {
           "type": "video",
           "settings": {
@@ -268,6 +281,7 @@
         }
       },
       "block_order": [
+        "video_Rh7fGR",
         "video_46eRnJ",
         "video_7ChRmG",
         "video_XFQHX6",
@@ -476,15 +490,14 @@
         "bg_gradient_start": "#f287b5",
         "bg_gradient_end": "#ffffff",
         "bg_gradient_direction": "cima",
-        "logo": "shopify://shop_images/Deixe_sua_avaliacao_800_x_800_px_1.svg",
         "show_badge": true,
         "badge_color": "#eb76ac",
         "title": "Pouco De Nós",
-        "description": "<p>Desenvolvidos para atender suas necessidades e prezar pela satisfação e segurança entregando produtos da mais alta qualidade da melhor forma possível!</p>",
+        "description": "<p>NÃO COMEÇAMOS AGORA.<br/><br/>A GENTE JÁ ESTAVA AQUI.<br/><br/>Desde 2011, a Nega Rosa Fitness faz parte do movimento que transforma roupa fitness em identidade.<br/><br/>Nascemos dentro da fábrica e crescemos conhecendo cada etapa do processo. Criamos, desenvolvemos e produzimos nossas próprias peças, porque acreditamos que qualidade de verdade começa muito antes do produto chegar até você.<br/><br/>São anos de experiência, evolução e uma certeza que permanece:<br/><br/>roupa fitness não precisa ser básica.<br/><br/>Precisa ter presença.<br/>Precisa vestir bem.<br/>Precisa acompanhar o seu ritmo.<br/>Precisa fazer você se olhar no espelho e pensar: é essa.<br/><br/>Na Nega Rosa, cada coleção nasce da nossa própria produção, da escolha dos materiais à construção de cada peça.<br/><br/>2011 → hoje.<br/>Uma fábrica. Uma marca. Milhares de histórias vestidas de Nega Rosa.<br/><br/>E se tem uma coisa que o tempo nos ensinou é:<br/>quem fabrica, conhece. Quem conhece, faz melhor.<br/><br/>NEGA ROSA FITNESS<br/>Fabricação própria desde 2011. 🌹</p>",
         "subtitle": "Quer saber mais sobre nós e nossa equipe?",
         "cta_helper": "Clique no botão abaixo",
         "button_label": "Saber mais sobre nós",
-        "button_url": "shopify://pages/sobre-nos"
+        "button_url": ""
       }
     }
   },
