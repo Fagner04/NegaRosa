@@ -48,15 +48,15 @@
         <!-- Content -->
         <div class="hero-banner__content hero-banner__content--{{ block.settings.text_position | default: 'bottom-left' }} hero-banner__content--{{ block.settings.text_color | default: 'light' }}">
           {%- if block.settings.tag != blank -%}
-            <span class="hero-banner__tag">{{ block.settings.tag }}</span>
+            <span class="hero-banner__tag"{% if block.settings.tag_color != blank %} style="color: {{ block.settings.tag_color }};"{% endif %}>{{ block.settings.tag }}</span>
           {%- endif -%}
 
           {%- if block.settings.title != blank -%}
-            <h1 class="hero-banner__title">{{ block.settings.title }}</h1>
+            <h1 class="hero-banner__title"{% if block.settings.title_color != blank %} style="color: {{ block.settings.title_color }};"{% endif %}>{{ block.settings.title }}</h1>
           {%- endif -%}
 
           {%- if block.settings.subtitle != blank -%}
-            <p class="hero-banner__subtitle">{{ block.settings.subtitle }}</p>
+            <p class="hero-banner__subtitle"{% if block.settings.subtitle_color != blank %} style="color: {{ block.settings.subtitle_color }};"{% endif %}>{{ block.settings.subtitle }}</p>
           {%- endif -%}
 
           <div class="hero-banner__actions">
@@ -363,11 +363,27 @@
           "type": "select",
           "id": "text_color",
           "label": "Cor do texto",
+          "info": "Base clara/escura. Para cor exata, use os campos abaixo.",
           "options": [
             { "value": "light", "label": "Claro" },
             { "value": "dark", "label": "Escuro" }
           ],
           "default": "light"
+        },
+        {
+          "type": "color",
+          "id": "tag_color",
+          "label": "Tag — cor (opcional)"
+        },
+        {
+          "type": "color",
+          "id": "title_color",
+          "label": "Título — cor (opcional)"
+        },
+        {
+          "type": "color",
+          "id": "subtitle_color",
+          "label": "Subtítulo — cor (opcional)"
         },
         {
           "type": "select",
