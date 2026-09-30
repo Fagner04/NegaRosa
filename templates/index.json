@@ -227,7 +227,7 @@
             "info_text": "",
             "show_badge": true,
             "tag": "Novo",
-            "link": ""
+            "link": "shopify://products/conjunto-momentum"
           }
         },
         "video_46eRnJ": {
@@ -310,7 +310,7 @@
       "settings": {
         "title": "Em Alta Agora",
         "subtitle": "Os produtos mais desejados do momento",
-        "collection": "beachwear",
+        "collection": "fitness",
         "products_to_show": 8
       }
     },
@@ -382,7 +382,6 @@
         "banner_xggQ6h": {
           "type": "banner",
           "settings": {
-            "image": "shopify://shop_images/emporiobody-076_cfaa929e-7878-4ab3-981e-dccb32228680.jpg",
             "tag": "Masculino",
             "title": "NOVOS ESTILOS",
             "subtitle": "Performance e estilo para o seu treino",
