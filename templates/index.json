@@ -39,26 +39,27 @@
         },
         "slide-2": {
           "type": "slide",
-          "disabled": true,
           "settings": {
-            "tag": "ProConnect",
-            "title": "PROCONNECT MAX",
-            "subtitle": "Uma nova era de amortecimento. Experimente o futuro do conforto e da inovação.",
+            "image": "shopify://shop_images/CAPA_BANNER_SITE_4.svg",
+            "image_mobile": "shopify://shop_images/MOBILE_900_x_1650_px_1.svg",
+            "tag": "Lançamento",
+            "title": "Coleção Life Urban",
+            "subtitle": "",
             "button_text": "Explorar",
             "button_url": "",
             "button_text_2": "Saiba Mais",
             "button_url_2": "",
-            "btn1_bg": "",
-            "btn1_text": "",
-            "btn2_bg": "",
-            "btn2_text": "",
-            "btn2_border": "",
-            "text_position": "center",
+            "btn1_bg": "#F287B5",
+            "btn1_text": "#FFFFFF",
+            "btn2_bg": "#FFFFFF",
+            "btn2_text": "#0F0F0F",
+            "btn2_border": "#FFFFFF",
+            "text_position": "bottom-left",
             "text_color": "light",
             "tag_color": "",
-            "title_color": "",
-            "subtitle_color": "",
-            "overlay_style": "gradient"
+            "title_color": "#F287B5",
+            "subtitle_color": "#FFFFFF",
+            "overlay_style": "dark"
           }
         },
         "slide-3": {
@@ -100,13 +101,13 @@
         "show_buttons_mobile": true,
         "mobile_ratio": "custom",
         "mobile_custom_height": 85,
-        "btn_bg_color": "#f287b5",
-        "btn_text_color": "#ffffff",
+        "btn_bg_color": "#F287B5",
+        "btn_text_color": "#FFFFFF",
         "btn_gradient": false,
-        "btn_gradient_start": "#b6b0b0",
+        "btn_gradient_start": "#FFFFFF",
         "btn_gradient_end": "#fda7cc",
         "btn_gradient_direction": "diagonal",
-        "btn_size": "grande"
+        "btn_size": "medio"
       }
     },
     "announcement_bar_dD4ndD": {
