@@ -1,7 +1,7 @@
 {%- comment -%}
   Snippet: complete-look
-  Popup "Monte o Look" a partir do metafield custom.complete_o_look (lista de produtos).
-  Reaproveita o shell .size-guide-overlay/.size-guide-modal do main-product.
+  Card fixo "Monte o Look" a partir do metafield custom.complete_o_look (lista de produtos).
+  Renderiza inline na página, sem popup nem botão.
 
   Uso (main-product): {% render 'complete-look', product: product %}
   Só renderiza se o metafield estiver preenchido.
@@ -10,95 +10,69 @@
 {%- assign look_products = product.metafields.custom.complete_o_look.value | default: product.metafields.custom.complete_o_look -%}
 {%- if look_products != blank and look_products.size > 0 -%}
 
-<button type="button" class="look-open-btn" data-look-open>
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
-  Monte o look ({{ look_products.size }})
-</button>
-
-<div class="size-guide-overlay" data-look-overlay aria-hidden="true">
-  <div class="size-guide-modal" role="dialog" aria-modal="true" aria-label="Monte o look">
-    <div class="size-guide-modal__header">
-      <h2 class="size-guide-modal__title">Monte o look</h2>
-      <button type="button" class="size-guide-modal__close" data-look-close aria-label="Fechar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="20" height="20"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div class="size-guide-modal__body">
-      <div class="look-list">
-        {%- for lp in look_products -%}
-          {%- if lp.title != blank -%}
-            {%- assign lp_size_idx = nil -%}
-            {%- for opt in lp.options_with_values -%}
-              {%- assign on = opt.name | downcase -%}
-              {%- if on contains 'tamanho' or on contains 'size' -%}
-                {%- assign lp_size_idx = forloop.index0 -%}
-                {%- break -%}
-              {%- endif -%}
-            {%- endfor -%}
-            <div class="look-item" data-look-item>
-              <a class="look-item__img" href="{{ lp.url }}" tabindex="-1">
-                {%- if lp.featured_image != blank -%}
-                  <img src="{{ lp.featured_image | image_url: width: 200 }}" alt="{{ lp.title | escape }}" width="200" height="200" loading="lazy">
-                {%- endif -%}
-              </a>
-              <div class="look-item__info">
-                <span class="look-item__title">{{ lp.title }}</span>
-                <span class="look-item__price">{{ lp.price | money }}</span>
-                {%- if lp_size_idx != nil -%}
-                  <div class="look-item__sizes">
-                    {%- assign first_set = false -%}
-                    {%- for value in lp.options_with_values[lp_size_idx].values -%}
-                      {%- assign vv_id = nil -%}
-                      {%- for v in lp.variants -%}
-                        {%- if v.options[lp_size_idx] == value and v.available -%}
-                          {%- assign vv_id = v.id -%}
-                          {%- break -%}
-                        {%- endif -%}
-                      {%- endfor -%}
-                      {%- if vv_id -%}
-                        <button type="button" class="look-size{% unless first_set %} active{% assign first_set = true %}{% endunless %}" data-variant-id="{{ vv_id }}" data-look-size>{{ value }}</button>
-                      {%- endif -%}
-                    {%- endfor -%}
-                  </div>
-                {%- endif -%}
-              </div>
-              <button type="button" class="look-add" data-look-add="{% if lp.selected_or_first_available_variant %}{{ lp.selected_or_first_available_variant.id }}{% endif %}">Adicionar</button>
-            </div>
+<div class="look-card" data-look-card>
+  <h3 class="look-card__title">Monte o look</h3>
+  <div class="look-list">
+    {%- for lp in look_products -%}
+      {%- if lp.title != blank -%}
+        {%- assign lp_size_idx = nil -%}
+        {%- for opt in lp.options_with_values -%}
+          {%- assign on = opt.name | downcase -%}
+          {%- if on contains 'tamanho' or on contains 'size' -%}
+            {%- assign lp_size_idx = forloop.index0 -%}
+            {%- break -%}
           {%- endif -%}
         {%- endfor -%}
-      </div>
-      <button type="button" class="btn btn-primary w-full" data-look-add-all style="margin-top: 12px;">Adicionar look completo</button>
-      <p class="look-msg" data-look-msg hidden></p>
-    </div>
+        <div class="look-item" data-look-item>
+          <a class="look-item__img" href="{{ lp.url }}">
+            {%- if lp.featured_image != blank -%}
+              <img src="{{ lp.featured_image | image_url: width: 200 }}" alt="{{ lp.title | escape }}" width="200" height="200" loading="lazy">
+            {%- endif -%}
+          </a>
+          <div class="look-item__info">
+            <span class="look-item__title">{{ lp.title }}</span>
+            <span class="look-item__price">{{ lp.price | money }}</span>
+            {%- if lp_size_idx != nil -%}
+              <div class="look-item__sizes">
+                {%- assign first_set = false -%}
+                {%- for value in lp.options_with_values[lp_size_idx].values -%}
+                  {%- assign vv_id = nil -%}
+                  {%- for v in lp.variants -%}
+                    {%- if v.options[lp_size_idx] == value and v.available -%}
+                      {%- assign vv_id = v.id -%}
+                      {%- break -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                  {%- if vv_id -%}
+                    <button type="button" class="look-size{% unless first_set %} active{% assign first_set = true %}{% endunless %}" data-variant-id="{{ vv_id }}" data-look-size>{{ value }}</button>
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+          </div>
+          <button type="button" class="look-add" data-look-add="{% if lp.selected_or_first_available_variant %}{{ lp.selected_or_first_available_variant.id }}{% endif %}">Adicionar</button>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
   </div>
+  <button type="button" class="btn btn-primary w-full" data-look-add-all style="margin-top: 12px;">Adicionar look completo</button>
+  <p class="look-msg" data-look-msg hidden></p>
 </div>
 
 <style>
-  .look-open-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-    justify-content: center;
-    padding: 12px 16px;
-    margin-top: var(--space-3);
-    border: 1.5px dashed var(--color-primary, #D81B73);
-    border-radius: 999px;
-    background: transparent;
-    color: var(--color-text);
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
+  .look-card {
+    margin-top: var(--space-4);
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    background: var(--color-bg, #fff);
   }
-  .look-open-btn.look-pulse {
-    animation: lookPulse 1.6s ease-in-out 2;
-  }
-  @keyframes lookPulse {
-    0%, 100% { transform: scale(1); box-shadow: none; }
-    50% { transform: scale(1.02); box-shadow: 0 0 0 6px rgba(216, 27, 115, 0.12); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .look-open-btn.look-pulse { animation: none; }
+  .look-card__title {
+    font-size: var(--font-size-base);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0 0 var(--space-3);
   }
   .look-list { display: flex; flex-direction: column; gap: 10px; }
   .look-item {
@@ -142,36 +116,7 @@
   if (window.__nrLookBound) return;
   window.__nrLookBound = true;
 
-  function each(sel, fn) { document.querySelectorAll(sel).forEach(fn); }
-
-  function openLook(overlay) {
-    overlay.classList.remove('closing');
-    overlay.classList.add('open');
-    overlay.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeLook(overlay) {
-    overlay.classList.add('closing');
-    setTimeout(function () {
-      overlay.classList.remove('open', 'closing');
-      overlay.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
-    }, 160);
-  }
-
   document.addEventListener('click', function (e) {
-    var openBtn = e.target.closest ? e.target.closest('[data-look-open]') : null;
-    if (openBtn) {
-      var ov = openBtn.parentElement.querySelector('[data-look-overlay]') || document.querySelector('[data-look-overlay]');
-      if (ov) openLook(ov);
-      return;
-    }
-    var closeBtn = e.target.closest ? e.target.closest('[data-look-close]') : null;
-    if (closeBtn) {
-      var ov2 = closeBtn.closest('[data-look-overlay]');
-      if (ov2) closeLook(ov2);
-      return;
-    }
     var sizeBtn = e.target.closest ? e.target.closest('[data-look-size]') : null;
     if (sizeBtn) {
       var item = sizeBtn.closest('[data-look-item]');
@@ -185,23 +130,6 @@
     if (addBtn && !addBtn.disabled) { addSingle(addBtn); return; }
     var addAll = e.target.closest ? e.target.closest('[data-look-add-all]') : null;
     if (addAll && !addAll.disabled) { addAllLook(addAll); return; }
-  });
-
-  document.querySelectorAll('[data-look-overlay]').forEach(function (ov) {
-    ov.addEventListener('click', function (e) { if (e.target === ov) closeLook(ov); });
-  });
-
-  // Pulsadinha sutil 1x no botão para chamar atenção (sem abrir nada sozinho)
-  window.addEventListener('load', function () {
-    setTimeout(function () {
-      var btn = document.querySelector('[data-look-open]');
-      if (btn) btn.classList.add('look-pulse');
-    }, 1200);
-  });
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') {
-      document.querySelectorAll('[data-look-overlay].open').forEach(closeLook);
-    }
   });
 
   function refreshHeader() {
@@ -235,8 +163,10 @@
   }
 
   function addAllLook(btn) {
+    var card = btn.closest('[data-look-card]');
+    var scope = card || document;
     var ids = [];
-    document.querySelectorAll('[data-look-item] [data-look-add]').forEach(function (b) {
+    scope.querySelectorAll('[data-look-item] [data-look-add]').forEach(function (b) {
       var id = parseInt(b.getAttribute('data-look-add'), 10);
       if (id && ids.indexOf(id) === -1) ids.push(id);
     });
@@ -250,11 +180,12 @@
       btn.disabled = false;
       if (d && (d.status || d.description)) return;
       refreshHeader();
-      var msg = document.querySelector('[data-look-msg]');
-      if (msg) { msg.textContent = 'Look completo na sacola ✓'; msg.hidden = false; }
-      setTimeout(function () {
-        document.querySelectorAll('[data-look-overlay].open').forEach(closeLook);
-      }, 900);
+      var msg = scope.querySelector('[data-look-msg]');
+      if (msg) {
+        msg.textContent = 'Look completo na sacola ✓';
+        msg.hidden = false;
+        setTimeout(function () { msg.hidden = true; }, 3000);
+      }
     }).catch(function () { btn.disabled = false; });
   }
 })();
