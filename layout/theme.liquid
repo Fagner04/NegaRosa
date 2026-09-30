@@ -108,6 +108,9 @@
   {{ 'fitting-room.css' | asset_url | stylesheet_tag }}
   {{ 'scroll-reveal.css' | asset_url | stylesheet_tag }}
 
+  <!-- Font Awesome (ícones) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
   <script>
     document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
     window.shopUrl = '{{ request.origin }}';
