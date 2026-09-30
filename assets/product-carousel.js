@@ -119,13 +119,6 @@
 
       const diff = currentX - this.startX;
 
-      // Only start dragging after moving more than 5px (avoids blocking clicks)
-      if (!this.hasDragged && Math.abs(diff) < 5) return;
-
-      this.hasDragged = true;
-      this.isDragging = true;
-      this.carousel.classList.add('dragging');
-
       // Calculate velocity for momentum
       const now = Date.now();
       const dt = now - this.lastTime;
@@ -136,6 +129,14 @@
       this.lastTime = now;
 
       this.carousel.scrollLeft = this.scrollLeft - diff;
+
+      // Só considera arrasto (e bloqueia o clique) se rolou de verdade —
+      // tremida de mão não impede de abrir o produto
+      if (Math.abs(this.carousel.scrollLeft - this.scrollLeft) <= 6) return;
+
+      this.hasDragged = true;
+      this.isDragging = true;
+      this.carousel.classList.add('dragging');
     }
 
     endDrag() {

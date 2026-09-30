@@ -2356,17 +2356,17 @@
         });
 
         // Arrastar com o mouse no desktop (no mobile o swipe nativo já funciona)
-        var isDown = false, startX = 0, startLeft = 0, moved = false;
+        // Só bloqueia o clique se o carousel REALMENTE rolou (>6px) — tremida de mão não conta
+        var isDown = false, startX = 0, startLeft = 0, dragMoved = false;
         carousel.addEventListener('mousedown', function (e) {
-          isDown = true; moved = false;
+          isDown = true; dragMoved = false;
           startX = e.pageX; startLeft = carousel.scrollLeft;
           carousel.classList.add('is-dragging');
         });
         carousel.addEventListener('mousemove', function (e) {
           if (!isDown) return;
-          var dx = e.pageX - startX;
-          if (Math.abs(dx) > 5) moved = true;
-          carousel.scrollLeft = startLeft - dx;
+          carousel.scrollLeft = startLeft - (e.pageX - startX);
+          if (Math.abs(carousel.scrollLeft - startLeft) > 6) dragMoved = true;
         });
         ['mouseup', 'mouseleave'].forEach(function (ev) {
           carousel.addEventListener(ev, function () {
@@ -2375,7 +2375,7 @@
           });
         });
         carousel.addEventListener('click', function (e) {
-          if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; }
+          if (dragMoved) { e.preventDefault(); e.stopPropagation(); dragMoved = false; }
         }, true);
       })();
     </script>
