@@ -50,7 +50,7 @@
               </div>
             {%- endif -%}
           </div>
-          <button type="button" class="look-add" data-look-add="{% if lp.selected_or_first_available_variant %}{{ lp.selected_or_first_available_variant.id }}{% endif %}">Adicionar</button>
+          <button type="button" class="look-add" data-look-add="{%- assign lp_first_av = nil -%}{%- for v in lp.variants -%}{%- if v.available -%}{%- assign lp_first_av = v.id -%}{%- break -%}{%- endif -%}{%- endfor -%}{{ lp_first_av | default: lp.selected_or_first_available_variant.id }}">Adicionar</button>
         </div>
       {%- endif -%}
     {%- endfor -%}
@@ -178,21 +178,41 @@
     });
     if (!ids.length) return;
     btn.disabled = true;
-    fetch('/cart/add.js', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items: ids.map(function (id) { return { id: id, quantity: 1 }; }) })
-    }).then(function (r) { return r.json(); }).then(function (d) {
-      btn.disabled = false;
-      if (d && (d.status || d.description)) return;
-      refreshHeader();
-      var msg = scope.querySelector('[data-look-msg]');
-      if (msg) {
-        msg.textContent = 'Look completo na sacola ✓';
-        msg.hidden = false;
-        setTimeout(function () { msg.hidden = true; }, 3000);
+    var orig = btn.textContent;
+    btn.textContent = 'Adicionando...';
+    var done = 0, failed = 0;
+    function next() {
+      if (done + failed >= ids.length) {
+        btn.disabled = false;
+        btn.textContent = orig;
+        refreshHeader();
+        var msg = scope.querySelector('[data-look-msg]');
+        if (msg) {
+          if (failed === 0) {
+            msg.style.color = '#16a34a';
+            msg.textContent = 'Look completo na sacola ✓';
+          } else if (done === 0) {
+            msg.style.color = '#dc2626';
+            msg.textContent = 'Não foi possível adicionar. Tente de novo.';
+          } else {
+            msg.style.color = '#b45309';
+            msg.textContent = done + ' de ' + ids.length + ' peças na sacola (uma indisponível).';
+          }
+          msg.hidden = false;
+          setTimeout(function () { msg.hidden = true; }, 4000);
+        }
+        return;
       }
-    }).catch(function () { btn.disabled = false; });
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: [{ id: ids[done + failed], quantity: 1 }] })
+      }).then(function (r) { return r.json(); }).then(function (d) {
+        if (d && (d.status || d.description)) { failed++; } else { done++; }
+        next();
+      }).catch(function () { failed++; next(); });
+    }
+    next();
   }
 })();
 </script>
