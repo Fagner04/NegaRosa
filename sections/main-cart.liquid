@@ -338,6 +338,7 @@
     
     {%- if cart.item_count > 0 -%}
       <h1 class="cart-title">Sua Sacola</h1>
+      {% render 'cart-timer', banner: true %}
       
       <form action="/cart" method="post" id="CartForm" class="cart-container">
         

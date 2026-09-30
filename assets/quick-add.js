@@ -636,6 +636,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (data.status) { btn.disabled = false; textEl.textContent = data.description || 'Erro'; return; }
       btn.classList.add('success'); textEl.textContent = 'Adicionado ✓';
       updateCartCount();
+      if (window.NegaRosaCartTimer) window.NegaRosaCartTimer.bump();
       setTimeout(function () { btn.classList.remove('success'); btn.disabled = false; textEl.textContent = origText; closeQuickAdd(); }, 1200);
     })
     .catch(function () { btn.classList.remove('loading'); btn.disabled = false; textEl.textContent = 'Erro'; });

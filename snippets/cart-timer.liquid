@@ -1,0 +1,166 @@
+{%- comment -%}
+  Snippet: cart-timer
+  Temporizador de reserva do carrinho (config em Configurações > Carrinho).
+  - Motor (sempre): sincroniza o prazo via /cart.js e limpa com /cart/clear.js ao expirar.
+  - Banner (banner: true): countdown visível. Use na página do carrinho.
+
+  Uso:
+    {% render 'cart-timer' %}                (motor, ex: layout)
+    {% render 'cart-timer', banner: true %}  (motor + banner, ex: main-cart)
+{%- endcomment -%}
+
+{%- if settings.cart_timer_enabled -%}
+
+{%- if banner -%}
+<div class="cart-timer" data-cart-timer hidden>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+  <span>{{ settings.cart_timer_text | default: 'Seu carrinho fica reservado por' }} <strong data-cart-timer-count>--:--</strong></span>
+</div>
+<div class="cart-timer cart-timer--expired" data-cart-timer-expired hidden>
+  <span>{{ settings.cart_timer_expired_text | default: 'Seu tempo esgotou — o carrinho foi esvaziado.' }}</span>
+</div>
+<style>
+  .cart-timer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: var(--space-4);
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: #FEF3C7;
+    border: 1px solid #FCD34D;
+    color: #92400E;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .cart-timer strong { font-variant-numeric: tabular-nums; }
+  .cart-timer--expired {
+    background: #FEE2E2;
+    border-color: #FCA5A5;
+    color: #991B1B;
+  }
+</style>
+{%- endif -%}
+
+<script>
+(function () {
+  if (window.__nrCartTimer) return;
+  window.__nrCartTimer = true;
+
+  var MINUTES = {{ settings.cart_timer_minutes | default: 30 | json }};
+  var KEY = 'nr_cart_deadline';
+  var COUNT_KEY = 'nr_cart_count';
+  var EXPIRED_FLAG = 'nr_cart_expired';
+
+  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function read(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function del(k) { try { localStorage.removeItem(k); } catch (e) {} }
+
+  function fmt(ms) {
+    var s = Math.max(0, Math.ceil(ms / 1000));
+    var m = Math.floor(s / 60);
+    var r = s % 60;
+    return (m < 10 ? '0' + m : '' + m) + ':' + (r < 10 ? '0' + r : '' + r);
+  }
+
+  function paint() {
+    var banner = document.querySelector('[data-cart-timer]');
+    if (!banner || banner.hidden) return;
+    var countEl = banner.querySelector('[data-cart-timer-count]');
+    var deadline = parseInt(read(KEY), 10) || 0;
+    if (countEl && deadline > 0) countEl.textContent = fmt(deadline - Date.now());
+  }
+
+  var timer = null;
+  function stopTick() { if (timer) { clearInterval(timer); timer = null; } }
+
+  function tick() {
+    var deadline = parseInt(read(KEY), 10) || 0;
+    if (!deadline) { sync(); return; }
+    if (deadline - Date.now() <= 0) { expire(); return; }
+    paint();
+  }
+
+  function startTick() {
+    stopTick();
+    tick();
+    timer = setInterval(tick, 1000);
+  }
+
+  function clearStored() { del(KEY); del(COUNT_KEY); }
+
+  var expiring = false;
+  function expire() {
+    if (expiring) return;
+    expiring = true;
+    stopTick();
+    fetch('/cart/clear.js', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' })
+      .then(function () {
+        try { sessionStorage.setItem(EXPIRED_FLAG, '1'); } catch (e) {}
+        clearStored();
+        if (window.location.pathname.indexOf('/cart') === 0) {
+          window.location.reload();
+        } else {
+          document.querySelectorAll('.header__cart-count').forEach(function (el) {
+            el.textContent = '0';
+            el.style.display = 'none';
+          });
+          document.dispatchEvent(new CustomEvent('cart:cleared-expired'));
+          expiring = false;
+        }
+      })
+      .catch(function () { expiring = false; });
+  }
+
+  function sync() {
+    fetch('/cart.js', { cache: 'no-store' })
+      .then(function (r) { return r.json(); })
+      .then(function (cart) {
+        var banner = document.querySelector('[data-cart-timer]');
+        var expiredBanner = document.querySelector('[data-cart-timer-expired]');
+        if (!cart || cart.item_count <= 0) {
+          clearStored();
+          stopTick();
+          var wasExpired = false;
+          try {
+            wasExpired = sessionStorage.getItem(EXPIRED_FLAG) === '1';
+            sessionStorage.removeItem(EXPIRED_FLAG);
+          } catch (e) {}
+          if (banner) banner.hidden = true;
+          if (wasExpired && expiredBanner) expiredBanner.hidden = false;
+          return;
+        }
+        if (expiredBanner) expiredBanner.hidden = true;
+        var lastCount = read(COUNT_KEY);
+        var deadline = parseInt(read(KEY), 10) || 0;
+        if (String(cart.item_count) !== String(lastCount) || !deadline || deadline <= Date.now()) {
+          deadline = Date.now() + MINUTES * 60000;
+          store(KEY, String(deadline));
+          store(COUNT_KEY, String(cart.item_count));
+        }
+        if (banner) banner.hidden = false;
+        startTick();
+      })
+      .catch(function () {});
+  }
+
+  window.NegaRosaCartTimer = {
+    sync: sync,
+    bump: function () { del(KEY); sync(); }
+  };
+
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) sync(); });
+  window.addEventListener('storage', function (e) {
+    if (e.key === KEY || e.key === COUNT_KEY) sync();
+  });
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', sync);
+  } else {
+    sync();
+  }
+})();
+</script>
+
+{%- endif -%}

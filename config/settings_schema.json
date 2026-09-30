@@ -957,5 +957,43 @@
         "default": false
       }
     ]
+  },
+  {
+    "name": "Carrinho",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Temporizador de reserva (limpa o carrinho)"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_timer_enabled",
+        "label": "Ativar temporizador do carrinho",
+        "info": "Se o cliente não finalizar em X minutos, o carrinho é esvaziado automaticamente.",
+        "default": false
+      },
+      {
+        "type": "range",
+        "id": "cart_timer_minutes",
+        "label": "Minutos até limpar o carrinho",
+        "min": 5,
+        "max": 120,
+        "step": 5,
+        "unit": "min",
+        "default": 30
+      },
+      {
+        "type": "text",
+        "id": "cart_timer_text",
+        "label": "Texto do aviso",
+        "default": "Seu carrinho fica reservado por"
+      },
+      {
+        "type": "text",
+        "id": "cart_timer_expired_text",
+        "label": "Texto quando o tempo esgota",
+        "default": "Seu tempo esgotou — o carrinho foi esvaziado."
+      }
+    ]
   }
 ]
