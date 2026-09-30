@@ -497,7 +497,7 @@
         "subtitle": "Quer saber mais sobre nós e nossa equipe?",
         "cta_helper": "Clique no botão abaixo",
         "button_label": "Saber mais sobre nós",
-        "button_url": ""
+        "button_url": "shopify://pages/sobre-nos"
       }
     }
   },
