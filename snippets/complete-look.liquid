@@ -109,6 +109,12 @@
   }
   .look-add.added { background: #16a34a; border-color: #16a34a; color: #fff; }
   .look-msg { font-size: 13px; font-weight: 600; color: #16a34a; text-align: center; margin: 10px 0 0; }
+  @media (max-width: 480px) {
+    .look-card { padding: var(--space-3); }
+    .look-item { flex-wrap: wrap; }
+    .look-item__info { flex: 1 1 calc(100% - 66px); }
+    .look-add { flex: 1 1 100%; padding: 10px; }
+  }
 </style>
 
 <script>
