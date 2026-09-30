@@ -15,7 +15,7 @@
         "slide-1": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/CAPA_BANNER_SITE_5.svg",
+            "image": "shopify://shop_images/CAPA_BANNER_SITE_4.svg",
             "image_mobile": "shopify://shop_images/MOBILE_900_x_1650_px_1.svg",
             "tag": "Lançamento",
             "title": "Coleção Life Urban",
@@ -26,12 +26,12 @@
             "button_url_2": "",
             "btn1_bg": "#C7D780",
             "btn1_text": "#0f0f0f",
-            "btn2_bg": "#ffffff",
+            "btn2_bg": "#FFFFFF",
             "btn2_text": "#000000",
-            "btn2_border": "#ffffff",
+            "btn2_border": "#FFFFFF",
             "text_position": "bottom-left",
             "text_color": "light",
-            "tag_color": "",
+            "tag_color": "#FFFFFF",
             "title_color": "#C7D780",
             "subtitle_color": "",
             "overlay_style": "dark"
