@@ -157,6 +157,7 @@
           <span class="header__cart-count" style="{% if cart.item_count == 0 %}display:none{% endif %}">
             {{ cart.item_count }}
           </span>
+          <span class="header__cart-timer" data-header-cart-timer hidden>--:--</span>
           <span class="header__cart-bubble" aria-hidden="true">
             <span class="header__cart-bubble-label">Sacola</span>
             <span class="header__cart-bubble-value">{{ cart.total_price | money }}</span>
@@ -166,6 +167,24 @@
 
         <style>
           .header__cart-btn { position: relative; }
+          .header__cart-timer {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 1px;
+            background: #111;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            padding: 2px 7px;
+            border-radius: 999px;
+            white-space: nowrap;
+            line-height: 1.4;
+            z-index: 61;
+          }
+          .header__cart-timer[hidden] { display: none; }
           .header__cart-bubble {
             position: absolute;
             top: calc(100% + 14px);
