@@ -156,9 +156,9 @@
         "cat-1": {
           "type": "category",
           "settings": {
-            "title": "Calçados",
-            "image": "shopify://shop_images/913_7131_20260921015420.jpg",
-            "link": "",
+            "title": "Coleção nomeaqui",
+            "image": "shopify://shop_images/CAPA_BANNER_SITE_4.svg",
+            "link": "shopify://collections/fitness",
             "cta_text": "Comprar",
             "placeholder_color": "1a1a2e",
             "placeholder_color_2": "16213e"
@@ -167,8 +167,8 @@
         "cat-2": {
           "type": "category",
           "settings": {
-            "title": "Vestuário",
-            "image": "shopify://shop_images/913_7131_20260921015420.jpg",
+            "title": "Coleção nomeaqui",
+            "image": "shopify://shop_images/CAPA_BANNER_SITE_5_689187d2-d504-490b-8070-5fce0b7a183d.svg",
             "link": "",
             "cta_text": "Comprar",
             "placeholder_color": "2d2d2d",
@@ -178,8 +178,8 @@
         "cat-3": {
           "type": "category",
           "settings": {
-            "title": "Acessórios",
-            "image": "shopify://shop_images/913_7131_20260921015420.jpg",
+            "title": "Coleção nomeaqui",
+            "image": "shopify://shop_images/1790787743936-4qd338sqkgx.jpg",
             "link": "",
             "cta_text": "Comprar",
             "placeholder_color": "3d1a1a",
@@ -407,6 +407,7 @@
         "banner_xggQ6h",
         "banner_UzNb4t"
       ],
+      "disabled": true,
       "name": "Banner Dividido",
       "settings": {}
     },
