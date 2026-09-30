@@ -52,7 +52,7 @@
           {%- endif -%}
 
           {%- if block.settings.title != blank -%}
-            <h1 class="hero-banner__title"{% if block.settings.title_color != blank %} style="color: {{ block.settings.title_color }};"{% endif %}>{{ block.settings.title }}</h1>
+            <h1 class="hero-banner__title hero-banner__title--lines-{{ block.settings.title_lines | default: 'auto' }}"{% if block.settings.title_color != blank %} style="color: {{ block.settings.title_color }};"{% endif %}>{{ block.settings.title }}</h1>
           {%- endif -%}
 
           {%- if block.settings.subtitle != blank -%}
@@ -369,6 +369,17 @@
             { "value": "dark", "label": "Escuro" }
           ],
           "default": "light"
+        },
+        {
+          "type": "select",
+          "id": "title_lines",
+          "label": "Título em quantas linhas (desktop)",
+          "options": [
+            { "value": "auto", "label": "Automático" },
+            { "value": "1", "label": "1 linha" },
+            { "value": "2", "label": "2 linhas" }
+          ],
+          "default": "auto"
         },
         {
           "type": "color",
