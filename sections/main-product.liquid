@@ -2419,26 +2419,35 @@
       });
     }
 
-    // Mobile: mover descrição para o final, abaixo das formas de pagamento (trust badges)
+    // Mobile: mover descrição + acordeões (envio/pagamento) para o final,
+    // abaixo das formas de pagamento (trust badges)
     (function relocateDescriptionMobile(){
       var descEl = document.querySelector('.product-gallery > .product-description-full');
+      var detailsEl = document.querySelector('.product-gallery > .product-details');
       var anchorEl = document.querySelector('.frete-calc') || document.querySelector('.product-trust');
       var galleryEl = document.querySelector('.product-gallery');
-      if (!descEl || !anchorEl || !galleryEl) return;
-      var placeholder = document.createComment('desc-original-slot');
-      var originalParent = descEl.parentNode;
-      var originalNext = descEl.nextSibling;
-      originalParent.insertBefore(placeholder, descEl);
+      if ((!descEl && !detailsEl) || !anchorEl || !galleryEl) return;
+      var descPh = document.createComment('desc-original-slot');
+      var detailsPh = document.createComment('details-original-slot');
+      if (descEl) descEl.parentNode.insertBefore(descPh, descEl);
+      if (detailsEl) detailsEl.parentNode.insertBefore(detailsPh, detailsEl);
       var mq = window.matchMedia('(max-width: 767px)');
       function apply(e){
         if (e.matches) {
-          if (descEl.previousSibling !== anchorEl) {
+          if (descEl && descEl.previousSibling !== anchorEl) {
             anchorEl.parentNode.insertBefore(descEl, anchorEl.nextSibling);
+          }
+          var afterDesc = descEl || anchorEl;
+          if (detailsEl && detailsEl.previousSibling !== afterDesc) {
+            afterDesc.parentNode.insertBefore(detailsEl, afterDesc.nextSibling);
           }
 
         } else {
-          if (placeholder.parentNode) {
-            placeholder.parentNode.insertBefore(descEl, placeholder);
+          if (descEl && descPh.parentNode) {
+            descPh.parentNode.insertBefore(descEl, descPh);
+          }
+          if (detailsEl && detailsPh.parentNode) {
+            detailsPh.parentNode.insertBefore(detailsEl, detailsPh);
           }
         }
       }
