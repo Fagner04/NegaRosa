@@ -203,11 +203,7 @@
 
   @media (max-width: 767px) {
     .product-gallery {
-      grid-template-columns: 1fr;
-      grid-template-areas:
-        "main"
-        "desc"
-        "acc";
+      display: block;
     }
     .product-gallery__thumbs { display: none; }
     .product-gallery__main {
@@ -1176,6 +1172,7 @@
     /* Info como drawer moderno sobre a foto (só mobile) */
     .product-container { gap: 0; }
     .product-gallery__mobile-carousel { border-radius: var(--border-radius-lg, 12px) var(--border-radius-lg, 12px) 0 0; }
+    .product-gallery__main { padding-bottom: 30px; }
     .product-info {
       background: var(--color-bg, #fff);
       border-radius: 22px 22px 0 0;
