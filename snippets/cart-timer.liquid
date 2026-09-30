@@ -14,7 +14,7 @@
 {%- if banner -%}
 <div class="cart-timer" data-cart-timer hidden>
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-  <span>{{ settings.cart_timer_text | default: 'Seu carrinho fica reservado por' }} <strong data-cart-timer-count>--:--</strong></span>
+  <span>{{ settings.cart_timer_text | default: 'Seu carrinho encerra em' }} <strong data-cart-timer-count>--:--</strong></span>
 </div>
 <div class="cart-timer cart-timer--expired" data-cart-timer-expired hidden>
   <span>{{ settings.cart_timer_expired_text | default: 'Seu tempo esgotou — o carrinho foi esvaziado.' }}</span>

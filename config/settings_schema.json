@@ -986,7 +986,7 @@
         "type": "text",
         "id": "cart_timer_text",
         "label": "Texto do aviso",
-        "default": "Seu carrinho fica reservado por"
+        "default": "Seu carrinho encerra em"
       },
       {
         "type": "text",
