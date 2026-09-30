@@ -15,7 +15,7 @@
         "slide-1": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/CAPA_BANNER_SITE_2.png",
+            "image": "shopify://shop_images/CAPA_BANNER_SITE_5.svg",
             "image_mobile": "shopify://shop_images/MOBILE_900_x_1650_px.png",
             "tag": "Lançamento",
             "title": "CONECTE-SE AGORA",
@@ -475,7 +475,6 @@
         "bg_gradient_start": "#f287b5",
         "bg_gradient_end": "#ffffff",
         "bg_gradient_direction": "cima",
-        "logo": "shopify://shop_images/Deixe_sua_avaliacao_800_x_800_px_1.svg",
         "show_badge": true,
         "badge_color": "#eb76ac",
         "title": "Pouco De Nós",
