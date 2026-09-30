@@ -185,6 +185,14 @@
             z-index: 61;
           }
           .header__cart-timer[hidden] { display: none; }
+          @media (max-width: 640px) {
+            .header__cart-timer {
+              top: 100%;
+              left: 50%;
+              transform: translateX(-50%);
+              margin: 3px 0 0;
+            }
+          }
           .header__cart-bubble {
             position: absolute;
             top: calc(100% + 14px);
