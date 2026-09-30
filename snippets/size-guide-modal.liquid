@@ -56,18 +56,15 @@
 
 <script>
   (function() {
-    var root = document.currentScript.previousElementSibling;
-    if (!root || root.tagName !== 'SIZE-GUIDE-MODAL') {
-      // fallback: last size-guide-modal on page
-      var all = document.querySelectorAll('size-guide-modal');
-      root = all[all.length - 1];
-    }
-    if (!root) return;
+    function bindRoot(root) {
+      if (!root || root.dataset.sgBound) return;
+      root.dataset.sgBound = '1';
 
-    var overlay = root.querySelector('[data-sg-overlay]');
-    var openBtn = root.querySelector('[data-sg-open]');
-    var closeBtn = root.querySelector('[data-sg-close]');
-    var body = root.querySelector('[data-sg-body]');
+      var overlay = root.querySelector('[data-sg-overlay]');
+      var openBtn = root.querySelector('[data-sg-open]');
+      var closeBtn = root.querySelector('[data-sg-close]');
+      var body = root.querySelector('[data-sg-body]');
+      if (!overlay || !openBtn) return;
 
     function open() {
       overlay.classList.remove('closing');
@@ -161,6 +158,40 @@
       });
     });
     {%- endif -%}
+    } // end bindRoot
+
+    function bindAll() {
+      document.querySelectorAll('size-guide-modal').forEach(bindRoot);
+    }
+    bindAll();
+    document.addEventListener('DOMContentLoaded', bindAll);
+
+    // Delegação global: garante abrir/fechar mesmo após re-render do tema
+    if (!window.__sgDelegated) {
+      window.__sgDelegated = true;
+      document.addEventListener('click', function(e) {
+        var t = e.target && e.target.closest ? e.target.closest('[data-sg-open],[data-sg-close]') : null;
+        if (!t) return;
+        var r = t.closest('size-guide-modal');
+        if (!r) return;
+        bindRoot(r);
+        var ov = r.querySelector('[data-sg-overlay]');
+        if (!ov) return;
+        if (t.hasAttribute('data-sg-open')) {
+          ov.classList.remove('closing');
+          ov.classList.add('open');
+          ov.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+        } else {
+          ov.classList.add('closing');
+          setTimeout(function() {
+            ov.classList.remove('open', 'closing');
+            ov.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+          }, 160);
+        }
+      });
+    }
   })();
 </script>
 
