@@ -29,7 +29,7 @@
             "btn2_bg": "#FFFFFF",
             "btn2_text": "#000000",
             "btn2_border": "#FFFFFF",
-            "text_position": "bottom-left",
+            "text_position": "bottom-center",
             "text_color": "light",
             "tag_color": "#FFFFFF",
             "title_color": "#C7D780",
