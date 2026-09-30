@@ -203,8 +203,8 @@
     "featured-offers": {
       "type": "featured-collection",
       "settings": {
-        "title": "Ofertas",
-        "subtitle": "Até 40% OFF em produtos selecionados",
+        "title": "Últimas  novidades",
+        "subtitle": "Coleções nova",
         "collection": "fitness",
         "products_to_show": 7,
         "columns": "4",
