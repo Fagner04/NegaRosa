@@ -230,19 +230,6 @@
             "link": "shopify://products/conjunto-momentum"
           }
         },
-        "video_46eRnJ": {
-          "type": "video",
-          "settings": {
-            "image": "shopify://shop_images/913_7150_20260921132447.jpg",
-            "video_type": "mp4",
-            "video_id": "https://cdn.shopify.com/videos/c/o/v/71cb371e8bbd48b3abba1c5618f401e3.mp4",
-            "product_title": "Olhar Conectado",
-            "info_text": "",
-            "show_badge": true,
-            "tag": "Lançamento",
-            "link": "shopify://products/maio-rose"
-          }
-        },
         "video_7ChRmG": {
           "type": "video",
           "settings": {
@@ -282,7 +269,6 @@
       },
       "block_order": [
         "video_Rh7fGR",
-        "video_46eRnJ",
         "video_7ChRmG",
         "video_XFQHX6",
         "video_XWz9ph"
