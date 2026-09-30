@@ -1693,11 +1693,11 @@
             </div>
           </div>
 
-          <!-- Widget de Frete (movido para logo abaixo do botão Adicionar à Sacola) -->
-          {%- render 'frete-calculator', product: product -%}
-
           <!-- Monte o Look (só aparece se o metafield custom.complete_o_look estiver preenchido) -->
           {%- render 'complete-look', product: product -%}
+
+          <!-- Widget de Frete (movido para logo abaixo do botão Adicionar à Sacola) -->
+          {%- render 'frete-calculator', product: product -%}
 
           <!-- Card frete/devolução (padrão EmporioBody) -->
           {%- render 'shipping-info' -%}
