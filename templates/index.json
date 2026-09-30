@@ -112,6 +112,7 @@
         },
         "announcement_ikemzd": {
           "type": "announcement",
+          "disabled": true,
           "settings": {
             "text": "FRETE GRÁTIS acima de R$399,90| Parcele em até 3x sem juros",
             "link": ""
