@@ -11,6 +11,56 @@
 
 {%- if settings.cart_timer_enabled -%}
 
+<a class="cart-balloon" data-cart-balloon href="{{ routes.cart_url }}" hidden aria-label="Ver sacola">
+  <span class="cart-balloon__icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
+    <span class="cart-balloon__qty" data-cart-balloon-qty>0</span>
+  </span>
+  <span class="cart-balloon__time" data-cart-balloon-time>--:--</span>
+</a>
+<style>
+  .cart-balloon {
+    position: fixed;
+    left: 16px;
+    bottom: 16px;
+    z-index: 900;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #111;
+    color: #fff;
+    border-radius: 999px;
+    padding: 10px 16px 10px 12px;
+    text-decoration: none;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .cart-balloon[hidden] { display: none; }
+  .cart-balloon__icon { position: relative; display: inline-flex; }
+  .cart-balloon__qty {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: #D81B73;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+  .cart-balloon__time { font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+  @media (max-width: 640px) {
+    .cart-balloon { left: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); }
+  }
+</style>
+
 {%- if banner -%}
 <div class="cart-timer" data-cart-timer hidden>
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -65,11 +115,19 @@
   }
 
   function paint() {
-    var banner = document.querySelector('[data-cart-timer]');
-    if (!banner || banner.hidden) return;
-    var countEl = banner.querySelector('[data-cart-timer-count]');
     var deadline = parseInt(read(KEY), 10) || 0;
-    if (countEl && deadline > 0) countEl.textContent = fmt(deadline - Date.now());
+    if (!deadline) return;
+    var left = fmt(deadline - Date.now());
+    var banner = document.querySelector('[data-cart-timer]');
+    if (banner && !banner.hidden) {
+      var countEl = banner.querySelector('[data-cart-timer-count]');
+      if (countEl) countEl.textContent = left;
+    }
+    var balloon = document.querySelector('[data-cart-balloon]');
+    if (balloon && !balloon.hidden) {
+      var timeEl = balloon.querySelector('[data-cart-balloon-time]');
+      if (timeEl) timeEl.textContent = left;
+    }
   }
 
   var timer = null;
@@ -119,6 +177,7 @@
       .then(function (cart) {
         var banner = document.querySelector('[data-cart-timer]');
         var expiredBanner = document.querySelector('[data-cart-timer-expired]');
+        var balloon = document.querySelector('[data-cart-balloon]');
         if (!cart || cart.item_count <= 0) {
           clearStored();
           stopTick();
@@ -128,6 +187,7 @@
             sessionStorage.removeItem(EXPIRED_FLAG);
           } catch (e) {}
           if (banner) banner.hidden = true;
+          if (balloon) balloon.hidden = true;
           if (wasExpired && expiredBanner) expiredBanner.hidden = false;
           return;
         }
@@ -140,6 +200,11 @@
           store(COUNT_KEY, String(cart.item_count));
         }
         if (banner) banner.hidden = false;
+        if (balloon) {
+          var qtyEl = balloon.querySelector('[data-cart-balloon-qty]');
+          if (qtyEl) qtyEl.textContent = cart.item_count > 99 ? '99+' : String(cart.item_count);
+          balloon.hidden = false;
+        }
         startTick();
       })
       .catch(function () {});

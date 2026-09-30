@@ -751,10 +751,11 @@ body.menu-open .overlay {
   -webkit-backdrop-filter: blur(3px);
 }
 
-/* WhatsApp e CUPOM ficam por baixo do drawer + overlay no mobile */
+/* WhatsApp, CUPOM e balão do carrinho ficam por baixo do drawer + overlay no mobile */
 body.menu-open .zap-widget,
 body.menu-open .coupon-tab,
-body.menu-open .coupon-card {
+body.menu-open .coupon-card,
+body.menu-open .cart-balloon {
   z-index: 250 !important;
 }
 
