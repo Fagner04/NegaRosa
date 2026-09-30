@@ -37,7 +37,7 @@
     "color_button_text": "#FFFFFF",
     "color_button_secondary_bg": "#000000",
     "section_spacing": 30,
-    "frete_api_url": "https://script.google.com/macros/s/AKfycbxJUlNn9j9RqbpM3DN_yPD0ULlpwihJ6qaX9jMtN3B0obRiRv93S1PXNqcXr53NpwJJ/exec",
+    "frete_api_url": "https://script.google.com/macros/s/AKfycbzzQpRSs2k8hICabZ8UDZhN21qKk6Rrh0Mbap57r5XNq7fN6Gg0XR0aH310ZHRqOzy6/exec",
     "addzap": true,
     "colorzap": "#F287B5",
     "coupon_enabled": true,
