@@ -142,6 +142,13 @@
     {% section 'header' %}
   </div>
   <div class="header-spacer"></div>
+  <script>
+    (function () {
+      var ft = document.querySelector('.fixed-top');
+      var sp = document.querySelector('.header-spacer');
+      if (ft && sp) sp.style.height = ft.offsetHeight + 'px';
+    })();
+  </script>
 
   <!-- Main Content -->
   <main id="MainContent" class="main-content" role="main" tabindex="-1">
