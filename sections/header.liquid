@@ -185,6 +185,8 @@
             z-index: 61;
           }
           .header__cart-timer[hidden] { display: none; }
+          .header__cart-timer { transition: opacity .25s ease, visibility .25s; }
+          .fixed-top.hidden .header__cart-timer { opacity: 0; visibility: hidden; }
           @media (max-width: 640px) {
             .header__cart-timer {
               top: 100%;
