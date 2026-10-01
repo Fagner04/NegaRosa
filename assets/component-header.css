@@ -219,6 +219,7 @@
 .header__nav-link {
   display: flex;
   align-items: center;
+  gap: 5px;
   height: 100%;
   padding: 0 var(--space-4);
   font-size: var(--font-size-base);
@@ -227,6 +228,16 @@
   position: relative;
   transition: color var(--transition-fast);
   white-space: nowrap;
+}
+
+.header__nav-chevron {
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition: transform 0.25s ease;
+}
+
+.header__nav-item:hover .header__nav-chevron {
+  transform: rotate(180deg);
 }
 
 .header__nav-link::after {
