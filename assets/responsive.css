@@ -367,8 +367,8 @@
     width: calc(50% - var(--space-2));
   }
 
-  /* Trending */
-  .trending-section__nav {
+  /* Trending: esconde as setas no mobile (carrossel é swipe), mas mantém o Ver todos */
+  .trending-section__nav-btn {
     display: none;
   }
 
