@@ -5,11 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-  {%- if settings.header_bg_gradient -%}
-    <meta name="theme-color" content="{{ settings.header_bg_gradient_end | default: '#F287B5' }}">
-  {%- else -%}
-    <meta name="theme-color" content="{{ settings.header_bg_color | default: settings.color_primary }}">
-  {%- endif -%}
+  <meta name="theme-color" content="#FFFFFF">
   <script>
     /* iOS: remove o theme-color (cor sólida) para a barra de status mostrar
        o gradiente real do header (a página estende sob o notch via viewport-fit=cover) */
