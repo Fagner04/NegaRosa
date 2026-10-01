@@ -6,18 +6,6 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <meta name="theme-color" content="#FFFFFF">
-  <script>
-    /* iOS: remove o theme-color (cor sólida) para a barra de status mostrar
-       o gradiente real do header (a página estende sob o notch via viewport-fit=cover) */
-    (function () {
-      var p = navigator.platform || '';
-      var ios = /iPhone|iPad|iPod/.test(p) || (p === 'MacIntel' && navigator.maxTouchPoints > 1);
-      if (ios) {
-        var m = document.querySelector('meta[name="theme-color"]');
-        if (m && m.parentNode) m.parentNode.removeChild(m);
-      }
-    })();
-  </script>
 
   {%- if settings.favicon != blank -%}
     <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
