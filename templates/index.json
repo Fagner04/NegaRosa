@@ -307,9 +307,9 @@
     "trending": {
       "type": "trending-now",
       "settings": {
-        "title": "Em Alta Agora",
+        "title": "Vitrine da semana",
         "subtitle": "Os produtos mais desejados do momento",
-        "collection": "fitness",
+        "collection": "vitrine",
         "products_to_show": 8
       }
     },
