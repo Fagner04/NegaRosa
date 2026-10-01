@@ -2361,12 +2361,14 @@
         carousel.addEventListener('mousedown', function (e) {
           isDown = true; dragMoved = false;
           startX = e.pageX; startLeft = carousel.scrollLeft;
-          carousel.classList.add('is-dragging');
         });
         carousel.addEventListener('mousemove', function (e) {
           if (!isDown) return;
           carousel.scrollLeft = startLeft - (e.pageX - startX);
-          if (Math.abs(carousel.scrollLeft - startLeft) > 6) dragMoved = true;
+          if (Math.abs(carousel.scrollLeft - startLeft) > 6) {
+            dragMoved = true;
+            carousel.classList.add('is-dragging');
+          }
         });
         ['mouseup', 'mouseleave'].forEach(function (ev) {
           carousel.addEventListener(ev, function () {
