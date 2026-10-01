@@ -159,12 +159,14 @@
     var section = document.getElementById('reels-{{ section.id }}');
     var modal = document.getElementById('ReelsModal-{{ section.id }}');
     var player = modal.querySelector('[data-reels-player]');
+    var modalContent = modal.querySelector('.reels-modal__content');
     var closeBtn = modal.querySelector('[data-reels-close]');
     var cards = section.querySelectorAll('.reels__card');
 
     function closeModal() {
       modal.classList.remove('open');
       player.innerHTML = '';
+      if (modalContent) modalContent.classList.remove('reels-modal__content--tiktok');
       document.body.style.overflow = '';
     }
 
@@ -179,6 +181,7 @@
         if (!id) return;
 
         var html = '';
+        var isTiktok = false;
         if (type === 'youtube' && id) {
           html = '<iframe class="reels-modal__iframe" src="https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>';
         } else if (type === 'vimeo' && id) {
@@ -187,13 +190,22 @@
           var tiktokId = (id || '').trim();
           var tiktokMatch = tiktokId.match(/(\d{8,})/);
           if (tiktokMatch) tiktokId = tiktokMatch[1];
-          html = '<iframe class="reels-modal__iframe" src="https://www.tiktok.com/player/v1/' + tiktokId + '?rel=0&autoplay=1&music_info=0&description=0" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen loading="lazy" title="TikTok video"></iframe>';
+          var ttCite = (id.indexOf('tiktok.com') > -1) ? id.trim().split('?')[0] : 'https://www.tiktok.com/video/' + tiktokId;
+          html = '<blockquote class="tiktok-embed" cite="' + ttCite + '" data-video-id="' + tiktokId + '" style="max-width: 605px; min-width: 325px;"><section></section></blockquote>';
+          isTiktok = true;
         } else if (type === 'mp4' && id) {
           html = '<video class="reels-modal__video" src="' + id + '" autoplay loop playsinline controls></video>';
         }
 
         if (html) {
           player.innerHTML = html;
+          if (modalContent) modalContent.classList.toggle('reels-modal__content--tiktok', isTiktok);
+          if (isTiktok) {
+            var ttScript = document.createElement('script');
+            ttScript.src = 'https://www.tiktok.com/embed.js';
+            ttScript.async = true;
+            player.appendChild(ttScript);
+          }
           modal.classList.add('open');
           document.body.style.overflow = 'hidden';
         }

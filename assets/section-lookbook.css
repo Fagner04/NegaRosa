@@ -538,6 +538,23 @@
   border: none;
 }
 
+/* TikTok embed oficial (blockquote + embed.js): altura automática, sem faixa preta */
+.reels-modal__content--tiktok {
+  aspect-ratio: auto;
+  width: min(100%, 380px);
+  max-height: 85vh;
+  overflow-y: auto;
+  background-color: #fff;
+}
+.reels-modal__content--tiktok .tiktok-embed {
+  margin: 0 !important;
+  min-width: 0 !important;
+}
+.reels-modal__content--tiktok iframe {
+  width: 100% !important;
+  margin: 0 !important;
+}
+
 .reels-modal__video {
   width: 100%;
   height: 100%;
