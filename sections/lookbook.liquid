@@ -184,10 +184,10 @@
         } else if (type === 'vimeo' && id) {
           html = '<iframe class="reels-modal__iframe" src="https://player.vimeo.com/video/' + id + '?autoplay=1" allow="autoplay" allowfullscreen loading="lazy"></iframe>';
         } else if (type === 'tiktok' && id) {
-          var tiktokId = id;
-          var tiktokMatch = id.match(/\/video\/(\d+)/);
+          var tiktokId = (id || '').trim();
+          var tiktokMatch = tiktokId.match(/(\d{8,})/);
           if (tiktokMatch) tiktokId = tiktokMatch[1];
-          html = '<iframe class="reels-modal__iframe" src="https://www.tiktok.com/embed/v2/' + tiktokId + '" allow="autoplay" allowfullscreen loading="lazy"></iframe>';
+          html = '<iframe class="reels-modal__iframe" src="https://www.tiktok.com/player/v1/' + tiktokId + '?rel=0&autoplay=1&music_info=0&description=0" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen loading="lazy" title="TikTok video"></iframe>';
         } else if (type === 'mp4' && id) {
           html = '<video class="reels-modal__video" src="' + id + '" autoplay loop playsinline controls></video>';
         }
