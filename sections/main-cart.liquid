@@ -399,7 +399,7 @@
           <h2 class="cart-summary__title">Resumo</h2>
 
           {%- comment -%} Cálculo antecipado do atacado — reaproveitado no resumo e no card {%- endcomment -%}
-          {%- assign wholesale_min = section.settings.wholesale_min_qty | default: settings.wholesale_min_qty | default: settings.conectwhats_atacado_min_qty | default: 6 -%}
+          {%- assign wholesale_min = section.settings.wholesale_min_qty | default: 6 -%}
           {%- assign total_items = cart.item_count -%}
           {%- assign progress = total_items | times: 100 | divided_by: wholesale_min -%}
           {%- if progress > 100 -%}{%- assign progress = 100 -%}{%- endif -%}
