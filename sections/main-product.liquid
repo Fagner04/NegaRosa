@@ -2490,10 +2490,36 @@
           price: "{{ variant.price | money }}",
           price_cents: {{ variant.price }},
           compare_at_price: {% if variant.compare_at_price %}"{{ variant.compare_at_price | money }}"{% else %}null{% endif %},
-          compare_at_price_cents: {% if variant.compare_at_price %}{{ variant.compare_at_price }}{% else %}null{% endif %}
+          compare_at_price_cents: {% if variant.compare_at_price %}{{ variant.compare_at_price }}{% else %}null{% endif %},
+          image: {% if variant.image %}"{{ variant.image | image_url: width: 1000 }}"{% else %}null{% endif %}
         }{% unless forloop.last %},{% endunless %}
       {%- endfor -%}
     ];
+
+    function updateGallery(imageUrl) {
+      if (!imageUrl) return;
+      var main = document.getElementById('ProductMainImage');
+      if (main && main.getAttribute('src') !== imageUrl) main.setAttribute('src', imageUrl);
+      var thumbs = document.querySelectorAll('.product-gallery__thumb');
+      thumbs.forEach(function (t) {
+        t.classList.toggle('active', t.getAttribute('data-image-url') === imageUrl);
+      });
+      var carousel = document.getElementById('ProductMobileCarousel');
+      var dotsWrap = document.getElementById('ProductMobileDots');
+      if (carousel) {
+        var slides = carousel.querySelectorAll('.product-gallery__mobile-slide img');
+        for (var i = 0; i < slides.length; i++) {
+          if (slides[i].getAttribute('src') === imageUrl) {
+            carousel.scrollTo({ left: i * carousel.clientWidth, behavior: 'smooth' });
+            if (dotsWrap) {
+              var dots = dotsWrap.querySelectorAll('.product-gallery__mobile-dot');
+              dots.forEach(function (d, di) { d.classList.toggle('active', di === i); });
+            }
+            break;
+          }
+        }
+      }
+    }
 
     // Product Gallery — Mobile Carousel (dots ↔ swipe)
     (function initMobileGalleryCarousel(){
@@ -2787,7 +2813,8 @@
 
       if (matchedVariant) {
         variantIdInput.value = matchedVariant.id;
-        
+        updateGallery(matchedVariant.image);
+
         // Update Price Display
         if (priceWrapper) {
           if (matchedVariant.compare_at_price) {
