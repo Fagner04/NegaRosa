@@ -39,7 +39,7 @@
     "section_spacing": 30,
     "frete_api_url": "https://script.google.com/macros/s/AKfycbzzQpRSs2k8hICabZ8UDZhN21qKk6Rrh0Mbap57r5XNq7fN6Gg0XR0aH310ZHRqOzy6/exec",
     "addzap": true,
-    "colorzap": "#C9D691",
+    "colorzap": "#F287B5",
     "whatsapp_schedule_enabled": true,
     "whatsapp_weekday_start": "08:00",
     "whatsapp_saturday_start": "",
