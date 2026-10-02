@@ -15,15 +15,22 @@
   <div class="look-list">
     {%- for lp in look_products -%}
       {%- if lp.title != blank -%}
+        {%- assign lp_color_idx = nil -%}
         {%- assign lp_size_idx = nil -%}
         {%- for opt in lp.options_with_values -%}
           {%- assign on = opt.name | downcase -%}
-          {%- if on contains 'tamanho' or on contains 'size' -%}
+          {%- if on == 'cor' or on == 'color' or on == 'colour' or on == 'cores' -%}
+            {%- assign lp_color_idx = forloop.index0 -%}
+          {%- elsif on contains 'tamanho' or on contains 'size' -%}
             {%- assign lp_size_idx = forloop.index0 -%}
-            {%- break -%}
           {%- endif -%}
         {%- endfor -%}
-        <div class="look-item" data-look-item>
+        {%- assign lp_def = lp.selected_or_first_available_variant -%}
+        {%- if lp_def == nil -%}
+          {%- for v in lp.variants -%}{%- if v.available -%}{%- assign lp_def = v -%}{%- break -%}{%- endif -%}{%- endfor -%}
+        {%- endif -%}
+        {%- if lp_def == nil -%}{%- assign lp_def = lp.variants.first -%}{%- endif -%}
+        <div class="look-item" data-look-item data-handle="{{ lp.handle }}" data-color-idx="{{ lp_color_idx }}" data-size-idx="{{ lp_size_idx }}">
           <a class="look-item__img" href="{{ lp.url }}">
             {%- if lp.featured_image != blank -%}
               <img src="{{ lp.featured_image | image_url: width: 200 }}" alt="{{ lp.title | escape }}" width="200" height="200" loading="lazy">
@@ -32,31 +39,90 @@
           <div class="look-item__info">
             <span class="look-item__title">{{ lp.title }}</span>
             <span class="look-item__price">{{ lp.price | money }}</span>
+            {%- if lp_color_idx != nil -%}
+              <div class="look-item__colors" data-look-colors>
+                {%- for value in lp.options_with_values[lp_color_idx].values -%}
+                  {%- assign has_av = false -%}
+                  {%- for v in lp.variants -%}
+                    {%- if v.options[lp_color_idx] == value and v.available -%}{%- assign has_av = true -%}{%- break -%}{%- endif -%}
+                  {%- endfor -%}
+                  {%- if has_av -%}
+                    {%- liquid
+                      assign swatch_color = '#cccccc'
+                      assign value_lower = value | downcase
+                      assign swatch_meta_val = lp.metafields.custom.swatch_colors.value | default: ''
+                      if swatch_meta_val != ''
+                        assign cm_size = swatch_meta_val | size
+                        assign cm_first_size = swatch_meta_val | first | size
+                        if cm_first_size > cm_size
+                          assign cm_str = swatch_meta_val | join: '|'
+                        else
+                          assign cm_str = swatch_meta_val
+                        endif
+                        assign entries = cm_str | split: '|'
+                        for entry in entries
+                          assign parts = entry | split: '#'
+                          if parts.size == 2
+                            assign meta_name = parts[0] | strip | remove: ':' | downcase
+                            if meta_name == value_lower
+                              assign swatch_color = parts[1] | strip | prepend: '#'
+                            endif
+                          endif
+                        endfor
+                      endif
+                      if swatch_color == '#cccccc'
+                        if value_lower contains 'preto' or value_lower contains 'preta' or value_lower contains 'black'
+                          assign swatch_color = '#000000'
+                        elsif value_lower contains 'branco' or value_lower contains 'branca' or value_lower contains 'white'
+                          assign swatch_color = '#ffffff'
+                        elsif value_lower contains 'vermelho' or value_lower contains 'vermelha' or value_lower contains 'red'
+                          assign swatch_color = '#e60000'
+                        elsif value_lower contains 'marinho' or value_lower contains 'navy'
+                          assign swatch_color = '#001f5b'
+                        elsif value_lower contains 'azul' or value_lower contains 'blue'
+                          assign swatch_color = '#0044ff'
+                        elsif value_lower contains 'verde' or value_lower contains 'green'
+                          assign swatch_color = '#00aa33'
+                        elsif value_lower contains 'cinza' or value_lower contains 'grey' or value_lower contains 'gray'
+                          assign swatch_color = '#888888'
+                        elsif value_lower contains 'rosa' or value_lower contains 'pink'
+                          assign swatch_color = '#ff69b4'
+                        elsif value_lower contains 'amarelo' or value_lower contains 'yellow'
+                          assign swatch_color = '#f5c518'
+                        elsif value_lower contains 'laranja' or value_lower contains 'orange'
+                          assign swatch_color = '#ff6600'
+                        elsif value_lower contains 'roxo' or value_lower contains 'purple' or value_lower contains 'violeta'
+                          assign swatch_color = '#7b2fbe'
+                        elsif value_lower contains 'bege' or value_lower contains 'beige' or value_lower contains 'nude'
+                          assign swatch_color = '#c8a882'
+                        elsif value_lower contains 'caramelo' or value_lower contains 'camel' or value_lower contains 'marrom' or value_lower contains 'brown'
+                          assign swatch_color = '#8b4513'
+                        endif
+                      endif
+                    -%}
+                    <button type="button" class="look-color{% if lp_def.options[lp_color_idx] == value %} active{% endif %}" data-look-color data-value="{{ value | escape }}" style="background-color: {{ swatch_color }};" title="{{ value | escape }}" aria-label="{{ value | escape }}"></button>
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
             {%- if lp_size_idx != nil -%}
               <div class="look-item__sizes">
-                {%- assign first_set = false -%}
                 {%- for value in lp.options_with_values[lp_size_idx].values -%}
-                  {%- assign vv_id = nil -%}
+                  {%- assign has_av = false -%}
                   {%- for v in lp.variants -%}
-                    {%- if v.options[lp_size_idx] == value and v.available -%}
-                      {%- assign vv_id = v.id -%}
-                      {%- break -%}
-                    {%- endif -%}
+                    {%- if v.options[lp_size_idx] == value and v.available -%}{%- assign has_av = true -%}{%- break -%}{%- endif -%}
                   {%- endfor -%}
-                  {%- if vv_id -%}
-                    <button type="button" class="look-size{% unless first_set %} active{% assign first_set = true %}{% endunless %}" data-variant-id="{{ vv_id }}" data-look-size>{{ value }}</button>
+                  {%- if has_av -%}
+                    <button type="button" class="look-size{% if lp_def.options[lp_size_idx] == value %} active{% endif %}" data-look-size data-value="{{ value | escape }}">{{ value }}</button>
                   {%- endif -%}
                 {%- endfor -%}
               </div>
             {%- endif -%}
           </div>
-          <button type="button" class="look-add" data-look-add="{%- assign lp_first_av = nil -%}{%- for v in lp.variants -%}{%- if v.available -%}{%- assign lp_first_av = v.id -%}{%- break -%}{%- endif -%}{%- endfor -%}{{ lp_first_av | default: lp.selected_or_first_available_variant.id }}">Adicionar</button>
+          <button type="button" class="look-add" data-look-add="{{ lp_def.id }}">Adicionar</button>
         </div>
       {%- endif -%}
     {%- endfor -%}
-  </div>
-  <button type="button" class="btn btn-primary w-full" data-look-add-all style="margin-top: 12px;">Adicionar look completo</button>
-  <p class="look-msg" data-look-msg hidden></p>
 </div>
 
 <style>
@@ -91,6 +157,13 @@
   .look-item__info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
   .look-item__title { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .look-item__price { font-size: 13px; font-weight: 600; color: #7F1D1D; }
+  .look-item__colors { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+  .look-color {
+    width: 24px; height: 24px; padding: 0;
+    border-radius: 50%; border: 1px solid var(--color-border);
+    cursor: pointer; flex-shrink: 0;
+  }
+  .look-color.active { outline: 2px solid var(--color-primary); outline-offset: 2px; }
   .look-item__sizes { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
   .look-size {
     min-width: 24px; height: 24px; padding: 0 6px;
@@ -110,7 +183,6 @@
     cursor: pointer;
   }
   .look-add.added { background: #16a34a; border-color: #16a34a; color: #fff; }
-  .look-msg { font-size: 13px; font-weight: 600; color: #16a34a; text-align: center; margin: 10px 0 0; }
   @media (max-width: 480px) {
     .look-card { padding: var(--space-3); }
     .look-item { flex-wrap: wrap; }
@@ -124,20 +196,59 @@
   if (window.__nrLookBound) return;
   window.__nrLookBound = true;
 
+  var prodCache = {};
+  function getProd(handle, cb) {
+    if (!handle) { cb(null); return; }
+    if (prodCache[handle]) { cb(prodCache[handle]); return; }
+    fetch('/products/' + handle + '.js', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (p) {
+      prodCache[handle] = p;
+      cb(p);
+    }).catch(function () { cb(null); });
+  }
+  function selectedVal(item, sel) {
+    var b = item.querySelector(sel + '.active');
+    return b ? b.getAttribute('data-value') : null;
+  }
+  function resolveItem(item) {
+    var handle = item.getAttribute('data-handle');
+    var cIdx = parseInt(item.getAttribute('data-color-idx'), 10);
+    var sIdx = parseInt(item.getAttribute('data-size-idx'), 10);
+    if (isNaN(cIdx)) cIdx = null;
+    if (isNaN(sIdx)) sIdx = null;
+    var selColor = selectedVal(item, '[data-look-color]');
+    var selSize = selectedVal(item, '[data-look-size]');
+    if (cIdx === null && sIdx === null) return;
+    getProd(handle, function (p) {
+      if (!p || !p.variants) return;
+      var match = null, fallback = null;
+      for (var i = 0; i < p.variants.length; i++) {
+        var v = p.variants[i];
+        var okC = (cIdx === null || v.options[cIdx] === selColor);
+        var okS = (sIdx === null || v.options[sIdx] === selSize);
+        if (okC && okS) {
+          if (v.available) { match = v; break; }
+          if (!fallback) fallback = v;
+        }
+      }
+      var best = match || fallback;
+      if (best) {
+        var add = item.querySelector('[data-look-add]');
+        if (add) add.setAttribute('data-look-add', best.id);
+      }
+    });
+  }
   document.addEventListener('click', function (e) {
-    var sizeBtn = e.target.closest ? e.target.closest('[data-look-size]') : null;
-    if (sizeBtn) {
-      var item = sizeBtn.closest('[data-look-item]');
-      item.querySelectorAll('[data-look-size]').forEach(function (b) { b.classList.remove('active'); });
-      sizeBtn.classList.add('active');
-      var add = item.querySelector('[data-look-add]');
-      if (add) add.setAttribute('data-look-add', sizeBtn.getAttribute('data-variant-id'));
+    var optBtn = e.target.closest ? e.target.closest('[data-look-color],[data-look-size]') : null;
+    if (optBtn) {
+      var item = optBtn.closest('[data-look-item]');
+      var group = optBtn.hasAttribute('data-look-color') ? item.querySelectorAll('[data-look-color]') : item.querySelectorAll('[data-look-size]');
+      group.forEach(function (b) { b.classList.remove('active'); });
+      optBtn.classList.add('active');
+      resolveItem(item);
       return;
     }
     var addBtn = e.target.closest ? e.target.closest('[data-look-add]') : null;
     if (addBtn && !addBtn.disabled) { addSingle(addBtn); return; }
-    var addAll = e.target.closest ? e.target.closest('[data-look-add-all]') : null;
-    if (addAll && !addAll.disabled) { addAllLook(addAll); return; }
   });
 
   function refreshHeader() {
@@ -170,52 +281,6 @@
     }).catch(function () { btn.disabled = false; });
   }
 
-  function addAllLook(btn) {
-    var card = btn.closest('[data-look-card]');
-    var scope = card || document;
-    var ids = [];
-    scope.querySelectorAll('[data-look-item] [data-look-add]').forEach(function (b) {
-      var id = parseInt(b.getAttribute('data-look-add'), 10);
-      if (id && ids.indexOf(id) === -1) ids.push(id);
-    });
-    if (!ids.length) return;
-    btn.disabled = true;
-    var orig = btn.textContent;
-    btn.textContent = 'Adicionando...';
-    var done = 0, failed = 0;
-    function next() {
-      if (done + failed >= ids.length) {
-        btn.disabled = false;
-        btn.textContent = orig;
-        refreshHeader();
-        var msg = scope.querySelector('[data-look-msg]');
-        if (msg) {
-          if (failed === 0) {
-            msg.style.color = '#16a34a';
-            msg.textContent = 'Look completo na sacola ✓';
-          } else if (done === 0) {
-            msg.style.color = '#dc2626';
-            msg.textContent = 'Não foi possível adicionar. Tente de novo.';
-          } else {
-            msg.style.color = '#b45309';
-            msg.textContent = done + ' de ' + ids.length + ' peças na sacola (uma indisponível).';
-          }
-          msg.hidden = false;
-          setTimeout(function () { msg.hidden = true; }, 4000);
-        }
-        return;
-      }
-      fetch('/cart/add.js', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: [{ id: ids[done + failed], quantity: 1 }] })
-      }).then(function (r) { return r.json(); }).then(function (d) {
-        if (d && (d.status || d.description)) { failed++; } else { done++; }
-        next();
-      }).catch(function () { failed++; next(); });
-    }
-    next();
-  }
 })();
 </script>
 
