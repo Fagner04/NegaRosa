@@ -40,67 +40,14 @@
             <span class="look-item__title">{{ lp.title }}</span>
             <span class="look-item__price">{{ lp.price | money }}</span>
             {%- if lp_color_idx != nil -%}
-              <div class="look-item__colors" data-look-colors>
+              <div class="look-item__sizes" data-look-colors>
                 {%- for value in lp.options_with_values[lp_color_idx].values -%}
                   {%- assign has_av = false -%}
                   {%- for v in lp.variants -%}
                     {%- if v.options[lp_color_idx] == value and v.available -%}{%- assign has_av = true -%}{%- break -%}{%- endif -%}
                   {%- endfor -%}
                   {%- if has_av -%}
-                    {%- liquid
-                      assign swatch_color = '#cccccc'
-                      assign value_lower = value | downcase
-                      assign swatch_meta_val = lp.metafields.custom.swatch_colors.value | default: ''
-                      if swatch_meta_val != ''
-                        assign cm_size = swatch_meta_val | size
-                        assign cm_first_size = swatch_meta_val | first | size
-                        if cm_first_size > cm_size
-                          assign cm_str = swatch_meta_val | join: '|'
-                        else
-                          assign cm_str = swatch_meta_val
-                        endif
-                        assign entries = cm_str | split: '|'
-                        for entry in entries
-                          assign parts = entry | split: '#'
-                          if parts.size == 2
-                            assign meta_name = parts[0] | strip | remove: ':' | downcase
-                            if meta_name == value_lower
-                              assign swatch_color = parts[1] | strip | prepend: '#'
-                            endif
-                          endif
-                        endfor
-                      endif
-                      if swatch_color == '#cccccc'
-                        if value_lower contains 'preto' or value_lower contains 'preta' or value_lower contains 'black'
-                          assign swatch_color = '#000000'
-                        elsif value_lower contains 'branco' or value_lower contains 'branca' or value_lower contains 'white'
-                          assign swatch_color = '#ffffff'
-                        elsif value_lower contains 'vermelho' or value_lower contains 'vermelha' or value_lower contains 'red'
-                          assign swatch_color = '#e60000'
-                        elsif value_lower contains 'marinho' or value_lower contains 'navy'
-                          assign swatch_color = '#001f5b'
-                        elsif value_lower contains 'azul' or value_lower contains 'blue'
-                          assign swatch_color = '#0044ff'
-                        elsif value_lower contains 'verde' or value_lower contains 'green'
-                          assign swatch_color = '#00aa33'
-                        elsif value_lower contains 'cinza' or value_lower contains 'grey' or value_lower contains 'gray'
-                          assign swatch_color = '#888888'
-                        elsif value_lower contains 'rosa' or value_lower contains 'pink'
-                          assign swatch_color = '#ff69b4'
-                        elsif value_lower contains 'amarelo' or value_lower contains 'yellow'
-                          assign swatch_color = '#f5c518'
-                        elsif value_lower contains 'laranja' or value_lower contains 'orange'
-                          assign swatch_color = '#ff6600'
-                        elsif value_lower contains 'roxo' or value_lower contains 'purple' or value_lower contains 'violeta'
-                          assign swatch_color = '#7b2fbe'
-                        elsif value_lower contains 'bege' or value_lower contains 'beige' or value_lower contains 'nude'
-                          assign swatch_color = '#c8a882'
-                        elsif value_lower contains 'caramelo' or value_lower contains 'camel' or value_lower contains 'marrom' or value_lower contains 'brown'
-                          assign swatch_color = '#8b4513'
-                        endif
-                      endif
-                    -%}
-                    <button type="button" class="look-color{% if lp_def.options[lp_color_idx] == value %} active{% endif %}" data-look-color data-value="{{ value | escape }}" style="background-color: {{ swatch_color }};" title="{{ value | escape }}" aria-label="{{ value | escape }}"></button>
+                    <button type="button" class="look-size{% if lp_def.options[lp_color_idx] == value %} active{% endif %}" data-look-color data-value="{{ value | escape }}">{{ value }}</button>
                   {%- endif -%}
                 {%- endfor -%}
               </div>
@@ -157,13 +104,6 @@
   .look-item__info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
   .look-item__title { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .look-item__price { font-size: 13px; font-weight: 600; color: #7F1D1D; }
-  .look-item__colors { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
-  .look-color {
-    width: 24px; height: 24px; padding: 0;
-    border-radius: 50%; border: 1px solid var(--color-border);
-    cursor: pointer; flex-shrink: 0;
-  }
-  .look-color.active { outline: 2px solid var(--color-primary); outline-offset: 2px; }
   .look-item__sizes { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
   .look-size {
     min-width: 24px; height: 24px; padding: 0 6px;
