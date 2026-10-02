@@ -955,6 +955,16 @@
         "id": "wholesale_enabled",
         "label": "Ativar modo atacado",
         "default": false
+      },
+      {
+        "type": "range",
+        "id": "wholesale_min_qty",
+        "label": "Quantidade mínima para atacado (carrinho)",
+        "info": "Peças totais no carrinho para ativar o preço de atacado",
+        "min": 2,
+        "max": 24,
+        "step": 1,
+        "default": 6
       }
     ]
   },

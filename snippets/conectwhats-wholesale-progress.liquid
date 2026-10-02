@@ -12,7 +12,7 @@
     enabled — liga/desliga a barra. Fallback: settings.conectwhats_atacado_enabled
               → settings.wholesale_enabled. (false explícito é respeitado.)
     min_qty — peças para ativar o atacado. Fallback:
-              settings.conectwhats_atacado_min_qty → 6.
+              settings.wholesale_min_qty → settings.conectwhats_atacado_min_qty → 6.
 
   Lê por item: product.metafields.custom.wholesale_price
   (aceita money object, number ou string em reais — pt-BR "179,91" ou en "179.91",
@@ -30,6 +30,9 @@
 
 {%- if cw_enabled -%}
   {%- assign wholesale_min = min_qty -%}
+  {%- if wholesale_min == nil -%}
+    {%- assign wholesale_min = settings.wholesale_min_qty -%}
+  {%- endif -%}
   {%- if wholesale_min == nil -%}
     {%- assign wholesale_min = settings.conectwhats_atacado_min_qty -%}
   {%- endif -%}
