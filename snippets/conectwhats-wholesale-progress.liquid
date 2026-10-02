@@ -89,7 +89,7 @@
   {%- assign savings = original_total | minus: wholesale_total -%}
 
   <style>
-    .cw-wholesale-progress { box-sizing: border-box; width: 100%; max-width: 100%; overflow: hidden; }
+    .cw-wholesale-progress { box-sizing: border-box; width: 100%; max-width: 100%; overflow: hidden; border: none !important; border-radius: 12px; background: #FFFFFF; box-shadow: 0 8px 20px rgba(17,17,17,0.08), 0 2px 6px rgba(17,17,17,0.06); }
     .cw-new-total { background: #F0FDF4; border: 2px solid #86EFAC; border-radius: 8px; padding: 12px; margin: 12px 0 0; }
     .cw-new-total-price { font-size: 20px; font-weight: 700; color: #15803D; }
     .cw-new-total-savings { font-size: 13px; color: #166534; }
@@ -105,7 +105,7 @@
   </style>
 
   {%- comment -%} BARRA + TOTAL ATACADO {%- endcomment -%}
-  <div class="cw-wholesale-progress" style="margin: 12px 0; padding: 10px 14px; border-radius: 8px;{% if wholesale_active %} background: #F0FDF4; border: 2px solid #86EFAC;{% else %} background: #FEF2F2; border: 2px solid #FECACA;{% endif %}">
+  <div class="cw-wholesale-progress" style="margin: 12px 0; padding: 10px 14px; border-radius: 12px; border: none; background: #FFFFFF;{% if wholesale_active %} box-shadow: 0 8px 20px rgba(22,163,74,0.16), 0 2px 6px rgba(22,163,74,0.12);{% else %} box-shadow: 0 8px 20px rgba(17,17,17,0.08), 0 2px 6px rgba(17,17,17,0.06);{% endif %}">
     {%- if wholesale_active -%}
       <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #166534;">
         <span>🎉</span>
