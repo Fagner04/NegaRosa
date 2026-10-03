@@ -60,7 +60,7 @@
     "vendor2_role": "Suporte Sac",
     "vendor2_number": "62991453008",
     "vendor2_photo": "shopify://shop_images/Real_Estate_Agency_Logo_1.svg",
-    "vendor2_online": false,
+    "vendor2_online": true,
     "vendor4_online": false,
     "vendor5_online": false,
     "coupon_enabled": true,
