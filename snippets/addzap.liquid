@@ -1103,6 +1103,7 @@
     tz:       {{ settings.whatsapp_timezone | default: -3 | json }},
     wdStart:  '{{ settings.whatsapp_weekday_start  | default: "09:00" }}',
     wdEnd:    '{{ settings.whatsapp_weekday_end    | default: "18:00" }}',
+    satOn:    {{ settings.whatsapp_saturday_enabled | default: true | json }},
     satStart: '{{ settings.whatsapp_saturday_start | default: "09:00" }}',
     satEnd:   '{{ settings.whatsapp_saturday_end   | default: "13:00" }}',
     sunOn:    {{ settings.whatsapp_sunday_enabled | default: false | json }},
@@ -1120,7 +1121,7 @@
     if (!sched.enabled) return true;
     var n=localNow(), day=n.getDay(), cur=n.getHours()*60+n.getMinutes(), s,e;
     if (day===0){ if(!sched.sunOn) return false; s=toMin(sched.sunStart); e=toMin(sched.sunEnd); }
-    else if (day===6){ s=toMin(sched.satStart); e=toMin(sched.satEnd); }
+    else if (day===6){ if(!sched.satOn) return false; s=toMin(sched.satStart); e=toMin(sched.satEnd); }
     else { s=toMin(sched.wdStart); e=toMin(sched.wdEnd); }
     return cur>=s && cur<=e;
   }
@@ -1135,6 +1136,7 @@
     var day=localNow().getDay();
     if(day===0&&!sched.sunOn) return 'Fechado aos domingos. Retornamos na segunda às '+sched.wdStart;
     if(day===0) return 'Horário de domingo: '+sched.sunStart+' às '+sched.sunEnd;
+    if(day===6&&!sched.satOn) return sched.sunOn ? 'Fechado aos sábados. Retornamos no domingo às '+sched.sunStart : 'Fechado no fim de semana. Retornamos na segunda às '+sched.wdStart;
     if(day===6) return 'Horário de sábado: '+sched.satStart+' às '+sched.satEnd;
     return 'Horário: '+sched.wdStart+' às '+sched.wdEnd+', Seg–Sex';
   }

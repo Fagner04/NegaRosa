@@ -533,6 +533,12 @@
         "default": "18:00"
       },
       {
+        "type": "checkbox",
+        "id": "whatsapp_saturday_enabled",
+        "label": "Atender sábado",
+        "default": true
+      },
+      {
         "type": "text",
         "id": "whatsapp_saturday_start",
         "label": "Horário início sábado",
