@@ -42,6 +42,7 @@
     "colorzap": "#F287B5",
     "whatsapp_schedule_enabled": true,
     "whatsapp_weekday_start": "08:00",
+    "whatsapp_saturday_enabled": false,
     "whatsapp_saturday_start": "",
     "whatsapp_saturday_end": "",
     "whatsapp_sunday_start": "",
