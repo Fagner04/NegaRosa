@@ -44,6 +44,8 @@
     "whatsapp_weekday_start": "08:00",
     "whatsapp_saturday_start": "",
     "whatsapp_saturday_end": "",
+    "whatsapp_sunday_start": "",
+    "whatsapp_sunday_end": "",
     "whatsapp_auto_messages_enabled": true,
     "whatsapp_auto_message_1": "Oiii seja bem vindo(@)",
     "whatsapp_auto_message_2": "Nosso atacado  hoje acima de 8 pçs",
