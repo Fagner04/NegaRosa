@@ -198,21 +198,6 @@
         "card_radius": 32
       }
     },
-    "featured-launches": {
-      "type": "featured-collection",
-      "disabled": true,
-      "settings": {
-        "title": "Lançamentos",
-        "subtitle": "Os mais recentes da ConectWhats",
-        "collection": "catalogo1",
-        "products_to_show": 7,
-        "columns": "3",
-        "layout": "carousel",
-        "show_secondary_image": true,
-        "show_quick_add": true,
-        "show_category": true
-      }
-    },
     "featured-offers": {
       "type": "featured-collection",
       "settings": {
@@ -220,6 +205,20 @@
         "subtitle": "Coleções nova",
         "collection": "fitness",
         "products_to_show": 7,
+        "columns": "4",
+        "layout": "carousel",
+        "show_secondary_image": true,
+        "show_quick_add": true,
+        "show_category": true
+      }
+    },
+    "featured-launches": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "Moda Masculino",
+        "subtitle": "Tendências atuais para renovar o seu guarda-roupa",
+        "collection": "masculino",
+        "products_to_show": 12,
         "columns": "4",
         "layout": "carousel",
         "show_secondary_image": true,
@@ -504,8 +503,8 @@
     "hero-banner",
     "announcement_bar_dD4ndD",
     "category-grid",
-    "featured-launches",
     "featured-offers",
+    "featured-launches",
     "lookbook_Jy9ERX",
     "trending",
     "drops",
