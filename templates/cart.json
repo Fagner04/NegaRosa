@@ -12,6 +12,7 @@
     "main": {
       "type": "main-cart",
       "settings": {
+        "summary_note": "Confira seus itens, tamanhos e quantidades antes de prosseguir. O frete é calculado na próxima etapa  ou se preferir calcula o frete no chat",
         "wholesale_enabled": true,
         "wholesale_min_qty": 8
       }
