@@ -491,7 +491,7 @@
 
 
           <div class="cart-summary__desc">
-            O valor total do frete será calculado na tela de finalização da compra. Para compras acima de R$ 399,90 o frete é grátis.
+            {{ section.settings.summary_note | default: 'Confira seus itens, tamanhos e quantidades antes de prosseguir. O frete é calculado na próxima etapa — e é grátis acima de R$ 399,90.' }}
           </div>
 
           {%- comment -%} Snippet 3 — Barra de progresso + total atacado (recalcula de forma isolada) {%- endcomment -%}
@@ -585,6 +585,16 @@
   "tag": "section",
   "class": "section",
   "settings": [
+    {
+      "type": "header",
+      "content": "Mensagem do resumo"
+    },
+    {
+      "type": "textarea",
+      "id": "summary_note",
+      "label": "Texto abaixo do total",
+      "default": "Confira seus itens, tamanhos e quantidades antes de prosseguir. O frete é calculado na próxima etapa — e é grátis acima de R$ 399,90."
+    },
     {
       "type": "header",
       "content": "Atacado"
