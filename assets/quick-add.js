@@ -334,6 +334,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var v = findVariant();
     updatePriceInfo(panel, v);
     setButton(panel, v);
+    clampQty(panel);
   }
 
   function setButton(panel, variant) {
@@ -622,6 +623,11 @@ document.addEventListener('DOMContentLoaded', function () {
     var panel    = btn.closest('#quick-add-modal') || btn.closest('#quick-add-drawer');
     var qtyInput = panel ? panel.querySelector('.qa-qty__input') : null;
     var qty      = qtyInput ? (parseInt(qtyInput.value, 10) || 1) : 1;
+    if (qty < 1) qty = 1;
+    var vv = null;
+    for (var vi = 0; vi < currentVariants.length; vi++) { if (currentVariants[vi].id === variantId) { vv = currentVariants[vi]; break; } }
+    var vmax = variantMaxQty(vv);
+    if (vmax != null && qty > vmax) { qty = Math.max(1, vmax); if (qtyInput) qtyInput.value = qty; }
     var textEl   = btn.querySelector('[data-btn-text]');
     var origText = textEl.textContent;
     btn.classList.add('loading'); btn.disabled = true; textEl.textContent = '';
@@ -651,14 +657,38 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  /* Estoque máximo da variante selecionada (null = sem teto: sem gestão ou venda liberada) */
+  function variantMaxQty(v) {
+    if (!v) return null;
+    var managed = v.inventory_management != null && v.inventory_management !== '';
+    if (!managed || v.inventory_policy === 'continue') return null;
+    var q = parseInt(v.inventory_quantity, 10);
+    if (isNaN(q) || q < 0) q = 0;
+    return q;
+  }
+
+  function clampQty(panel) {
+    var input = panel ? panel.querySelector('.qa-qty__input') : null;
+    if (!input) return 1;
+    var v = parseInt(input.value, 10);
+    if (isNaN(v) || v < 1) v = 1;
+    var max = variantMaxQty(findVariant());
+    if (max != null) {
+      if (max < 1) { input.value = 1; return 1; }
+      if (v > max) v = max;
+    }
+    input.value = v;
+    return v;
+  }
+
   /* ---------- Qty ---------- */
   [modal, drawer].forEach(function (panel) {
     var input = panel.querySelector('.qa-qty__input');
     var minus = panel.querySelector('[data-qa-qty-minus]');
     var plus  = panel.querySelector('[data-qa-qty-plus]');
     if (minus && input) minus.addEventListener('click', function (e) { e.stopPropagation(); var v = parseInt(input.value)||1; if(v>1) input.value=v-1; updateDrawerTotal(); });
-    if (plus  && input) plus.addEventListener('click',  function (e) { e.stopPropagation(); var v = parseInt(input.value)||1; input.value=v+1; updateDrawerTotal(); });
-    if (input) input.addEventListener('change', function () { var v = parseInt(input.value)||1; if(v<1) input.value=1; updateDrawerTotal(); });
+    if (plus  && input) plus.addEventListener('click',  function (e) { e.stopPropagation(); input.value=(parseInt(input.value)||1)+1; clampQty(panel); updateDrawerTotal(); });
+    if (input) input.addEventListener('change', function () { clampQty(panel); updateDrawerTotal(); });
   });
 
   /* ---------- Clicks INSIDE modal/drawer — stop propagation ---------- */
