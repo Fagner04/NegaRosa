@@ -674,6 +674,31 @@
     text-transform: uppercase;
   }
 
+  /* Bolha de aviso (ex.: estoque máximo) — não deforma o botão */
+  .nr-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%) translateY(16px);
+    max-width: min(92vw, 420px);
+    background: #1A1A1A;
+    color: #FFFFFF;
+    font-size: 13px;
+    line-height: 1.4;
+    padding: 10px 16px;
+    border-radius: 9999px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.25);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s, transform .25s;
+    z-index: 9999;
+    text-align: center;
+  }
+  .nr-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
   /* Quantidade ao lado do botão comprar */
   .buy-row {
     display: flex;
@@ -2651,6 +2676,24 @@
       return;
     }
 
+    // Bolha pequena de aviso (ex.: limite de estoque) — reaproveitada nos erros do add
+    var nrToastTimer = null;
+    function showNrToast(msg) {
+      if (!msg) return;
+      var el = document.getElementById('NrToast');
+      if (!el) {
+        el = document.createElement('div');
+        el.id = 'NrToast';
+        el.className = 'nr-toast';
+        el.setAttribute('role', 'status');
+        document.body.appendChild(el);
+      }
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(nrToastTimer);
+      nrToastTimer = setTimeout(function () { el.classList.remove('show'); }, 2600);
+    }
+
     // AJAX add-to-cart: evita redirecionamento para /cart
     form.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -2669,8 +2712,9 @@
         .then(function (r) { return r.json().then(function (data) { return { ok: r.ok, data: data }; }); })
         .then(function (res) {
           if (!res.ok) {
-            addBtn.textContent = (res.data && res.data.description) || 'Erro';
-            setTimeout(function () { addBtn.disabled = false; addBtn.textContent = originalText; }, 1800);
+            showNrToast((res.data && res.data.description) || 'Não foi possível adicionar.');
+            addBtn.disabled = false;
+            addBtn.textContent = originalText;
             return;
           }
           addBtn.textContent = 'Adicionado ✓';
@@ -2684,8 +2728,9 @@
           setTimeout(function () { addBtn.disabled = false; addBtn.textContent = originalText; }, 1500);
         })
         .catch(function () {
-          addBtn.textContent = 'Erro';
-          setTimeout(function () { addBtn.disabled = false; addBtn.textContent = originalText; }, 1800);
+          showNrToast('Erro de conexão. Tente novamente.');
+          addBtn.disabled = false;
+          addBtn.textContent = originalText;
         });
     });
 
