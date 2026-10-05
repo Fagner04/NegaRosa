@@ -245,37 +245,40 @@
         "video_7ChRmG": {
           "type": "video",
           "settings": {
+            "image": "shopify://shop_images/1791220018134-xnkrmv1h12.jpg",
             "video_type": "mp4",
-            "video_id": "https://cdn.shopify.com/videos/c/o/v/71cb371e8bbd48b3abba1c5618f401e3.mp4",
+            "video_id": "",
             "product_title": "Estilo Urbano",
             "info_text": "",
             "show_badge": true,
             "tag": "Em alta",
-            "link": "shopify://products/short-comfy"
+            "link": "shopify://collections/fitness"
           }
         },
         "video_XFQHX6": {
           "type": "video",
           "settings": {
+            "image": "shopify://shop_images/WhatsApp_Image_2026-10-02_at_16.33.27_1.jpg",
             "video_type": "mp4",
-            "video_id": "https://cdn.shopify.com/videos/c/o/v/71cb371e8bbd48b3abba1c5618f401e3.mp4",
+            "video_id": "",
             "product_title": "Clássico Moderno",
             "info_text": "",
             "show_badge": true,
             "tag": "Coleção Verão",
-            "link": "shopify://products/bone-brasil"
+            "link": "shopify://collections/fitness"
           }
         },
         "video_XWz9ph": {
           "type": "video",
           "settings": {
+            "image": "shopify://shop_images/WhatsApp_Image_2026-10-02_at_15.34.13ppoi.jpg",
             "video_type": "mp4",
-            "video_id": "https://cdn.shopify.com/videos/c/o/v/71cb371e8bbd48b3abba1c5618f401e3.mp4",
+            "video_id": "",
             "product_title": "Esportivo Chic",
             "info_text": "",
             "show_badge": true,
             "tag": "Novo",
-            "link": "shopify://products/short-comfy"
+            "link": "shopify://collections/fitness"
           }
         }
       },
