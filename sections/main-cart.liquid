@@ -468,7 +468,8 @@
 
           <div class="cart-summary__row">
             <span>Entrega</span>
-            {%- if cart.total_price > 39990 -%}
+            {%- assign frete_minimo = settings.frete_valor_minimo | plus: 0 -%}
+            {%- if settings.frete_frete_gratis and frete_minimo > 0 and cart.total_price > frete_minimo -%}
               <span style="color: var(--color-success); font-weight: var(--font-weight-medium);">Grátis</span>
             {%- else -%}
               <span>Calculado no Checkout</span>
