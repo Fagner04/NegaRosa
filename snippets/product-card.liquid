@@ -57,9 +57,13 @@
   if settings.wholesale_enabled or wholesale_price_cents > 0
     assign show_wholesale = true
   endif
+  assign variant_stock_map = ''
+  for v in product.variants
+    assign variant_stock_map = variant_stock_map | append: v.id | append: ':' | append: v.inventory_quantity | append: ','
+  endfor
 -%}
 
-<div class="product-card reveal-zoom card-hover" data-product-id="{{ product.id }}" data-product-handle="{{ product.handle }}"{%- if wholesale_price_cents > 0 -%} data-wholesale-cents="{{ wholesale_price_cents }}"{%- if wholesale_min_qty != blank -%} data-wholesale-min-qty="{{ wholesale_min_qty }}"{%- endif -%}{%- endif -%}>
+<div class="product-card reveal-zoom card-hover" data-product-id="{{ product.id }}" data-product-handle="{{ product.handle }}" data-variant-stock="{{ variant_stock_map }}"{%- if wholesale_price_cents > 0 -%} data-wholesale-cents="{{ wholesale_price_cents }}"{%- if wholesale_min_qty != blank -%} data-wholesale-min-qty="{{ wholesale_min_qty }}"{%- endif -%}{%- endif -%}>
   <!-- Image Wrapper -->
   <div class="product-card__image-outer">
     <a href="/products/{{ product.handle | handleize }}" class="product-card__image-wrapper img-zoom" aria-label="{{ product.title }}">

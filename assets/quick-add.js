@@ -18,7 +18,24 @@ document.addEventListener('DOMContentLoaded', function () {
   var isOpen          = false;
   var qaColorMap      = null;
   var qaWholesale     = null; /* { cents, minQty } — lido do card */
+  var qaStockMap      = null; /* { variantId: qty } — estoque real lido do card (Liquid) */
   var qaHandle        = '';
+
+  /* "id:qty,id:qty" → { id: number|null } (vazio = desconhecido, sem teto) */
+  function parseStockMap(val) {
+    var map = null;
+    if (!val) return null;
+    String(val).split(',').forEach(function (entry) {
+      var parts = String(entry).split(':');
+      if (parts.length !== 2 || !parts[0]) return;
+      var id = parseInt(parts[0], 10);
+      if (isNaN(id)) return;
+      var q = parts[1] === '' ? null : parseInt(parts[1], 10);
+      if (!map) map = {};
+      map[id] = (q == null || isNaN(q) || q < 0) ? null : q;
+    });
+    return map;
+  }
 
   function parseColorMap(val) {
     var map = {};
@@ -532,10 +549,11 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   /* ---------- Open ---------- */
-  function openQuickAdd(handle, wholesale) {
+  function openQuickAdd(handle, wholesale, stock) {
     isOpen = true;
     qaHandle = handle || '';
     qaWholesale = wholesale || null;
+    qaStockMap = parseStockMap(stock);
     syncDetailsLinks();
     overlay.classList.add('active');
     document.body.classList.add('modal-open');
@@ -564,6 +582,15 @@ document.addEventListener('DOMContentLoaded', function () {
         var product     = data.product || data;
         currentProduct  = product;
         currentVariants = product.variants || [];
+
+        /* Estoque real vindo do card (Liquid) — o /products/*.js não expõe inventory_quantity */
+        if (qaStockMap) {
+          currentVariants.forEach(function (v) {
+            if (Object.prototype.hasOwnProperty.call(qaStockMap, v.id) && qaStockMap[v.id] != null) {
+              v.inventory_quantity = qaStockMap[v.id];
+            }
+          });
+        }
 
         console.log('[QuickAdd] Product:', product.title, 'Options:', JSON.stringify(product.options), 'Variants:', product.variants ? product.variants.length : 0);
         currentVariants.forEach(function (v) {
@@ -613,6 +640,7 @@ document.addEventListener('DOMContentLoaded', function () {
     selectedOptions = {};
     qaColorMap = null;
     qaWholesale = null;
+    qaStockMap = null;
     qaHandle = '';
   }
 
@@ -770,7 +798,8 @@ document.addEventListener('DOMContentLoaded', function () {
       e.stopPropagation();
       var handle = qaBtn.dataset.productHandle;
       qaColorMap = parseColorMap(qaBtn.dataset.colorMap);
-      if (handle) openQuickAdd(handle, readWholesaleFromCard(qaBtn.closest('.product-card')));
+      var qaCard = qaBtn.closest('.product-card');
+      if (handle) openQuickAdd(handle, readWholesaleFromCard(qaCard), qaCard && qaCard.dataset ? qaCard.dataset.variantStock : '');
       return;
     }
 
@@ -789,7 +818,7 @@ document.addEventListener('DOMContentLoaded', function () {
           e.stopPropagation();
           var cardQaBtn = card ? card.querySelector('.product-card__quick-add') : null;
           qaColorMap = parseColorMap(cardQaBtn && cardQaBtn.dataset.colorMap);
-          openQuickAdd(cardHandle, readWholesaleFromCard(card));
+          openQuickAdd(cardHandle, readWholesaleFromCard(card), card && card.dataset ? card.dataset.variantStock : '');
           return;
         }
       }
