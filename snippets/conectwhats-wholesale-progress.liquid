@@ -108,13 +108,13 @@
   <div class="cw-wholesale-progress" style="margin: 12px 0; padding: 10px 14px; border-radius: 12px; border: none; background: #FFFFFF;{% if wholesale_active %} box-shadow: 0 8px 20px rgba(22,163,74,0.16), 0 2px 6px rgba(22,163,74,0.12);{% else %} box-shadow: 0 8px 20px rgba(17,17,17,0.08), 0 2px 6px rgba(17,17,17,0.06);{% endif %}">
     {%- if wholesale_active -%}
       <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #166534;">
-        <span>🎉</span>
+        <i data-lucide="party-popper" style="width: 16px; height: 16px;"></i>
         <span>Atacado Ativo! ({{ total_items }}/{{ wholesale_min }} peças)</span>
         <span class="cw-badge-atacado">ATACADO</span>
       </div>
       {%- if has_wholesale_prices and savings > 0 -%}
         <div class="cw-new-total">
-          <div class="cw-new-total-savings">💰 Total no atacado:</div>
+          <div class="cw-new-total-savings"><i data-lucide="badge-dollar-sign" style="width: 14px; height: 14px; vertical-align: -2px;"></i> Total no atacado:</div>
           <div class="cw-new-total-price">{{ wholesale_total | money }}</div>
           <div class="cw-new-total-savings">Você economiza {{ savings | money }}</div>
         </div>
