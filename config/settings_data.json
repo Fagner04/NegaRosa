@@ -42,6 +42,7 @@
     "frete_frete_gratis": false,
     "frete_valor_minimo": "",
     "addzap": true,
+    "numberzap": "5562991453008",
     "colorzap": "#F287B5",
     "whatsapp_schedule_enabled": true,
     "whatsapp_weekday_start": "08:00",
