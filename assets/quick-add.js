@@ -616,6 +616,24 @@ document.addEventListener('DOMContentLoaded', function () {
     qaHandle = '';
   }
 
+  /* Bolha pequena de aviso (mesmo padrão da página de produto) */
+  var qaToastTimer = null;
+  function showQaToast(msg) {
+    if (!msg) return;
+    var el = document.getElementById('QaToast');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'QaToast';
+      el.className = 'qa-toast';
+      el.setAttribute('role', 'status');
+      document.body.appendChild(el);
+    }
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(qaToastTimer);
+    qaToastTimer = setTimeout(function () { el.classList.remove('show'); }, 2600);
+  }
+
   /* ---------- Add to cart ---------- */
   function handleAddToCart(btn) {
     var variantId = parseInt(btn.dataset.variantId, 10);
@@ -639,13 +657,13 @@ document.addEventListener('DOMContentLoaded', function () {
     .then(function (r) { return r.json(); })
     .then(function (data) {
       btn.classList.remove('loading');
-      if (data.status) { btn.disabled = false; textEl.textContent = data.description || 'Erro'; return; }
+      if (data.status) { btn.disabled = false; textEl.textContent = origText; showQaToast(data.description || 'Não foi possível adicionar.'); return; }
       btn.classList.add('success'); textEl.textContent = 'Adicionado ✓';
       updateCartCount();
       if (window.NegaRosaCartTimer) window.NegaRosaCartTimer.bump();
       setTimeout(function () { btn.classList.remove('success'); btn.disabled = false; textEl.textContent = origText; closeQuickAdd(); }, 1200);
     })
-    .catch(function () { btn.classList.remove('loading'); btn.disabled = false; textEl.textContent = 'Erro'; });
+    .catch(function () { btn.classList.remove('loading'); btn.disabled = false; textEl.textContent = origText; showQaToast('Erro de conexão. Tente novamente.'); });
   }
 
   function updateCartCount() {
@@ -657,13 +675,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* Estoque máximo da variante selecionada (null = sem teto: sem gestão ou venda liberada) */
+  /* Estoque máximo da variante selecionada.
+     null = sem teto (sem gestão, venda liberada OU quantidade desconhecida:
+     o /products/*.js público não expõe inventory_quantity). */
   function variantMaxQty(v) {
     if (!v) return null;
     var managed = v.inventory_management != null && v.inventory_management !== '';
     if (!managed || v.inventory_policy === 'continue') return null;
+    if (v.inventory_quantity == null || v.inventory_quantity === '') return null;
     var q = parseInt(v.inventory_quantity, 10);
-    if (isNaN(q) || q < 0) q = 0;
+    if (isNaN(q) || q < 0) return null;
     return q;
   }
 

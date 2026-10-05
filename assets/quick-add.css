@@ -1071,3 +1071,28 @@
     display: none !important;
   }
 }
+
+/* Bolha de aviso (ex.: limite de estoque) — não deforma o botão */
+.qa-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%) translateY(16px);
+  max-width: min(92vw, 420px);
+  background: #1A1A1A;
+  color: #FFFFFF;
+  font-size: 13px;
+  line-height: 1.4;
+  padding: 10px 16px;
+  border-radius: 9999px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.25);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s, transform .25s;
+  z-index: 9999;
+  text-align: center;
+}
+.qa-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
