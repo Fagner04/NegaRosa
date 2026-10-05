@@ -122,7 +122,7 @@
     {%- else -%}
       {%- assign faltam = wholesale_min | minus: total_items -%}
       <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #991B1B;">
-        <span>📦</span>
+        <i data-lucide="package" style="width: 16px; height: 16px;"></i>
         <span>Faltam {{ faltam }} peça(s) para o Atacado</span>
       </div>
       <div class="cw-progress-track">
