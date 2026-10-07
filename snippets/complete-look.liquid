@@ -1,10 +1,8 @@
 {%- comment -%}
   Snippet: complete-look
-  Card fixo "Monte o Look" a partir do metafield custom.complete_o_look (lista de produtos).
-  Renderiza inline na página, sem popup nem botão.
-
-  Uso (main-product): {% render 'complete-look', product: product %}
-  Só renderiza se o metafield estiver preenchido.
+  Card "Monte o Look" a partir do metafield custom.complete_o_look (lista de produtos).
+  Layout igual ao seletor principal (bloco): TAMANHO primeiro, depois COR.
+  Tamanhos indisponíveis na cor atual ficam com X (classe .unavailable).
 {%- endcomment -%}
 
 {%- assign look_products = product.metafields.custom.complete_o_look.value | default: product.metafields.custom.complete_o_look -%}
@@ -17,12 +15,16 @@
       {%- if lp.title != blank -%}
         {%- assign lp_color_idx = nil -%}
         {%- assign lp_size_idx = nil -%}
+        {%- assign lp_color_name = 'Cor' -%}
+        {%- assign lp_size_name = 'Tamanho' -%}
         {%- for opt in lp.options_with_values -%}
           {%- assign on = opt.name | downcase -%}
           {%- if on == 'cor' or on == 'color' or on == 'colour' or on == 'cores' -%}
             {%- assign lp_color_idx = forloop.index0 -%}
+            {%- assign lp_color_name = opt.name -%}
           {%- elsif on contains 'tamanho' or on contains 'size' -%}
             {%- assign lp_size_idx = forloop.index0 -%}
+            {%- assign lp_size_name = opt.name -%}
           {%- endif -%}
         {%- endfor -%}
         {%- assign lp_def = lp.selected_or_first_available_variant -%}
@@ -39,30 +41,50 @@
           <div class="look-item__info">
             <span class="look-item__title">{{ lp.title }}</span>
             <span class="look-item__price">{{ lp.price | money }}</span>
-            {%- if lp_color_idx != nil -%}
-              <div class="look-item__sizes" data-look-colors>
-                {%- for value in lp.options_with_values[lp_color_idx].values -%}
-                  {%- assign has_av = false -%}
-                  {%- for v in lp.variants -%}
-                    {%- if v.options[lp_color_idx] == value and v.available -%}{%- assign has_av = true -%}{%- break -%}{%- endif -%}
+
+            {%- comment -%} 1) TAMANHO primeiro {%- endcomment -%}
+            {%- if lp_size_idx != nil -%}
+              {%- assign def_color_val = lp_def.options[lp_color_idx] -%}
+              <div class="look-opt" data-look-opt="size">
+                <span class="option-selector__label">{{ lp_size_name }}: <span class="option-selector__selected" data-look-selected-size>{{ lp_def.options[lp_size_idx] }}</span></span>
+                <div class="size-grid" data-look-sizes>
+                  {%- for value in lp.options_with_values[lp_size_idx].values -%}
+                    {%- assign has_av_color = false -%}
+                    {%- for v in lp.variants -%}
+                      {%- if v.options[lp_size_idx] == value and v.available -%}
+                        {%- if lp_color_idx == nil or v.options[lp_color_idx] == def_color_val -%}
+                          {%- assign has_av_color = true -%}{%- break -%}
+                        {%- endif -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+                    <button type="button"
+                      class="size-button{% if lp_def.options[lp_size_idx] == value %} active{% endif %}{% unless has_av_color %} unavailable{% endunless %}"
+                      data-look-size data-value="{{ value | escape }}"{% unless has_av_color %} title="Esgotado nesta cor"{% endunless %}>{{ value }}</button>
                   {%- endfor -%}
-                  {%- if has_av -%}
-                    <button type="button" class="look-size{% if lp_def.options[lp_color_idx] == value %} active{% endif %}" data-look-color data-value="{{ value | escape }}">{{ value }}</button>
-                  {%- endif -%}
-                {%- endfor -%}
+                </div>
               </div>
             {%- endif -%}
-            {%- if lp_size_idx != nil -%}
-              <div class="look-item__sizes">
-                {%- for value in lp.options_with_values[lp_size_idx].values -%}
-                  {%- assign has_av = false -%}
-                  {%- for v in lp.variants -%}
-                    {%- if v.options[lp_size_idx] == value and v.available -%}{%- assign has_av = true -%}{%- break -%}{%- endif -%}
+
+            {%- comment -%} 2) COR depois {%- endcomment -%}
+            {%- if lp_color_idx != nil -%}
+              {%- assign def_size_val = lp_def.options[lp_size_idx] -%}
+              <div class="look-opt" data-look-opt="color">
+                <span class="option-selector__label">{{ lp_color_name }}: <span class="option-selector__selected" data-look-selected-color>{{ lp_def.options[lp_color_idx] }}</span></span>
+                <div class="size-grid" data-look-colors>
+                  {%- for value in lp.options_with_values[lp_color_idx].values -%}
+                    {%- assign has_av_size = false -%}
+                    {%- for v in lp.variants -%}
+                      {%- if v.options[lp_color_idx] == value and v.available -%}
+                        {%- if lp_size_idx == nil or v.options[lp_size_idx] == def_size_val -%}
+                          {%- assign has_av_size = true -%}{%- break -%}
+                        {%- endif -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+                    <button type="button"
+                      class="size-button{% if lp_def.options[lp_color_idx] == value %} active{% endif %}{% unless has_av_size %} unavailable{% endunless %}"
+                      data-look-color data-value="{{ value | escape }}"{% unless has_av_size %} disabled title="Esgotado neste tamanho"{% endunless %}>{{ value }}</button>
                   {%- endfor -%}
-                  {%- if has_av -%}
-                    <button type="button" class="look-size{% if lp_def.options[lp_size_idx] == value %} active{% endif %}" data-look-size data-value="{{ value | escape }}">{{ value }}</button>
-                  {%- endif -%}
-                {%- endfor -%}
+                </div>
               </div>
             {%- endif -%}
           </div>
@@ -70,6 +92,7 @@
         </div>
       {%- endif -%}
     {%- endfor -%}
+  </div>
 </div>
 
 <style>
@@ -99,22 +122,74 @@
     background: var(--color-bg, #fff);
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
   }
-  .look-item__img { width: 56px; height: 56px; border-radius: 10px; overflow: hidden; flex-shrink: 0; background: var(--color-bg-secondary); }
+  .look-item__img { width: 56px; height: 56px; border-radius: 10px; overflow: hidden; flex-shrink: 0; background: var(--color-bg-secondary); align-self: flex-start; }
   .look-item__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .look-item__info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .look-item__info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
   .look-item__title { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .look-item__price { font-size: 13px; font-weight: 600; color: #7F1D1D; }
-  .look-item__sizes { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
-  .look-size {
-    min-width: 24px; height: 24px; padding: 0 6px;
-    border-radius: 999px; border: 1px solid var(--color-border);
-    background: #fff; font-size: 11px; font-weight: 700; cursor: pointer;
+  /* Reaproveita o visual do produto principal (size-grid/size-button).
+     Fallback escopado caso o CSS do main-product mude. */
+  .look-item .option-selector__label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    display: flex;
+    justify-content: flex-start;
+    gap: var(--space-1);
   }
-  .look-size.active { border-color: var(--color-primary); background: var(--color-primary); color: #fff; }
+  .look-item .option-selector__selected {
+    font-weight: var(--font-weight-regular);
+    color: var(--color-text-light);
+    text-transform: none;
+  }
+  .look-item .size-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+  .look-item .size-button {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    transition: all var(--transition-fast);
+    background: var(--color-bg);
+    cursor: pointer;
+    position: relative;
+  }
+  .look-item .size-button.active {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary);
+    color: var(--color-text-inverse);
+  }
+  .look-item .size-button.unavailable {
+    opacity: 0.35;
+    background-color: var(--color-bg-secondary);
+    position: relative;
+  }
+  .look-item .size-button.unavailable::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--color-border-dark);
+    border-radius: var(--border-radius-sm);
+    background: linear-gradient(
+      to bottom right,
+      transparent calc(50% - 1.5px),
+      var(--color-border-dark) calc(50% - 1.5px),
+      var(--color-border-dark) calc(50% + 1.5px),
+      transparent calc(50% + 1.5px)
+    );
+  }
+  .look-item [data-look-opt="color"] .size-button.unavailable { cursor: not-allowed; }
   .look-add {
     flex-shrink: 0;
-    border: 1px solid var(--color-primary, #D81B73);
-    color: var(--color-primary, #D81B73);
+    border: 1px solid var(--color-primary, #111);
+    color: var(--color-primary, #111);
     background: transparent;
     border-radius: 999px;
     padding: 8px 12px;
@@ -122,6 +197,7 @@
     font-weight: 700;
     cursor: pointer;
   }
+  .look-add:disabled { opacity: 0.5; cursor: not-allowed; }
   .look-add.added { background: #16a34a; border-color: #16a34a; color: #fff; }
   @media (max-width: 480px) {
     .look-card { padding: var(--space-3); }
@@ -149,47 +225,107 @@
     var b = item.querySelector(sel + '.active');
     return b ? b.getAttribute('data-value') : null;
   }
-  function resolveItem(item) {
-    var handle = item.getAttribute('data-handle');
+  function setLabel(item, sel, val) {
+    var el = item.querySelector(sel);
+    if (el && val) el.textContent = val;
+  }
+
+  // Igual ao produto principal: marca X nos tamanhos sem estoque na cor atual
+  // e nas cores sem estoque no tamanho atual.
+  function markItem(item, p) {
     var cIdx = parseInt(item.getAttribute('data-color-idx'), 10);
     var sIdx = parseInt(item.getAttribute('data-size-idx'), 10);
     if (isNaN(cIdx)) cIdx = null;
     if (isNaN(sIdx)) sIdx = null;
     var selColor = selectedVal(item, '[data-look-color]');
     var selSize = selectedVal(item, '[data-look-size]');
-    if (cIdx === null && sIdx === null) return;
-    getProd(handle, function (p) {
-      if (!p || !p.variants) return;
-      var match = null, fallback = null;
+    if (!p || !p.variants) return;
+
+    item.querySelectorAll('[data-look-size]').forEach(function (btn) {
+      var val = btn.getAttribute('data-value');
+      var avail = false;
       for (var i = 0; i < p.variants.length; i++) {
         var v = p.variants[i];
-        var okC = (cIdx === null || v.options[cIdx] === selColor);
-        var okS = (sIdx === null || v.options[sIdx] === selSize);
-        if (okC && okS) {
-          if (v.available) { match = v; break; }
-          if (!fallback) fallback = v;
-        }
+        if (v.options[sIdx] !== val) continue;
+        if (!v.available) continue;
+        if (cIdx !== null && selColor && v.options[cIdx] !== selColor) continue;
+        avail = true; break;
       }
-      var best = match || fallback;
-      if (best) {
-        var add = item.querySelector('[data-look-add]');
-        if (add) add.setAttribute('data-look-add', best.id);
-      }
+      if (avail) { btn.classList.remove('unavailable'); btn.removeAttribute('title'); }
+      else { btn.classList.add('unavailable'); btn.setAttribute('title', 'Esgotado nesta cor'); }
     });
+
+    item.querySelectorAll('[data-look-color]').forEach(function (btn) {
+      var val = btn.getAttribute('data-value');
+      var avail = false;
+      for (var i = 0; i < p.variants.length; i++) {
+        var v = p.variants[i];
+        if (v.options[cIdx] !== val) continue;
+        if (!v.available) continue;
+        if (sIdx !== null && selSize && v.options[sIdx] !== selSize) continue;
+        avail = true; break;
+      }
+      if (avail) { btn.classList.remove('unavailable'); btn.removeAttribute('disabled'); btn.removeAttribute('title'); }
+      else { btn.classList.add('unavailable'); btn.setAttribute('disabled', 'disabled'); btn.setAttribute('title', 'Esgotado neste tamanho'); }
+    });
+
+    setLabel(item, '[data-look-selected-size]', selSize);
+    setLabel(item, '[data-look-selected-color]', selColor);
+    resolveVariant(item, p);
   }
+
+  function resolveVariant(item, p) {
+    var cIdx = parseInt(item.getAttribute('data-color-idx'), 10);
+    var sIdx = parseInt(item.getAttribute('data-size-idx'), 10);
+    if (isNaN(cIdx)) cIdx = null;
+    if (isNaN(sIdx)) sIdx = null;
+    var selColor = selectedVal(item, '[data-look-color]');
+    var selSize = selectedVal(item, '[data-look-size]');
+    var variants = p.variants || [];
+    var match = null, fallback = null;
+    for (var i = 0; i < variants.length; i++) {
+      var v = variants[i];
+      var okC = (cIdx === null || v.options[cIdx] === selColor);
+      var okS = (sIdx === null || v.options[sIdx] === selSize);
+      if (okC && okS) {
+        if (v.available) { match = v; break; }
+        if (!fallback) fallback = v;
+      }
+    }
+    var best = match || fallback;
+    var add = item.querySelector('[data-look-add]');
+    if (add && best) {
+      add.setAttribute('data-look-add', best.id);
+      if (best.available) { add.disabled = false; if (!add.classList.contains('added')) add.textContent = 'Adicionar'; }
+      else { add.disabled = true; add.textContent = 'Esgotado'; }
+    }
+  }
+
+  function refreshItem(item) {
+    var handle = item.getAttribute('data-handle');
+    getProd(handle, function (p) { if (p) markItem(item, p); });
+  }
+
   document.addEventListener('click', function (e) {
     var optBtn = e.target.closest ? e.target.closest('[data-look-color],[data-look-size]') : null;
     if (optBtn) {
+      if (optBtn.hasAttribute('disabled')) return;
       var item = optBtn.closest('[data-look-item]');
-      var group = optBtn.hasAttribute('data-look-color') ? item.querySelectorAll('[data-look-color]') : item.querySelectorAll('[data-look-size]');
+      var isColor = optBtn.hasAttribute('data-look-color');
+      // Cor esgotada (X) não é clicável; tamanho com X continua clicável p/ mostrar Esgotado
+      if (isColor && optBtn.classList.contains('unavailable')) return;
+      var group = isColor ? item.querySelectorAll('[data-look-color]') : item.querySelectorAll('[data-look-size]');
       group.forEach(function (b) { b.classList.remove('active'); });
       optBtn.classList.add('active');
-      resolveItem(item);
+      refreshItem(item);
       return;
     }
     var addBtn = e.target.closest ? e.target.closest('[data-look-add]') : null;
     if (addBtn && !addBtn.disabled) { addSingle(addBtn); return; }
   });
+
+  // Sincroniza o X ao carregar (busca estoque real por cor/tamanho)
+  document.querySelectorAll('[data-look-item]').forEach(function (item) { refreshItem(item); });
 
   function refreshHeader() {
     if (window.refreshCartBubble) { window.refreshCartBubble(); return; }
