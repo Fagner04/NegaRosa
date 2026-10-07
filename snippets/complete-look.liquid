@@ -188,15 +188,29 @@
   .look-item [data-look-opt="color"] .size-button.unavailable { cursor: not-allowed; }
   .look-add {
     flex-shrink: 0;
-    border: 1px solid var(--color-primary, #111);
-    color: var(--color-primary, #111);
-    background: transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: #111;
+    border: 1px solid #111;
+    color: #fff;
     border-radius: 999px;
-    padding: 8px 12px;
+    padding: 10px 18px;
     font-size: 12px;
-    font-weight: 700;
+    font-weight: 800;
+    letter-spacing: 0.02em;
     cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+    transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+    white-space: nowrap;
   }
+  .look-add:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
+    background: #000;
+  }
+  .look-add:active:not(:disabled) { transform: scale(0.97); }
   .look-add:disabled { opacity: 0.5; cursor: not-allowed; }
   .look-add.added { background: #16a34a; border-color: #16a34a; color: #fff; }
   /* Efeito voando p/ sacola */
