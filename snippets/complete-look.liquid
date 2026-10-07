@@ -199,6 +199,22 @@
   }
   .look-add:disabled { opacity: 0.5; cursor: not-allowed; }
   .look-add.added { background: #16a34a; border-color: #16a34a; color: #fff; }
+  /* Efeito voando p/ sacola */
+  .nr-fly-img {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+    border-radius: 12px;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.5, -0.1, 0.3, 1), opacity 0.7s ease, width 0.7s ease, height 0.7s ease;
+    will-change: transform, opacity;
+  }
+  @keyframes nrBagPop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.25) rotate(-8deg); }
+    100% { transform: scale(1); }
+  }
+  .header__cart-btn.nr-bump { animation: nrBagPop 0.5s ease; }
   @media (max-width: 480px) {
     .look-card { padding: var(--space-3); }
     .look-item { flex-wrap: wrap; }
@@ -339,9 +355,49 @@
     if (window.NegaRosaCartTimer) window.NegaRosaCartTimer.bump();
   }
 
+  function flyToBag(btn) {
+    try {
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var item = btn.closest ? btn.closest('[data-look-item]') : null;
+      var img = item ? item.querySelector('.look-item__img img') : null;
+      var bag = document.querySelector('.header__cart-btn');
+      if (!img || !bag) return;
+      var r1 = img.getBoundingClientRect();
+      var r2 = bag.getBoundingClientRect();
+      if (!r1.width || !r2.width) return;
+      var ghost = img.cloneNode(false);
+      ghost.className = 'nr-fly-img';
+      ghost.style.left = r1.left + 'px';
+      ghost.style.top = r1.top + 'px';
+      ghost.style.width = r1.width + 'px';
+      ghost.style.height = r1.height + 'px';
+      ghost.style.opacity = '1';
+      document.body.appendChild(ghost);
+      var dx = (r2.left + r2.width / 2) - (r1.left + r1.width / 2);
+      var dy = (r2.top + r2.height / 2) - (r1.top + r1.height / 2);
+      // Arco suave: sobe um pouco antes de ir p/ sacola
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          ghost.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(0.12)';
+          ghost.style.opacity = '0.4';
+          ghost.style.width = '28px';
+          ghost.style.height = '28px';
+        });
+      });
+      setTimeout(function () {
+        if (ghost.parentNode) ghost.parentNode.removeChild(ghost);
+        bag.classList.remove('nr-bump');
+        void bag.offsetWidth;
+        bag.classList.add('nr-bump');
+        setTimeout(function () { bag.classList.remove('nr-bump'); }, 550);
+      }, 720);
+    } catch (e) { /* sem quebrar o add */ }
+  }
+
   function addSingle(btn) {
     var id = parseInt(btn.getAttribute('data-look-add'), 10);
     if (!id) return;
+    flyToBag(btn);
     btn.disabled = true;
     fetch('/cart/add.js', {
       method: 'POST',
