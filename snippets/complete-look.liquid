@@ -229,6 +229,30 @@
     100% { transform: scale(1); }
   }
   .header__cart-btn.nr-bump { animation: nrBagPop 0.5s ease; }
+  /* Toast fallback (o principal está no main-product) */
+  #NrToast.nr-toast-fallback {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%) translateY(16px);
+    max-width: min(92vw, 420px);
+    background: #1A1A1A;
+    color: #FFFFFF;
+    font-size: 13px;
+    line-height: 1.4;
+    padding: 10px 16px;
+    border-radius: 9999px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.25);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s, transform .25s;
+    z-index: 9999;
+    text-align: center;
+  }
+  #NrToast.nr-toast-fallback.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
   @media (max-width: 480px) {
     .look-card { padding: var(--space-3); }
     .look-item { flex-wrap: wrap; }
@@ -369,6 +393,54 @@
     if (window.NegaRosaCartTimer) window.NegaRosaCartTimer.bump();
   }
 
+  var lookToastTimer = null;
+  function showLookToast(msg) {
+    if (!msg) return;
+    var el = document.getElementById('NrToast');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'NrToast';
+      el.className = 'nr-toast nr-toast-fallback';
+      el.setAttribute('role', 'status');
+      document.body.appendChild(el);
+    } else if (!el.classList.contains('nr-toast')) {
+      el.classList.add('nr-toast-fallback');
+    }
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(lookToastTimer);
+    lookToastTimer = setTimeout(function () { el.classList.remove('show'); }, 2600);
+  }
+
+  function variantMaxStock(p, variantId) {
+    if (!p || !p.variants) return 999;
+    for (var i = 0; i < p.variants.length; i++) {
+      var v = p.variants[i];
+      if (v.id === variantId) {
+        if (v.inventory_management === null || typeof v.inventory_management === 'undefined') {
+          // Sem controle de estoque -> segue disponibilidade
+          if (v.inventory_policy === 'continue') return 999;
+          if (typeof v.inventory_quantity !== 'number') return 999;
+        }
+        if (v.inventory_policy === 'continue') return 999;
+        return (typeof v.inventory_quantity === 'number' && v.inventory_quantity > 0) ? v.inventory_quantity : 0;
+      }
+    }
+    return 999;
+  }
+
+  function cartQtyFor(variantId, cb) {
+    fetch('/cart.js', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (cart) {
+      var q = 0;
+      if (cart && cart.items) {
+        for (var i = 0; i < cart.items.length; i++) {
+          if (cart.items[i].variant_id === variantId || cart.items[i].id === variantId) { q = cart.items[i].quantity; break; }
+        }
+      }
+      cb(q);
+    }).catch(function () { cb(0); });
+  }
+
   function flyToBag(btn) {
     try {
       if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -411,21 +483,44 @@
   function addSingle(btn) {
     var id = parseInt(btn.getAttribute('data-look-add'), 10);
     if (!id) return;
-    flyToBag(btn);
+    var item = btn.closest ? btn.closest('[data-look-item]') : null;
+    var handle = item ? item.getAttribute('data-handle') : null;
+    var orig = btn.textContent;
     btn.disabled = true;
-    fetch('/cart/add.js', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items: [{ id: id, quantity: 1 }] })
-    }).then(function (r) { return r.json(); }).then(function (d) {
-      btn.disabled = false;
-      if (d && d.status) return;
-      btn.classList.add('added');
-      var orig = btn.textContent;
-      btn.textContent = 'Adicionado ✓';
-      refreshHeader();
-      setTimeout(function () { btn.classList.remove('added'); btn.textContent = orig; }, 1500);
-    }).catch(function () { btn.disabled = false; });
+    getProd(handle, function (p) {
+      var max = variantMaxStock(p, id);
+      cartQtyFor(id, function (inCart) {
+        if (max !== 999 && inCart >= max) {
+          showLookToast('Você já atingiu o limite disponível em estoque (' + max + ' un.).');
+          btn.disabled = false;
+          return;
+        }
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ items: [{ id: id, quantity: 1 }] })
+        }).then(function (r) { return r.json().then(function (data) { return { ok: r.ok, data: data }; }); }).then(function (res) {
+          btn.disabled = false;
+          if (!res.ok || (res.data && res.data.status)) {
+            showLookToast((res.data && res.data.description) || 'Não foi possível adicionar. Limite de estoque atingido.');
+            return;
+          }
+          flyToBag(btn);
+          btn.classList.add('added');
+          btn.textContent = 'Adicionado ✓';
+          refreshHeader();
+          if (max !== 999 && inCart + 1 >= max) {
+            setTimeout(function () {
+              btn.classList.remove('added');
+              btn.textContent = orig;
+              showLookToast('Limite de estoque atingido (' + max + ' un.).');
+            }, 1200);
+          } else {
+            setTimeout(function () { btn.classList.remove('added'); btn.textContent = orig; }, 1500);
+          }
+        }).catch(function () { btn.disabled = false; showLookToast('Erro de conexão. Tente novamente.'); });
+      });
+    });
   }
 
 })();
