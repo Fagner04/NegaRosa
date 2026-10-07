@@ -130,60 +130,60 @@
   /* Reaproveita o visual do produto principal (size-grid/size-button).
      Fallback escopado caso o CSS do main-product mude. */
   .look-item .option-selector__label {
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-bold);
+    font-size: 12px;
+    font-weight: 800;
     text-transform: uppercase;
     display: flex;
     justify-content: flex-start;
-    gap: var(--space-1);
+    gap: 4px;
   }
   .look-item .option-selector__selected {
-    font-weight: var(--font-weight-regular);
+    font-weight: 400;
     color: var(--color-text-light);
     text-transform: none;
   }
   .look-item .size-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     gap: 6px;
   }
   .look-item .size-button {
-    height: 40px;
-    display: flex;
+    height: 30px;
+    min-width: 48px;
+    padding: 0 12px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-sm);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
     transition: all var(--transition-fast);
-    background: var(--color-bg);
+    background: #fff;
     cursor: pointer;
     position: relative;
   }
   .look-item .size-button.active {
-    border-color: var(--color-primary);
-    background-color: var(--color-primary);
-    color: var(--color-text-inverse);
+    border-color: #111;
+    background-color: #111;
+    color: #fff;
   }
   .look-item .size-button.unavailable {
-    opacity: 0.35;
-    background-color: var(--color-bg-secondary);
+    opacity: 0.45;
+    background-color: #fff;
+    color: #a3a3a3;
     position: relative;
   }
   .look-item .size-button.unavailable::after {
     content: '';
     position: absolute;
-    inset: 0;
-    border: 2px solid var(--color-border-dark);
-    border-radius: var(--border-radius-sm);
-    background: linear-gradient(
-      to bottom right,
-      transparent calc(50% - 1.5px),
-      var(--color-border-dark) calc(50% - 1.5px),
-      var(--color-border-dark) calc(50% + 1.5px),
-      transparent calc(50% + 1.5px)
-    );
+    left: -2px;
+    right: -2px;
+    top: 50%;
+    height: 1px;
+    background: #d4d4d4;
+    transform: rotate(-18deg);
+    pointer-events: none;
   }
   .look-item [data-look-opt="color"] .size-button.unavailable { cursor: not-allowed; }
   .look-add {
