@@ -32,7 +32,8 @@
           {%- for v in lp.variants -%}{%- if v.available -%}{%- assign lp_def = v -%}{%- break -%}{%- endif -%}{%- endfor -%}
         {%- endif -%}
         {%- if lp_def == nil -%}{%- assign lp_def = lp.variants.first -%}{%- endif -%}
-        <div class="look-item" data-look-item data-handle="{{ lp.handle }}" data-color-idx="{{ lp_color_idx }}" data-size-idx="{{ lp_size_idx }}">
+        {%- capture lp_stock -%}{%- for v in lp.variants -%}{% unless forloop.first %},{% endunless %}"{{ v.id }}":{"q":{{ v.inventory_quantity | default: 0 }},"p":"{{ v.inventory_policy }}","m":{% if v.inventory_management %}1{% else %}0{% endif %}}{%- endfor -%}{%- endcapture -%}
+        <div class="look-item" data-look-item data-handle="{{ lp.handle }}" data-color-idx="{{ lp_color_idx }}" data-size-idx="{{ lp_size_idx }}" data-stock='{ {{ lp_stock }} }'>
           <a class="look-item__img" href="{{ lp.url }}">
             {%- if lp.featured_image != blank -%}
               <img src="{{ lp.featured_image | image_url: width: 300 }}" alt="{{ lp.title | escape }}" width="300" height="300" loading="lazy">
@@ -412,21 +413,22 @@
     lookToastTimer = setTimeout(function () { el.classList.remove('show'); }, 2600);
   }
 
-  function variantMaxStock(p, variantId) {
-    if (!p || !p.variants) return 999;
-    for (var i = 0; i < p.variants.length; i++) {
-      var v = p.variants[i];
-      if (v.id === variantId) {
-        if (v.inventory_management === null || typeof v.inventory_management === 'undefined') {
-          // Sem controle de estoque -> segue disponibilidade
-          if (v.inventory_policy === 'continue') return 999;
-          if (typeof v.inventory_quantity !== 'number') return 999;
-        }
-        if (v.inventory_policy === 'continue') return 999;
-        return (typeof v.inventory_quantity === 'number' && v.inventory_quantity > 0) ? v.inventory_quantity : 0;
-      }
-    }
-    return 999;
+  // Estoque real vem do Liquid (data-stock), pois o /products/*.js não expõe quantidade.
+  function stockMapFor(item) {
+    if (item._stockMap) return item._stockMap;
+    var map = {};
+    try { map = JSON.parse(item.getAttribute('data-stock') || '{}'); } catch (e) { map = {}; }
+    item._stockMap = map;
+    return map;
+  }
+
+  function variantMaxStock(item, variantId) {
+    var map = stockMapFor(item);
+    var e = map[String(variantId)];
+    if (!e) return 999;
+    if (e.p === 'continue') return 999;
+    if (!e.m) return 999;
+    return (typeof e.q === 'number' && e.q > 0) ? e.q : 0;
   }
 
   function cartQtyFor(variantId, cb) {
@@ -484,12 +486,10 @@
     var id = parseInt(btn.getAttribute('data-look-add'), 10);
     if (!id) return;
     var item = btn.closest ? btn.closest('[data-look-item]') : null;
-    var handle = item ? item.getAttribute('data-handle') : null;
     var orig = btn.textContent;
     btn.disabled = true;
-    getProd(handle, function (p) {
-      var max = variantMaxStock(p, id);
-      cartQtyFor(id, function (inCart) {
+    var max = variantMaxStock(item, id);
+    cartQtyFor(id, function (inCart) {
         if (max !== 999 && inCart >= max) {
           showLookToast('Você já atingiu o limite disponível em estoque (' + max + ' un.).');
           btn.disabled = false;
@@ -519,7 +519,6 @@
             setTimeout(function () { btn.classList.remove('added'); btn.textContent = orig; }, 1500);
           }
         }).catch(function () { btn.disabled = false; showLookToast('Erro de conexão. Tente novamente.'); });
-      });
     });
   }
 
