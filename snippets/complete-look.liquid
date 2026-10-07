@@ -51,15 +51,19 @@
                 <div class="size-grid" data-look-sizes>
                   {%- for value in lp.options_with_values[lp_size_idx].values -%}
                     {%- assign has_av_color = false -%}
+                    {%- assign is_last = false -%}
                     {%- for v in lp.variants -%}
                       {%- if v.options[lp_size_idx] == value and v.available -%}
                         {%- if lp_color_idx == nil or v.options[lp_color_idx] == def_color_val -%}
-                          {%- assign has_av_color = true -%}{%- break -%}
+                          {%- assign has_av_color = true -%}
+                          {%- if v.inventory_management and v.inventory_policy != 'continue' and v.inventory_quantity == 1 -%}
+                            {%- assign is_last = true -%}
+                          {%- endif -%}
                         {%- endif -%}
                       {%- endif -%}
                     {%- endfor -%}
                     <button type="button"
-                      class="size-button{% if lp_def.options[lp_size_idx] == value %} active{% endif %}{% unless has_av_color %} unavailable{% endunless %}"
+                      class="size-button{% if lp_def.options[lp_size_idx] == value %} active{% endif %}{% unless has_av_color %} unavailable{% endunless %}{% if is_last and has_av_color %} is-last{% endif %}"
                       data-look-size data-value="{{ value | escape }}"{% unless has_av_color %} title="Esgotado nesta cor"{% endunless %}>{{ value }}</button>
                   {%- endfor -%}
                 </div>
@@ -74,15 +78,19 @@
                 <div class="size-grid" data-look-colors>
                   {%- for value in lp.options_with_values[lp_color_idx].values -%}
                     {%- assign has_av_size = false -%}
+                    {%- assign is_last_c = false -%}
                     {%- for v in lp.variants -%}
                       {%- if v.options[lp_color_idx] == value and v.available -%}
                         {%- if lp_size_idx == nil or v.options[lp_size_idx] == def_size_val -%}
-                          {%- assign has_av_size = true -%}{%- break -%}
+                          {%- assign has_av_size = true -%}
+                          {%- if v.inventory_management and v.inventory_policy != 'continue' and v.inventory_quantity == 1 -%}
+                            {%- assign is_last_c = true -%}
+                          {%- endif -%}
                         {%- endif -%}
                       {%- endif -%}
                     {%- endfor -%}
                     <button type="button"
-                      class="size-button{% if lp_def.options[lp_color_idx] == value %} active{% endif %}{% unless has_av_size %} unavailable{% endunless %}"
+                      class="size-button{% if lp_def.options[lp_color_idx] == value %} active{% endif %}{% unless has_av_size %} unavailable{% endunless %}{% if is_last_c and has_av_size %} is-last{% endif %}"
                       data-look-color data-value="{{ value | escape }}"{% unless has_av_size %} disabled title="Esgotado neste tamanho"{% endunless %}>{{ value }}</button>
                   {%- endfor -%}
                 </div>
@@ -187,6 +195,24 @@
     pointer-events: none;
   }
   .look-item [data-look-opt="color"] .size-button.unavailable { cursor: not-allowed; }
+  /* Selo "última" — variante com 1 unidade no estoque */
+  .look-item .size-button.is-last::before {
+    content: "última";
+    position: absolute;
+    top: -9px;
+    right: -4px;
+    background: #dc2626;
+    color: #fff;
+    font-size: 8px;
+    font-weight: 800;
+    line-height: 1;
+    padding: 3px 6px;
+    border-radius: 999px;
+    letter-spacing: 0.02em;
+    pointer-events: none;
+    z-index: 2;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  }
   .look-add {
     flex-shrink: 0;
     display: inline-flex;
@@ -296,33 +322,42 @@
     var selColor = selectedVal(item, '[data-look-color]');
     var selSize = selectedVal(item, '[data-look-size]');
     if (!p || !p.variants) return;
+    var stockMap = stockMapFor(item);
+    function isLastUnit(variantId) {
+      var st = stockMap[String(variantId)];
+      return !!(st && st.m && st.q === 1);
+    }
 
     item.querySelectorAll('[data-look-size]').forEach(function (btn) {
       var val = btn.getAttribute('data-value');
-      var avail = false;
+      var avail = false, last = false;
       for (var i = 0; i < p.variants.length; i++) {
         var v = p.variants[i];
         if (v.options[sIdx] !== val) continue;
         if (!v.available) continue;
         if (cIdx !== null && selColor && v.options[cIdx] !== selColor) continue;
-        avail = true; break;
+        avail = true;
+        if (isLastUnit(v.id)) last = true;
       }
       if (avail) { btn.classList.remove('unavailable'); btn.removeAttribute('title'); }
       else { btn.classList.add('unavailable'); btn.setAttribute('title', 'Esgotado nesta cor'); }
+      btn.classList.toggle('is-last', avail && last);
     });
 
     item.querySelectorAll('[data-look-color]').forEach(function (btn) {
       var val = btn.getAttribute('data-value');
-      var avail = false;
+      var avail = false, last = false;
       for (var i = 0; i < p.variants.length; i++) {
         var v = p.variants[i];
         if (v.options[cIdx] !== val) continue;
         if (!v.available) continue;
         if (sIdx !== null && selSize && v.options[sIdx] !== selSize) continue;
-        avail = true; break;
+        avail = true;
+        if (isLastUnit(v.id)) last = true;
       }
       if (avail) { btn.classList.remove('unavailable'); btn.removeAttribute('disabled'); btn.removeAttribute('title'); }
       else { btn.classList.add('unavailable'); btn.setAttribute('disabled', 'disabled'); btn.setAttribute('title', 'Esgotado neste tamanho'); }
+      btn.classList.toggle('is-last', avail && last);
     });
 
     setLabel(item, '[data-look-selected-size]', selSize);
