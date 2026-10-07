@@ -699,6 +699,23 @@
     transform: translateX(-50%) translateY(0);
   }
 
+  /* Efeito voando p/ sacola (botão principal) */
+  .nr-fly-img {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+    border-radius: 12px;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.5, -0.1, 0.3, 1), opacity 0.7s ease, width 0.7s ease, height 0.7s ease;
+    will-change: transform, opacity;
+  }
+  @keyframes nrBagPop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.25) rotate(-8deg); }
+    100% { transform: scale(1); }
+  }
+  .header__cart-btn.nr-bump { animation: nrBagPop 0.5s ease; }
+
   /* Quantidade ao lado do botão comprar */
   .buy-row {
     display: flex;
@@ -2699,6 +2716,49 @@
       e.preventDefault();
       var addBtn = document.getElementById('AddToCartBtn');
       if (!addBtn || addBtn.disabled) return;
+      try {
+        if (!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+          var bag = document.querySelector('.header__cart-btn');
+          var srcImg = null;
+          var mobCarousel = document.getElementById('ProductMobileCarousel');
+          if (mobCarousel && mobCarousel.offsetParent !== null) {
+            srcImg = mobCarousel.querySelector('img');
+          }
+          if (!srcImg) srcImg = document.getElementById('ProductMainImage');
+          if (srcImg && bag) {
+            var r1 = srcImg.getBoundingClientRect();
+            var r2 = bag.getBoundingClientRect();
+            if (r1.width && r2.width) {
+              var ghost = srcImg.cloneNode(false);
+              ghost.className = 'nr-fly-img';
+              ghost.removeAttribute('id');
+              ghost.style.left = r1.left + 'px';
+              ghost.style.top = r1.top + 'px';
+              ghost.style.width = r1.width + 'px';
+              ghost.style.height = r1.height + 'px';
+              ghost.style.opacity = '1';
+              document.body.appendChild(ghost);
+              var dx = (r2.left + r2.width / 2) - (r1.left + r1.width / 2);
+              var dy = (r2.top + r2.height / 2) - (r1.top + r1.height / 2);
+              requestAnimationFrame(function () {
+                requestAnimationFrame(function () {
+                  ghost.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(0.12)';
+                  ghost.style.opacity = '0.4';
+                  ghost.style.width = '28px';
+                  ghost.style.height = '28px';
+                });
+              });
+              setTimeout(function () {
+                if (ghost.parentNode) ghost.parentNode.removeChild(ghost);
+                bag.classList.remove('nr-bump');
+                void bag.offsetWidth;
+                bag.classList.add('nr-bump');
+                setTimeout(function () { bag.classList.remove('nr-bump'); }, 550);
+              }, 720);
+            }
+          }
+        }
+      } catch (err) { /* sem quebrar o add */ }
       var originalText = addBtn.textContent;
       addBtn.disabled = true;
       addBtn.textContent = 'Adicionando...';
