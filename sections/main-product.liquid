@@ -475,6 +475,43 @@
     transform: rotate(-25deg);
   }
 
+  /* Selo "última" — variante com 1 unidade no estoque */
+  .size-button.is-last::before {
+    content: 'última';
+    position: absolute;
+    top: -9px;
+    right: -4px;
+    background: #dc2626;
+    color: #fff;
+    font-size: 8px;
+    font-weight: 800;
+    line-height: 1;
+    padding: 3px 6px;
+    border-radius: 999px;
+    letter-spacing: 0.02em;
+    pointer-events: none;
+    z-index: 2;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  }
+  .color-swatch.is-last::before {
+    content: 'última';
+    position: absolute;
+    top: -10px;
+    right: -16px;
+    background: #dc2626;
+    color: #fff;
+    font-size: 8px;
+    font-weight: 800;
+    line-height: 1;
+    padding: 3px 6px;
+    border-radius: 999px;
+    letter-spacing: 0.02em;
+    pointer-events: none;
+    z-index: 2;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+    white-space: nowrap;
+  }
+
   /* Color Swatches */
   .color-swatches {
     display: flex;
@@ -1565,6 +1602,7 @@
                   endif
                 endif
               -%}
+              {%- assign opt_idx = forloop.index0 -%}
               <div class="option-selector" data-option-index="{{ forloop.index0 }}" data-option-name="{{ option.name | downcase }}">
                 <label class="option-selector__label">
                   {{ option.name }}:
@@ -1585,6 +1623,19 @@
                   {%- comment -%} Cor da amostra — apenas para opção de Cor {%- endcomment -%}
                   <div class="color-swatches">
                     {%- for value in option.values -%}
+                      {%- assign is_last_opt = false -%}
+                      {%- for variant in product.variants -%}
+                        {%- if variant.options[opt_idx] == value and variant.available -%}
+                          {%- assign ctx_ok = true -%}
+                          {%- for o2 in product.options_with_values -%}
+                            {%- assign j2 = forloop.index0 -%}
+                            {%- if j2 != opt_idx -%}{%- if variant.options[j2] != o2.selected_value -%}{%- assign ctx_ok = false -%}{%- break -%}{%- endif -%}{%- endif -%}
+                          {%- endfor -%}
+                          {%- if ctx_ok and variant.inventory_management and variant.inventory_policy != 'continue' and variant.inventory_quantity == 1 -%}
+                            {%- assign is_last_opt = true -%}{%- break -%}
+                          {%- endif -%}
+                        {%- endif -%}
+                      {%- endfor -%}
                       {%- liquid
                         assign swatch_color = '#cccccc'
                         assign value_lower = value | downcase
@@ -1650,7 +1701,7 @@
                         endif
                       -%}
                       <button type="button"
-                              class="color-swatch{% if option.selected_value == value %} active{% endif %}"
+                              class="color-swatch{% if option.selected_value == value %} active{% endif %}{% if is_last_opt %} is-last{% endif %}"
                               data-value="{{ value | escape }}"
                               style="background-color: {{ swatch_color }};"
                               title="{{ value | escape }}"
@@ -1695,8 +1746,21 @@
                   {%- comment -%} Bloco — grade de botões (padrão para tamanho e demais) {%- endcomment -%}
                   <div class="size-grid">
                     {%- for value in option.values -%}
+                      {%- assign is_last_opt = false -%}
+                      {%- for variant in product.variants -%}
+                        {%- if variant.options[opt_idx] == value and variant.available -%}
+                          {%- assign ctx_ok = true -%}
+                          {%- for o2 in product.options_with_values -%}
+                            {%- assign j2 = forloop.index0 -%}
+                            {%- if j2 != opt_idx -%}{%- if variant.options[j2] != o2.selected_value -%}{%- assign ctx_ok = false -%}{%- break -%}{%- endif -%}{%- endif -%}
+                          {%- endfor -%}
+                          {%- if ctx_ok and variant.inventory_management and variant.inventory_policy != 'continue' and variant.inventory_quantity == 1 -%}
+                            {%- assign is_last_opt = true -%}{%- break -%}
+                          {%- endif -%}
+                        {%- endif -%}
+                      {%- endfor -%}
                       <button type="button"
-                              class="size-button{% if option.selected_value == value %} active{% endif %}"
+                              class="size-button{% if option.selected_value == value %} active{% endif %}{% if is_last_opt %} is-last{% endif %}"
                               data-value="{{ value | escape }}">
                         {{ value }}
                       </button>
@@ -2837,8 +2901,9 @@
           var val = btn.getAttribute('data-value');
 
           // Verifica se existe alguma variante disponível onde esta opção
-          // tenha esse valor E as demais opções combinem com a seleção atual
-          var avail = false;
+          // tenha esse valor E as demais opções combinem com a seleção atual.
+          // Marca também o selo "última" quando a combinação tem 1 unidade.
+          var avail = false, last = false;
           for (var vi = 0; vi < variants.length; vi++) {
             var v = variants[vi];
             if (v.options[idx] !== val) continue;
@@ -2852,7 +2917,9 @@
                 break;
               }
             }
-            if (match) { avail = true; break; }
+            if (!match) continue;
+            avail = true;
+            if (v.inventory_policy !== 'continue' && v.inventory_quantity === 1) { last = true; break; }
           }
 
           if (avail) {
@@ -2865,6 +2932,7 @@
               btn.setAttribute('disabled', 'disabled');
             }
           }
+          btn.classList.toggle('is-last', avail && last);
         }
 
         // Oculta a seção inteira se TODOS os botões estiverem esgotados (só para cores)
