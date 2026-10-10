@@ -280,7 +280,7 @@
   max-height: 56vh;
   max-height: 56dvh;
   margin: 0 12px;
-  background: var(--color-bg-secondary);
+  background: #fff;
   border-radius: 16px;
   overflow: hidden;
   flex-shrink: 0;
@@ -292,7 +292,7 @@
   object-fit: contain;
   object-position: center top;
   display: block;
-  background: var(--color-bg-secondary);
+  background: #fff;
 }
 
 .qa-sheet__round-btn {
