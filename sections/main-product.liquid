@@ -2824,39 +2824,77 @@
           }
         }
       } catch (err) { /* sem quebrar o add */ }
-      var originalText = addBtn.textContent;
-      addBtn.disabled = true;
-      addBtn.textContent = 'Adicionando...';
+      function submitAdd() {
+        var originalText = addBtn.textContent;
+        addBtn.disabled = true;
+        addBtn.textContent = 'Adicionando...';
 
-      var formData = new FormData(form);
-      fetch('/cart/add.js', {
-        method: 'POST',
-        headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-        body: formData
-      })
-        .then(function (r) { return r.json().then(function (data) { return { ok: r.ok, data: data }; }); })
-        .then(function (res) {
-          if (!res.ok) {
-            showNrToast((res.data && res.data.description) || 'Não foi possível adicionar.');
+        var formData = new FormData(form);
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+          body: formData
+        })
+          .then(function (r) { return r.json().then(function (data) { return { ok: r.ok, data: data }; }); })
+          .then(function (res) {
+            if (!res.ok) {
+              showNrToast((res.data && res.data.description) || 'Não foi possível adicionar.');
+              addBtn.disabled = false;
+              addBtn.textContent = originalText;
+              return;
+            }
+            addBtn.textContent = 'Adicionado ✓';
+            // Atualiza contador do carrinho no header
+            fetch('/cart.js').then(function (r) { return r.json(); }).then(function (cart) {
+              document.querySelectorAll('.header__cart-count').forEach(function (el) {
+                el.textContent = cart.item_count;
+                el.style.display = cart.item_count > 0 ? 'flex' : 'none';
+              });
+            }).catch(function(){});
+            setTimeout(function () { addBtn.disabled = false; addBtn.textContent = originalText; }, 1500);
+          })
+          .catch(function () {
+            showNrToast('Erro de conexão. Tente novamente.');
             addBtn.disabled = false;
             addBtn.textContent = originalText;
-            return;
+          });
+      }
+
+      // Mesmo padrão do complete-look: se a sacola já tem todo o estoque, avisa sem POST
+      var submitVariantIdInput = document.getElementById('ProductVariantId');
+      var submitVariantId = submitVariantIdInput ? parseInt(submitVariantIdInput.value, 10) : 0;
+      var submitV = null;
+      for (var svi = 0; svi < variants.length; svi++) {
+        if (variants[svi].id === submitVariantId) { submitV = variants[svi]; break; }
+      }
+      var submitMax = 999;
+      if (submitV && submitV.inventory_policy !== 'continue' && submitV.inventory_quantity > 0) {
+        submitMax = submitV.inventory_quantity;
+      }
+      if (submitMax === 999 || !submitVariantId) { submitAdd(); return; }
+      addBtn.disabled = true;
+      addBtn.textContent = 'Verificando...';
+      fetch('/cart.js', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (cart) {
+        var inCart = 0;
+        if (cart && cart.items) {
+          for (var ci = 0; ci < cart.items.length; ci++) {
+            if (cart.items[ci].variant_id === submitVariantId || cart.items[ci].id === submitVariantId) { inCart = cart.items[ci].quantity; break; }
           }
-          addBtn.textContent = 'Adicionado ✓';
-          // Atualiza contador do carrinho no header
-          fetch('/cart.js').then(function (r) { return r.json(); }).then(function (cart) {
-            document.querySelectorAll('.header__cart-count').forEach(function (el) {
-              el.textContent = cart.item_count;
-              el.style.display = cart.item_count > 0 ? 'flex' : 'none';
-            });
-          }).catch(function(){});
-          setTimeout(function () { addBtn.disabled = false; addBtn.textContent = originalText; }, 1500);
-        })
-        .catch(function () {
-          showNrToast('Erro de conexão. Tente novamente.');
+        }
+        var rest = submitMax - inCart;
+        if (rest <= 0) {
+          showNrToast('Você já adicionou toda a quantidade disponível em estoque (' + submitMax + ' un.).');
           addBtn.disabled = false;
-          addBtn.textContent = originalText;
-        });
+          addBtn.textContent = 'Adicionar à Sacola';
+          return;
+        }
+        var qv = qtyInput ? (parseInt(qtyInput.value, 10) || 1) : 1;
+        if (qv > rest) {
+          if (qtyInput) qtyInput.value = rest;
+          showNrToast('Só restam ' + rest + ' un. em estoque — ajustamos a quantidade.');
+        }
+        submitAdd();
+      }).catch(function () { submitAdd(); });
     });
 
 
