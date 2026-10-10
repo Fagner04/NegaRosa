@@ -279,8 +279,9 @@
   aspect-ratio: 4 / 5;
   max-height: 56vh;
   max-height: 56dvh;
+  margin: 0 12px;
   background: var(--color-bg-secondary);
-  border-radius: 20px 20px 0 0;
+  border-radius: 16px;
   overflow: hidden;
   flex-shrink: 0;
 }
