@@ -1099,7 +1099,8 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity .25s, transform .25s;
-  z-index: 9999;
+  /* Acima do drawer (10061) p/ o aviso não ficar escondido atrás dele */
+  z-index: 10070;
   text-align: center;
 }
 .qa-toast.show {
