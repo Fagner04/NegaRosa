@@ -190,11 +190,23 @@
       {%- endif -%}
     {%- endfor -%}
     {%- if size_option -%}
-      <div class="product-card__sizes" aria-label="Tamanhos disponíveis">
+      {%- capture size_pills -%}
         {%- for value in size_option.values -%}
-          <span class="product-card__size">{{ value }}</span>
+          {%- assign size_available = false -%}
+          {%- for v in product.variants -%}
+            {%- if v.options contains value and v.available -%}
+              {%- assign size_available = true -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if size_available -%}
+            <span class="product-card__size">{{ value }}</span>
+          {%- endif -%}
         {%- endfor -%}
-      </div>
+      {%- endcapture -%}
+      {%- if size_pills != blank -%}
+        <div class="product-card__sizes" aria-label="Tamanhos disponíveis">{{ size_pills }}</div>
+      {%- endif -%}
     {%- endif -%}
 
     <!-- Price block (Varejo / Atacado / PIX / Parcelamento) -->
