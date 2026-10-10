@@ -220,6 +220,11 @@
   transform: translateY(0);
 }
 
+/* Arrastar com o dedo: a lâmina segue o toque sem transição */
+.quick-add-drawer.dragging {
+  transition: none;
+}
+
 /* Efeito de abertura: mídia assenta + conteúdo sobe em cascata */
 .quick-add-drawer.active .qa-sheet__media {
   animation: qaSheetMediaIn 0.5s cubic-bezier(0.22, 1, 0.36, 1);

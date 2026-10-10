@@ -633,8 +633,8 @@ document.addEventListener('DOMContentLoaded', function () {
     modal.setAttribute('aria-hidden', 'true');
     drawer.classList.remove('active');
     drawer.setAttribute('aria-hidden', 'true');
-    /* clear inline display after slide-out finishes so CSS default (none) takes over */
-    setTimeout(function () { if (!isOpen) drawer.style.display = ''; }, 400);
+    /* clear inline display/styles after slide-out finishes so CSS default (none) takes over */
+    setTimeout(function () { if (!isOpen) { drawer.style.display = ''; drawer.style.transform = ''; drawer.classList.remove('dragging'); } }, 400);
     document.body.classList.remove('modal-open');
     currentProduct = null;
     selectedOptions = {};
@@ -922,13 +922,58 @@ document.addEventListener('DOMContentLoaded', function () {
     wrap.setAttribute('aria-hidden', 'true');
   }
 
-  /* Swipe down to close drawer */
-  var ty = 0, tx = 0;
-  drawer.addEventListener('touchstart', function (e) { ty = e.touches[0].clientY; tx = e.touches[0].clientX; }, { passive: true });
-  drawer.addEventListener('touchend',   function (e) {
-    var dy = e.changedTouches[0].clientY - ty;
-    var dx = Math.abs(e.changedTouches[0].clientX - tx);
-    if (dy > 80 && dx < 40) closeQuickAdd();
+  /* Bottom-sheet: segue o dedo ao puxar p/ baixo (fecha) ou solta e volta */
+  var dragStartY = 0, dragStartX = 0, dragDy = 0, draggingSheet = false;
+  var dragLastY = 0, dragLastT = 0, dragVel = 0;
+  function qaSheetDragBlocked() {
+    var sg = drawer.querySelector('[data-qa-sg]');
+    return !!(sg && sg.classList.contains('open'));
+  }
+  drawer.addEventListener('touchstart', function (e) {
+    if (e.touches.length !== 1) return;
+    dragStartY = e.touches[0].clientY;
+    dragStartX = e.touches[0].clientX;
+    dragDy = 0; draggingSheet = false; dragVel = 0;
+    dragLastY = dragStartY; dragLastT = Date.now();
   }, { passive: true });
+  drawer.addEventListener('touchmove', function (e) {
+    if (e.touches.length !== 1 || qaSheetDragBlocked()) return;
+    var y = e.touches[0].clientY, x = e.touches[0].clientX;
+    var dy = y - dragStartY, dx = x - dragStartX;
+    var now = Date.now();
+    dragVel = (y - dragLastY) / Math.max(1, now - dragLastT);
+    dragLastY = y; dragLastT = now;
+    if (!draggingSheet) {
+      /* Só puxa a lâmina se estiver no topo e o gesto for p/ baixo e vertical */
+      if (drawer.scrollTop <= 0 && dy > 10 && Math.abs(dy) > Math.abs(dx) * 1.5) {
+        draggingSheet = true;
+        drawer.classList.add('dragging');
+      } else return;
+    }
+    dragDy = Math.max(0, dy);
+    drawer.style.transform = 'translateY(' + dragDy + 'px)';
+    if (e.cancelable) e.preventDefault();
+  }, { passive: false });
+  function qaSheetDragEnd() {
+    if (!draggingSheet) return;
+    draggingSheet = false;
+    drawer.classList.remove('dragging');
+    if (dragDy > 110 || (dragVel > 0.45 && dragDy > 40)) {
+      /* Solta e fecha: desliza até sair da tela e depois limpa */
+      drawer.style.transform = 'translateY(100%)';
+      setTimeout(closeQuickAdd, 360);
+    } else {
+      /* Solta cedo: volta (snap back) */
+      drawer.style.transform = '';
+    }
+    dragDy = 0;
+  }
+  drawer.addEventListener('touchend', qaSheetDragEnd);
+  drawer.addEventListener('touchcancel', function () {
+    draggingSheet = false;
+    drawer.classList.remove('dragging');
+    drawer.style.transform = '';
+    dragDy = 0;
+  });
 
 });
