@@ -26,16 +26,31 @@
             {%- endif -%}
 
             {%- if block.settings.image != blank -%}
-              <img
-                class="category-card__image category-card__slide category-card__slide--active"
-                src="{{ block.settings.image | image_url: width: 800 }}"
-                alt="{{ block.settings.title | escape }}"
-                width="800"
-                height="600"
-                loading="lazy"
-              >
+              {%- if has_two -%}
+                <img
+                  class="category-card__image category-card__slide category-card__slide--active"
+                  src="{{ block.settings.image | image_url: width: 800 }}"
+                  alt="{{ block.settings.title | escape }}"
+                  width="800"
+                  height="600"
+                  loading="lazy"
+                >
+              {%- else -%}
+                <img
+                  class="category-card__image"
+                  src="{{ block.settings.image | image_url: width: 800 }}"
+                  alt="{{ block.settings.title | escape }}"
+                  width="800"
+                  height="600"
+                  loading="lazy"
+                >
+              {%- endif -%}
             {%- else -%}
-              <div class="category-card__image category-card__slide category-card__slide--active category-card__image--placeholder" style="background: linear-gradient(135deg, #{{ block.settings.placeholder_color | default: '333333' }} 0%, #{{ block.settings.placeholder_color_2 | default: '666666' }} 100%);"></div>
+              {%- if has_two -%}
+                <div class="category-card__image category-card__slide category-card__slide--active category-card__image--placeholder" style="background: linear-gradient(135deg, #{{ block.settings.placeholder_color | default: '333333' }} 0%, #{{ block.settings.placeholder_color_2 | default: '666666' }} 100%);"></div>
+              {%- else -%}
+                <div class="category-card__image category-card__image--placeholder" style="background: linear-gradient(135deg, #{{ block.settings.placeholder_color | default: '333333' }} 0%, #{{ block.settings.placeholder_color_2 | default: '666666' }} 100%);"></div>
+              {%- endif -%}
             {%- endif -%}
 
             {%- if block.settings.image_2 != blank -%}
