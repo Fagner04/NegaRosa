@@ -532,3 +532,16 @@
     font-size: 15px;
   }
 }
+
+/* Header transparente - sobreposição do hero */
+body.header-transparent:not(.header-scrolled) .hero-banner--fullscreen {
+  height: calc(100vh - var(--announcement-height));
+  height: calc(100svh - var(--announcement-height));
+  min-height: 500px;
+}
+body.header-transparent:not(.header-scrolled) .hero-banner {
+  margin-top: calc(-1 * var(--header-height));
+}
+body.header-transparent:not(.header-scrolled) .hero-banner__content {
+  padding-top: var(--header-height);
+}
