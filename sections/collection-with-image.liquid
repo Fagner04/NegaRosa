@@ -1,0 +1,205 @@
+{{ 'collection-with-image.css' | asset_url | stylesheet_tag }}
+
+{%- assign collection = collections[section.settings.collection] -%}
+
+<section class="cwi-section" data-section-id="{{ section.id }}" id="cwi-section-{{ section.id }}">
+  <div class="page-width cwi-section__inner">
+    <div class="cwi">
+
+      {%- comment -%} Foto de fundo dentro do .cwi para respeitar o border-radius {%- endcomment -%}
+      {%- if section.settings.image -%}
+        <img
+          src="{{ section.settings.image | image_url: width: 1400 }}"
+          alt=""
+          class="cwi__bg-full"
+          width="1400"
+          height="600"
+          loading="eager"
+          fetchpriority="high"
+        >
+      {%- endif -%}
+
+      <!-- ── Painel esquerdo: título + botão (transparente, foto vem do fundo da seção) ── -->
+      <div class="cwi__panel" id="cwi-panel-{{ section.id }}">
+        <div class="cwi__panel-top">
+          {%- if section.settings.title != blank -%}
+            <h2 class="cwi__title">{{ section.settings.title | escape }}</h2>
+          {%- endif -%}
+          {%- if section.settings.button_text != blank -%}
+            <a href="{{ section.settings.button_link | default: collection.url | default: '#' }}"
+               class="cwi__cta">{{ section.settings.button_text | escape }}</a>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <!-- ── Carrossel de produtos ── -->
+      <div class="cwi__carousel-wrap">
+
+        <button class="cwi__arrow cwi__arrow--prev" aria-label="Anterior"
+                onclick="cwiScroll('{{ section.id }}', -1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+        </button>
+
+        <div class="cwi__track" id="cwi-track-{{ section.id }}">
+          {%- unless collection.empty? -%}
+            {%- for product in collection.products limit: section.settings.products_count -%}
+              <div class="cwi__item">
+                {%- render 'product-card', product: product -%}
+              </div>
+            {%- endfor -%}
+          {%- else -%}
+            {%- for i in (1..4) -%}
+              <div class="cwi__item">
+                <div class="cwi__placeholder-card">
+                  <div class="cwi__placeholder-img"></div>
+                  <div class="cwi__placeholder-info">Produto exemplo</div>
+                </div>
+              </div>
+            {%- endfor -%}
+          {%- endunless -%}
+        </div>
+
+        <button class="cwi__arrow cwi__arrow--next" aria-label="Próximo"
+                onclick="cwiScroll('{{ section.id }}', 1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Fundo colorido da seção — base quando não há foto */
+  #cwi-section-{{ section.id }} {
+    background-color: {{ section.settings.background1 }} !important;
+  }
+  /* Cor do título */
+  #cwi-panel-{{ section.id }} .cwi__title {
+    color: {{ section.settings.text_color }};
+  }
+  /* Botão */
+  #cwi-section-{{ section.id }} .cwi__cta {
+    background-color: {{ section.settings.button_background }};
+    color: {{ section.settings.button_text_color }};
+  }
+</style>
+
+<script>
+  (function () {
+    function cwiScroll(id, direction) {
+      var track = document.getElementById('cwi-track-' + id);
+      if (!track) return;
+      var firstItem = track.querySelector('.cwi__item');
+      var itemWidth = firstItem ? (firstItem.offsetWidth + 14) : 240;
+      track.scrollBy({ left: direction * itemWidth * 2, behavior: 'smooth' });
+    }
+    window.cwiScroll = cwiScroll;
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Coleção com imagem",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Coleção"
+    },
+    {
+      "type": "range",
+      "id": "products_count",
+      "label": "Produtos para mostrar",
+      "min": 4,
+      "max": 48,
+      "step": 4,
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Fundo da seção"
+    },
+    {
+      "type": "color",
+      "id": "background1",
+      "label": "Cor de fundo",
+      "info": "Aparece em toda a seção (inclusive atrás dos cards). Usada quando não há foto.",
+      "default": "#d4a0a5"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Foto de fundo",
+      "info": "Aparece em TODA a seção — atrás do painel e dos cards. Recomendado: 1400 x 600px horizontal."
+    },
+    {
+      "type": "header",
+      "content": "Painel esquerdo"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Cor do título",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "COLEÇÕES FITNESS"
+    },
+    {
+      "type": "header",
+      "content": "Botão"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Fundo do botão",
+      "default": "#1c1c1c"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Texto do botão",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Texto do botão",
+      "default": "Ver mais"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Link do botão",
+      "info": "Se vazio, usa a URL da coleção."
+    },
+    {
+      "type": "header",
+      "content": "Opções do PIX"
+    },
+    {
+      "type": "collection_list",
+      "id": "pix_exclude_collections",
+      "label": "Ocultar PIX nas coleções",
+      "limit": 10
+    }
+  ],
+  "presets": [
+    {
+      "category": "Collection",
+      "name": "Coleção com imagem",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}

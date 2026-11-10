@@ -1,0 +1,252 @@
+/* ==========================================================================
+   Coleção com Imagem — collection-with-image.css
+   ========================================================================== */
+
+/* ── Seção: fica dentro do page-width, com margens laterais ── */
+.cwi-section {
+  position: relative;
+  padding: 28px 0 36px;
+  overflow: hidden;
+}
+
+/* Foto de fundo dentro do .cwi — fica atrás de tudo, clippada pelo border-radius */
+.cwi__bg-full {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left center;
+  display: block;
+  z-index: 0;
+  border-radius: inherit;
+}
+
+.cwi-section__inner {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Flex principal — com border-radius para ficar como card ── */
+.cwi {
+  display: flex;
+  align-items: stretch;
+  min-height: 480px;
+  gap: 16px;
+  overflow: hidden;
+  border-radius: 24px;
+  position: relative;
+}
+
+/* ======================================================
+   PAINEL ESQUERDO
+   ====================================================== */
+.cwi__panel {
+  position: relative;
+  flex: 0 0 230px;
+  min-width: 200px;
+  max-width: 260px;
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 24px 20px;
+  background: transparent;
+}
+
+.cwi__panel-scrim {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 60%;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.cwi__panel-top {
+  position: relative;
+  z-index: 2;
+}
+
+.cwi__title {
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 0 0 14px;
+  color: #fff;
+}
+
+.cwi__cta {
+  display: inline-block;
+  padding: 9px 20px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: opacity 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+
+.cwi__cta:hover { opacity: 0.85; transform: scale(1.04); }
+
+/* ======================================================
+   CARROSSEL — sai do page-width pela direita
+   ====================================================== */
+.cwi__carousel-wrap {
+  flex: 1 1 0;
+  min-width: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  /* sem margin negativa — fica dentro do page-width */
+}
+
+.cwi__track {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* padding-right grande para o último card não ficar colado na borda */
+  padding: 8px 52px 8px 4px;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: stretch;
+}
+
+.cwi__track::-webkit-scrollbar { display: none; }
+
+.cwi__item {
+  flex: 0 0 auto;
+  width: 210px;
+  scroll-snap-align: start;
+}
+
+/* Cards brancos flutuando sobre o fundo — altura maior */
+.cwi__item .product-card {
+  width: 100% !important;
+  background: #ffffff !important;
+  border-radius: 20px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12) !important;
+}
+
+/* Padding na área da imagem — cria borda branca ao redor da foto */
+.cwi__item .product-card__image-outer {
+  padding: 10px !important;
+}
+
+.cwi__item .product-card__image-wrapper {
+  aspect-ratio: 3 / 4 !important;
+  min-height: 280px !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
+}
+
+.cwi__item .product-card__info {
+  background: #ffffff !important;
+}
+
+/* Placeholder */
+.cwi__placeholder-card { background: #fff; border-radius: 20px; overflow: hidden; }
+.cwi__placeholder-img { height: 260px; background: #f0f0f0; }
+.cwi__placeholder-info { padding: 12px; color: #bbb; font-size: 12px; text-align: center; }
+
+/* ======================================================
+   SETAS — aparecem só no hover da seção
+   ====================================================== */
+.cwi__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #fff;
+  border: none;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.20);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1c1c1c;
+  transition: background 0.2s, color 0.2s, transform 0.2s, opacity 0.2s;
+  /* escondidas por padrão */
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* aparecem quando o mouse está sobre a seção */
+.cwi:hover .cwi__arrow {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.cwi__arrow:hover {
+  background: #1c1c1c;
+  color: #fff;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.cwi__arrow--prev { left: 4px; }
+.cwi__arrow--next { right: 4px; }
+
+/* ======================================================
+   RESPONSIVO
+   ====================================================== */
+@media screen and (max-width: 768px) {
+  .cwi-section { padding: 0 0 20px; overflow: visible; }
+  .cwi__bg-full { display: none; }
+  .cwi {
+    flex-direction: column; gap: 0; min-height: auto;
+    border-radius: 16px 16px 0 0;
+    margin: 0 -16px;
+    width: calc(100% + 32px);
+  }
+  .cwi__panel {
+    flex: none; width: 100%; max-width: 100%;
+    min-height: 120px; border-radius: 16px 16px 0 0; padding: 16px 14px;
+  }
+  .cwi__title { font-size: 14px; }
+  .cwi__cta { padding: 7px 14px; font-size: 12px; }
+  .cwi__arrow { display: none; }
+  .cwi__track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 12px;
+    padding: 12px 16px 24px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .cwi__track::-webkit-scrollbar { display: none; }
+  .cwi__item {
+    flex: 0 0 auto;
+    width: 62vw;
+    max-width: 280px;
+    scroll-snap-align: start;
+  }
+  .cwi__item .product-card__image-wrapper { min-height: 240px !important; }
+}
+
+@media screen and (min-width: 769px) {
+  .cwi-section { background: transparent !important; }
+}
+
+@media screen and (min-width: 641px) and (max-width: 999px) {
+  .cwi__panel { flex: 0 0 190px; max-width: 200px; }
+  .cwi__item { width: 178px; }
+}
+
+@media screen and (min-width: 1000px) {
+  .cwi__panel { flex: 0 0 248px; max-width: 262px; padding: 28px 24px; }
+  .cwi__title { font-size: 22px; }
+  .cwi__item { width: 240px; }
+  .cwi__track { padding: 16px 52px 16px 8px; }
+}
