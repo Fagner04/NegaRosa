@@ -1,0 +1,130 @@
+{%- comment -%}
+  Steps Stacked – efeito sticky tipo landing Conectwhats
+{%- endcomment -%}
+<section class="steps-section" id="steps-{{ section.id }}">
+  <style>
+    .steps-section{
+      position:relative;
+      isolation:isolate;
+      color:var(--color-text);
+      padding-block:calc(var(--space-6) * 2);
+    }
+    .steps__head{
+      display:grid;
+      grid-template-columns:minmax(0,6fr) minmax(0,5fr);
+      gap:1.5rem 4rem;
+      align-items:end;
+      margin-bottom:3rem;
+    }
+    .steps__steps{
+      display:grid;
+      gap:1.25rem;
+    }
+    .steps__card{
+      display:grid;
+      grid-template-columns:minmax(0,2fr) minmax(0,5fr) minmax(0,5fr);
+      gap:1.5rem 3rem;
+      align-items:center;
+      min-height: clamp(19rem,50vh,28rem);
+      padding: clamp(1.5rem,4vw,3.5rem);
+      border-radius: 24px;
+      background:#f5f5f5;
+      position:relative;
+      transform-origin:50% 0%;
+    }
+    .steps__card:nth-child(2){ background:#3e2f58; color:#fff; }
+    .steps__card:nth-child(3){ background:#111; color:#fff; }
+    .steps__num{
+      font-size: clamp(5rem,11vw,9.5rem);
+      line-height:0.8;
+      font-weight:900;
+    }
+    .steps__copy{display:grid; gap:0.75rem; max-width:26rem;}
+    .steps__ui{
+      display:grid; gap:0.625rem; justify-items:start;
+      padding:1.25rem; border-radius:16px;
+      background:color-mix(in srgb, currentColor 7%, transparent);
+    }
+    .steps__check{display:flex; align-items:center; gap:0.625rem;}
+    @media (max-width: 992px){
+      .steps__card{grid-template-columns:auto minmax(0,1fr);}
+      .steps__ui{grid-column:1 / -1;}
+    }
+    @media (max-width: 768px){
+      .steps__head{grid-template-columns:1fr;}
+      .steps__card{grid-template-columns:1fr; gap:1.25rem; min-height:0;}
+      .steps__num{font-size:4.5rem;}
+    }
+    @media (prefers-reduced-motion:no-preference){
+      .steps-section.is-stacked .steps__card{
+        position:sticky;
+        top: calc(5.5rem + var(--setup-i,0) * 1.25rem);
+      }
+      @media (max-width:768px){
+        .steps-section.is-stacked .steps__card{
+          top: calc(5.25rem + var(--setup-i,0) * 0.75rem);
+        }
+      }
+    }
+  </style>
+
+  <div class="page-width">
+    <div class="steps__head">
+      <h2 style="font-size:2.5rem; font-weight:800;">Três passos e você já está vendendo mais.</h2>
+      <p style="color:#666;">Sem instalação complexa. Em menos de 5 minutos sua automação está ativa.</p>
+    </div>
+
+    <ol class="steps__steps" style="list-style:none; padding:0; margin:0;">
+      <li class="steps__card" style="--setup-i:0">
+        <p class="steps__num">1</p>
+        <div class="steps__copy">
+          <h3 style="font-size:1.5rem; font-weight:700; margin:0;">Crie sua conta</h3>
+          <p style="margin:0; color:inherit; opacity:0.8;">Acesse e crie sua conta gratuitamente. Sem cartão de crédito, sem compromisso.</p>
+        </div>
+        <div class="steps__ui">
+          <p class="steps__check">✓ Conta criada com sucesso</p>
+          <p class="steps__check">✓ Trial de 7 dias ativo</p>
+          <p class="steps__check">✓ WhatsApp pronto para conectar</p>
+        </div>
+      </li>
+      <li class="steps__card" style="--setup-i:1">
+        <p class="steps__num">2</p>
+        <div class="steps__copy">
+          <h3 style="font-size:1.5rem; font-weight:700; margin:0;">Conecte e integre</h3>
+          <p style="margin:0; color:inherit; opacity:0.8;">Escaneie o QR Code e integre sua loja em poucos cliques.</p>
+        </div>
+        <div class="steps__ui">
+          <p class="steps__check">✓ WhatsApp conectado</p>
+          <p class="steps__check">✓ Shopify integrado</p>
+        </div>
+      </li>
+      <li class="steps__card" style="--setup-i:2">
+        <p class="steps__num">3</p>
+        <div class="steps__copy">
+          <h3 style="font-size:1.5rem; font-weight:700; margin:0;">Ative e venda mais</h3>
+          <p style="margin:0; color:inherit; opacity:0.8;">Configure automações e recupere carrinhos automaticamente.</p>
+        </div>
+        <div class="steps__ui">
+          <p class="steps__check">✓ Automação ativa</p>
+          <p class="steps__check">✓ Vendas recuperadas</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var el = document.getElementById('steps-{{ section.id }}');
+  if(!el) return;
+  el.classList.add('is-stacked');
+});
+</script>
+
+{% schema %}
+{
+  "name": "Steps Stacked",
+  "settings": [],
+  "presets": [{ "name": "Steps Stacked" }]
+}
+{% endschema %}
