@@ -157,9 +157,12 @@
           "type": "category",
           "settings": {
             "title": "Moda masculina",
+            "badge": "",
             "image": "shopify://shop_images/CAPA_BANNER_SITE_2400_x_1125_px_6.svg",
             "link": "shopify://collections/masculino",
             "cta_text": "Ver mais",
+            "btn_bg": "#ffffff",
+            "btn_text_color": "#111111",
             "placeholder_color": "1a1a2e",
             "placeholder_color_2": "16213e"
           }
@@ -168,9 +171,12 @@
           "type": "category",
           "settings": {
             "title": "shorts",
+            "badge": "",
             "image": "shopify://shop_images/CAPA_BANNER_SITE_7.png",
             "link": "shopify://collections/shorts",
             "cta_text": "Comprar",
+            "btn_bg": "#ffffff",
+            "btn_text_color": "#111111",
             "placeholder_color": "2d2d2d",
             "placeholder_color_2": "4a4a4a"
           }
@@ -179,9 +185,12 @@
           "type": "category",
           "settings": {
             "title": "linha completa",
+            "badge": "",
             "image": "shopify://shop_images/CAPA_BANNER_SITE_8.png",
             "link": "shopify://collections/fitness",
             "cta_text": "Ver mais",
+            "btn_bg": "#ffffff",
+            "btn_text_color": "#111111",
             "placeholder_color": "3d1a1a",
             "placeholder_color_2": "5a2d2d"
           }
@@ -195,7 +204,24 @@
       "settings": {
         "title": "Explore por Categoria",
         "layout": "1",
-        "card_radius": 32
+        "slide_interval": 4
+      }
+    },
+    "collection_with_image_6RTThL": {
+      "type": "collection-with-image",
+      "name": "Coleção com imagem",
+      "settings": {
+        "collection": "blusas",
+        "products_count": 12,
+        "background1": "#E5E4E4",
+        "image": "shopify://shop_images/Banner_site_oficial_7.svg",
+        "text_color": "#3A3A3A",
+        "title": "COLEÇÕES FITNESS",
+        "button_background": "#1c1c1c",
+        "button_text_color": "#FFFFFF",
+        "button_text": "Ver mais",
+        "button_link": "shopify://collections/fitness",
+        "pix_exclude_collections": []
       }
     },
     "featured-offers": {
@@ -506,6 +532,7 @@
     "hero-banner",
     "announcement_bar_dD4ndD",
     "category-grid",
+    "collection_with_image_6RTThL",
     "featured-offers",
     "featured-launches",
     "lookbook_Jy9ERX",
