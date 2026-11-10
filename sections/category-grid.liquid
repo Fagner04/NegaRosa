@@ -131,6 +131,17 @@ function initCategoryGsap(){
         toggleActions:'play none none none'
       }
     });
+    // Sticky stacking effect
+    cards.forEach(function(card, i){
+      ScrollTrigger.create({
+        trigger: card,
+        start: 'top 20%',
+        end: 'bottom 80%',
+        pin: true,
+        pinSpacing: false,
+        scrub: false
+      });
+    });
   });
 }
 if (document.readyState === 'loading'){

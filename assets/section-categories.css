@@ -283,8 +283,4 @@
   .catgrid-section .category-grid{
     gap: 12px;
   }
-  .catgrid-section .category-card{
-    position: sticky;
-    top: calc(4rem + var(--setup-i,0) * 0.6rem);
-  }
 }
