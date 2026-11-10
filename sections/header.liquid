@@ -28,13 +28,6 @@
   .fixed-top.is-static { position: static !important; transform: none !important; }
   .fixed-top.is-static .header.scrolled { background-color: var(--header-bg, var(--color-bg)) !important; backdrop-filter: none !important; box-shadow: none !important; }
 </style>
-{% if section.settings.header_transparent %}
-<script>
-  document.addEventListener('DOMContentLoaded', function(){
-    document.body.classList.add('header-transparent');
-  });
-</script>
-{% endif %}
 
 <!-- Main Header -->
 
@@ -127,7 +120,7 @@
         <!-- Rastrear Pedido (desktop only) -->
         {%- assign track_href = section.settings.track_page.url | default: section.settings.track_url | default: '/pages/rastrear-pedido' -%}
         <a href="{{ track_href }}" class="header__action-btn header__action-btn--desktop" aria-label="{{ section.settings.track_label | default: 'Rastrear Pedido' }}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
           </svg>
           <span class="header__action-label">{{ section.settings.track_label | default: 'Rastrear' }}</span>
@@ -136,7 +129,7 @@
         <!-- Entrar / Conta (desktop only) -->
         {%- if customer -%}
           <a href="/account" class="header__action-btn header__action-btn--desktop" aria-label="{{ section.settings.account_label | default: 'Minha Conta' }}">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true">
               <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
             </svg>
             <span class="header__action-label">{{ section.settings.account_label | default: 'Conta' }}</span>
@@ -144,7 +137,7 @@
         {%- else -%}
           {%- assign login_href = section.settings.login_page.url | default: section.settings.login_url | default: '/account/login' -%}
           <a href="{{ login_href }}" class="header__action-btn header__action-btn--desktop" aria-label="{{ section.settings.login_label | default: 'Entrar ou cadastrar' }}">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true">
               <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
             </svg>
             <span class="header__action-label">{{ section.settings.login_label | default: 'Entrar' }}</span>
@@ -555,13 +548,6 @@
       "id": "sticky_header",
       "label": "Header fixo ao scrollar",
       "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "header_transparent",
-      "label": "Header transparente no topo",
-      "info": "Fica transparente sobre o hero e ganha fundo ao rolar",
-      "default": false
     },
     {
       "type": "header",

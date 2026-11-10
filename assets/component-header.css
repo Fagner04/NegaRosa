@@ -150,22 +150,12 @@
   background-color: var(--header-bg, var(--color-bg));
   background-image: var(--header-bg-image, none);
   height: var(--header-height);
-  border-bottom: 1px solid transparent;
+  border-bottom: none;
   transition: background-color var(--transition-base),
               border-color var(--transition-base),
               box-shadow var(--transition-base);
 }
 
-.header.scrolled {
-  background-color: var(--header-bg, rgba(255, 255, 255, 0.95));
-  background-image: var(--header-bg-image, none);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom-color: transparent;
-  box-shadow: var(--shadow-sm);
-}
-
-/* Header transparente sobre hero */
 .header-transparent .header:not(.scrolled) {
   background-color: transparent !important;
   background-image: none !important;
@@ -181,6 +171,23 @@
 
 .header-transparent .header:not(.scrolled) .header__nav-link::after {
   background-color: #fff;
+}
+
+.header-transparent:not(.header-scrolled) .header-spacer {
+  /* altura mantida para evitar salto de layout; header fica sobreposto */
+}
+
+.header-transparent:not(.header-scrolled) .main-content {
+  /* sem reposicionamento negativo para evitar jump ao rolar */
+}
+
+
+.header.scrolled {
+  background-color: var(--header-bg, #ffffff) !important;
+  background-image: var(--header-bg-image, none) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: var(--shadow-sm);
 }
 
 .header__container {
