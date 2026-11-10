@@ -1107,3 +1107,9 @@ a[aria-label="Favoritos"]:hover svg {
 @media (max-width: 749px) {
   .header__container { padding: 5px; }
 }
+
+/* Override header transparente - força transparente */
+body.header-transparent .header {
+  background-color: transparent !important;
+  background-image: none !important;
+}
