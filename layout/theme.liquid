@@ -130,7 +130,7 @@
   </script>
 </head>
 
-<body class="template-{{ template.name }}{% if template.suffix %} template-{{ template.name }}-{{ template.suffix }}{% endif %}" data-variant-type="{{ settings.variant_selector_type | default: 'block' }}">
+<body class="template-{{ template.name }}{% if template.suffix %} template-{{ template.name }}-{{ template.suffix }}{% endif %}{% if settings.header_transparent %} header-transparent{% endif %}" data-variant-type="{{ settings.variant_selector_type | default: 'block' }}">
   <a class="skip-to-content-link visually-hidden" href="#MainContent">
     {{ 'accessibility.skip_to_text' | t }}
   </a>

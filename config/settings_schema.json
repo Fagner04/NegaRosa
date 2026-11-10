@@ -128,6 +128,13 @@
         "default": "#111111"
       },
       {
+        "type": "checkbox",
+        "id": "header_transparent",
+        "label": "Header transparente sobre o hero",
+        "info": "Faz o header começar transparente e ganhar fundo ao rolar",
+        "default": false
+      },
+      {
         "type": "header",
         "content": "📄 Footer (Rodapé)"
       },
