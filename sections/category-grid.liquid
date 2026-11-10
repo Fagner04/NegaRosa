@@ -117,6 +117,7 @@ function initCategoryGsap(){
   sections.forEach(function(section){
     var cards = section.querySelectorAll('.category-card');
     if (!cards.length) return;
+    // Reveal with GSAP
     gsap.set(cards, {opacity:0, y:60});
     gsap.to(cards, {
       opacity:1,
@@ -130,17 +131,6 @@ function initCategoryGsap(){
         once:true,
         toggleActions:'play none none none'
       }
-    });
-    // Sticky stacking effect
-    cards.forEach(function(card, i){
-      ScrollTrigger.create({
-        trigger: card,
-        start: 'top 20%',
-        end: 'bottom 80%',
-        pin: true,
-        pinSpacing: false,
-        scrub: false
-      });
     });
   });
 }
