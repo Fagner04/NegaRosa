@@ -221,10 +221,6 @@
     grid-column: auto;
   }
 
-  .category-card {
-    min-height: 250px;
-  }
-
   .category-card__title {
     font-size: var(--font-size-xl);
   }

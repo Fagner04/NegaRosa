@@ -1,9 +1,10 @@
 {%- comment -%}
   Section: Category Grid
   Grid of category cards with image, overlay, and CTA
+  UX inspirada em SiteMyrian: slideshow de 2 fotos, dots, badge, botão estilizado
 {%- endcomment -%}
 
-<section class="section-spacing" id="categories-{{ section.id }}" style="--category-radius: {{ section.settings.card_radius | default: 8 }}px;">
+<section class="section-spacing catgrid-section" id="categories-{{ section.id }}" data-interval="{{ section.settings.slide_interval | times: 1000 }}">
   <div class="page-width">
     {%- if section.settings.title != blank -%}
       <div class="section-header reveal">
@@ -13,11 +14,20 @@
 
     <div class="category-grid category-grid--layout-{{ section.settings.layout }}" data-stagger-container>
       {%- for block in section.blocks -%}
-        <a href="{{ block.settings.link | default: '#' }}" class="category-card card-hover" {{ block.shopify_attributes }}>
-          <div class="category-card__image-wrapper" data-parallax="0.15">
+        {%- assign has_two = false -%}
+        {%- if block.settings.image != blank and block.settings.image_2 != blank -%}
+          {%- assign has_two = true -%}
+        {%- endif -%}
+
+        <a href="{{ block.settings.link | default: '#' }}" class="category-card{% if has_two %} category-card--slideshow{% endif %}" {{ block.shopify_attributes }}>
+          <div class="category-card__image-wrapper">
+            {%- if block.settings.badge != blank -%}
+              <span class="category-card__badge">{{ block.settings.badge }}</span>
+            {%- endif -%}
+
             {%- if block.settings.image != blank -%}
               <img
-                class="category-card__image"
+                class="category-card__image category-card__slide category-card__slide--active"
                 src="{{ block.settings.image | image_url: width: 800 }}"
                 alt="{{ block.settings.title | escape }}"
                 width="800"
@@ -25,26 +35,64 @@
                 loading="lazy"
               >
             {%- else -%}
-              <div class="category-card__image" style="background: linear-gradient(135deg, #{{ block.settings.placeholder_color | default: '333' }} 0%, #{{ block.settings.placeholder_color_2 | default: '666' }} 100%);"></div>
+              <div class="category-card__image category-card__slide category-card__slide--active category-card__image--placeholder" style="background: linear-gradient(135deg, #{{ block.settings.placeholder_color | default: '333333' }} 0%, #{{ block.settings.placeholder_color_2 | default: '666666' }} 100%);"></div>
             {%- endif -%}
-          </div>
 
-          <div class="category-card__overlay"></div>
+            {%- if block.settings.image_2 != blank -%}
+              <img
+                class="category-card__image category-card__slide"
+                src="{{ block.settings.image_2 | image_url: width: 800 }}"
+                alt="{{ block.settings.title | escape }}"
+                width="800"
+                height="600"
+                loading="lazy"
+              >
+            {%- endif -%}
 
-          <div class="category-card__content">
-            <h3 class="category-card__title">{{ block.settings.title | default: 'Categoria' }}</h3>
-            <span class="category-card__cta">
-              {{ block.settings.cta_text | default: 'Comprar' }}
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="9,18 15,12 9,6"></polyline>
-              </svg>
-            </span>
+            {%- if has_two -%}
+              <div class="category-card__dots">
+                <span class="category-card__dot category-card__dot--active"></span>
+                <span class="category-card__dot"></span>
+              </div>
+            {%- endif -%}
+
+            <div class="category-card__overlay-content">
+              <h3 class="category-card__title">{{ block.settings.title | default: 'Categoria' }}</h3>
+              <span class="category-card__cta" style="background-color: {{ block.settings.btn_bg | default: '#ffffff' }}; color: {{ block.settings.btn_text_color | default: '#111111' }};">
+                {{ block.settings.cta_text | default: 'Ver mais' }}
+              </span>
+            </div>
           </div>
         </a>
       {%- endfor -%}
     </div>
   </div>
 </section>
+
+<script>
+(function () {
+  var sections = document.querySelectorAll('.catgrid-section');
+  sections.forEach(function (section) {
+    var interval = parseInt(section.dataset.interval) || 3000;
+    var cards = section.querySelectorAll('.category-card--slideshow');
+
+    cards.forEach(function (card) {
+      var slides = card.querySelectorAll('.category-card__slide');
+      var dots   = card.querySelectorAll('.category-card__dot');
+      if (slides.length < 2) return;
+      var current = 0;
+
+      setInterval(function () {
+        slides[current].classList.remove('category-card__slide--active');
+        dots[current] && dots[current].classList.remove('category-card__dot--active');
+        current = (current + 1) % slides.length;
+        slides[current].classList.add('category-card__slide--active');
+        dots[current] && dots[current].classList.add('category-card__dot--active');
+      }, interval);
+    });
+  });
+})();
+</script>
 
 {% schema %}
 {
@@ -55,7 +103,7 @@
     {
       "type": "text",
       "id": "title",
-      "label": "Título",
+      "label": "Título da seção",
       "default": "Explore por Categoria"
     },
     {
@@ -71,14 +119,13 @@
     },
     {
       "type": "range",
-      "id": "card_radius",
-      "label": "Arredondamento dos cards (px)",
-      "info": "0 = quadrado, 24+ = bem redondo",
-      "min": 0,
-      "max": 32,
-      "step": 2,
-      "unit": "px",
-      "default": 8
+      "id": "slide_interval",
+      "label": "Tempo entre fotos (segundos)",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 4,
+      "info": "Aplicado em cards que têm 2 fotos"
     }
   ],
   "blocks": [
@@ -90,13 +137,25 @@
           "type": "text",
           "id": "title",
           "label": "Título",
-          "default": "Calçados"
+          "default": "Categoria"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge (ex: Novo, Destaque)",
+          "info": "Aparece no canto superior esquerdo"
         },
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Imagem",
-          "info": "Tamanho recomendado: 900 x 1200 px (retrato 3:4). JPG ou WebP, até 500KB."
+          "label": "Foto 1",
+          "info": "Recomendado: 800 x 600px."
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Foto 2 (opcional)",
+          "info": "Se preenchida, alterna automaticamente com a Foto 1"
         },
         {
           "type": "url",
@@ -107,7 +166,19 @@
           "type": "text",
           "id": "cta_text",
           "label": "Texto do botão",
-          "default": "Comprar"
+          "default": "Ver mais"
+        },
+        {
+          "type": "color",
+          "id": "btn_bg",
+          "label": "Cor de fundo do botão",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "btn_text_color",
+          "label": "Cor do texto do botão",
+          "default": "#111111"
         },
         {
           "type": "text",
