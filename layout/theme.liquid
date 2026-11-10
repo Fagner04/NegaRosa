@@ -101,6 +101,41 @@
   {{ 'responsive.css' | asset_url | stylesheet_tag }}
   {{ 'quick-add.css' | asset_url | stylesheet_tag }}
 
+  {% if settings.header_transparent %}
+  <style>
+    .header-transparent .header:not(.scrolled) {
+      {% if settings.header_bg_mode == 'solid' %}
+      background-color: var(--header-bg) !important;
+      background-image: var(--header-bg-image) !important;
+      {% elsif settings.header_bg_mode == 'frosted' %}
+      background-color: rgba(255,255,255, {{ settings.header_frosted_opacity | divided_by: 100.0 }}) !important;
+      backdrop-filter: blur({{ settings.header_backdrop_blur | default: 12 }}px);
+      -webkit-backdrop-filter: blur({{ settings.header_backdrop_blur | default: 12 }}px);
+      {% else %}
+      background-color: transparent !important;
+      background-image: none !important;
+      {% endif %}
+    }
+    .header-transparent .header:not(.scrolled) .header__nav-link,
+    .header-transparent .header:not(.scrolled) .header__action-btn,
+    .header-transparent .header:not(.scrolled) .header__action-btn svg {
+      color: {{ settings.header_icon_color_top | default: '#FFFFFF' }} !important;
+      stroke: {{ settings.header_icon_color_top | default: '#FFFFFF' }} !important;
+      fill: none !important;
+    }
+    .header-transparent .header:not(.scrolled) .header__nav-link::after {
+      background-color: {{ settings.header_icon_color_top | default: '#FFFFFF' }} !important;
+    }
+    .header.scrolled .header__nav-link,
+    .header.scrolled .header__action-btn,
+    .header.scrolled .header__action-btn svg {
+      color: {{ settings.header_icon_color_scrolled | default: '#111111' }} !important;
+      stroke: {{ settings.header_icon_color_scrolled | default: '#111111' }} !important;
+      fill: none !important;
+    }
+  </style>
+  {% endif %}
+
   {{ content_for_header }}
 
   {%- if settings.frete_ativo and settings.frete_api_url != blank -%}
