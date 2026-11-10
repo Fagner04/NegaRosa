@@ -19,7 +19,7 @@
           {%- assign has_two = true -%}
         {%- endif -%}
 
-        <a href="{{ block.settings.link | default: '#' }}" class="category-card{% if has_two %} category-card--slideshow{% endif %}" {{ block.shopify_attributes }}>
+        <a href="{{ block.settings.link | default: '#' }}" class="category-card{% if has_two %} category-card--slideshow{% endif %}" style="--setup-i: {{ forloop.index0 }};" {{ block.shopify_attributes }}>
           <div class="category-card__image-wrapper">
             {%- if block.settings.badge != blank -%}
               <span class="category-card__badge">{{ block.settings.badge }}</span>
