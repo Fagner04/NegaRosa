@@ -110,12 +110,13 @@
 </script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.innerWidth > 768) return;
+function initCategoryGsap(){
+  if (window.matchMedia('(min-width: 769px)').matches) return;
   if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
   var sections = document.querySelectorAll('.catgrid-section');
   sections.forEach(function(section){
     var cards = section.querySelectorAll('.category-card');
+    if (!cards.length) return;
     gsap.set(cards, {opacity:0, y:60});
     gsap.to(cards, {
       opacity:1,
@@ -125,12 +126,18 @@ document.addEventListener('DOMContentLoaded', function() {
       stagger:0.15,
       scrollTrigger:{
         trigger: section,
-        start:'top 80%',
-        once:true
+        start:'top 85%',
+        once:true,
+        toggleActions:'play none none none'
       }
     });
   });
-});
+}
+if (document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', initCategoryGsap);
+} else {
+  initCategoryGsap();
+}
 </script>
 
 {% schema %}
