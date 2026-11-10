@@ -286,5 +286,12 @@
   .catgrid-section .category-card{
     position: sticky;
     top: calc(4rem + var(--setup-i,0) * 2.5rem);
+    z-index: calc(100 - var(--setup-i,0));
+    will-change: transform;
+    transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s cubic-bezier(.2,.8,.2,1);
+  }
+  .catgrid-section .category-card:hover{
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 16px 40px rgba(0,0,0,.16);
   }
 }
