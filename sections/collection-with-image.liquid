@@ -76,9 +76,11 @@
 </section>
 
 <style>
-  /* Fundo colorido da seção — base quando não há foto */
-  #cwi-section-{{ section.id }} {
-    background-color: {{ section.settings.background1 }} !important;
+  /* Fundo colorido da seção — base quando não há foto, apenas mobile */
+  @media screen and (max-width: 768px) {
+    #cwi-section-{{ section.id }} {
+      background-color: {{ section.settings.background1 }} !important;
+    }
   }
   /* Cor do título */
   #cwi-panel-{{ section.id }} .cwi__title {
