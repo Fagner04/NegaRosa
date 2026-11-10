@@ -47,6 +47,15 @@
       }
     }
 
+    // Toggle body class for header transparent spacer behavior
+    if (document.body.classList.contains('header-transparent')) {
+      if (currentScrollY > 10) {
+        document.body.classList.add('header-scrolled');
+      } else {
+        document.body.classList.remove('header-scrolled');
+      }
+    }
+
     // Hide/show fixed-top based on scroll direction
     if (fixedTop) {
       if (currentScrollY > SCROLL_THRESHOLD) {

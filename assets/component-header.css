@@ -165,6 +165,24 @@
   box-shadow: var(--shadow-sm);
 }
 
+/* Header transparente sobre hero */
+.header-transparent .header:not(.scrolled) {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+.header-transparent .header:not(.scrolled) .header__nav-link,
+.header-transparent .header:not(.scrolled) .header__action-btn,
+.header-transparent .header:not(.scrolled) .header__action-btn svg {
+  color: #fff;
+  stroke: #fff;
+  fill: none;
+}
+
+.header-transparent .header:not(.scrolled) .header__nav-link::after {
+  background-color: #fff;
+}
+
 .header__container {
   display: flex;
   align-items: center;

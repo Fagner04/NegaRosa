@@ -28,6 +28,13 @@
   .fixed-top.is-static { position: static !important; transform: none !important; }
   .fixed-top.is-static .header.scrolled { background-color: var(--header-bg, var(--color-bg)) !important; backdrop-filter: none !important; box-shadow: none !important; }
 </style>
+{% if section.settings.header_transparent %}
+<script>
+  document.addEventListener('DOMContentLoaded', function(){
+    document.body.classList.add('header-transparent');
+  });
+</script>
+{% endif %}
 
 <!-- Main Header -->
 
@@ -548,6 +555,13 @@
       "id": "sticky_header",
       "label": "Header fixo ao scrollar",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "header_transparent",
+      "label": "Header transparente no topo",
+      "info": "Fica transparente sobre o hero e ganha fundo ao rolar",
+      "default": false
     },
     {
       "type": "header",
