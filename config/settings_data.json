@@ -94,6 +94,7 @@
           "logo_width_mobile": 130,
           "menu": "main-menu",
           "sticky_header": true,
+          "header_transparent": true,
           "help_label": "Ajuda",
           "help_page": "suporte",
           "help_url": "",
