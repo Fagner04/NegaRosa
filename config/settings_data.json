@@ -88,7 +88,7 @@
     "social_proof_initial_delay": 60,
     "social_proof_interval": 300,
     "social_proof_duration": 9,
-    "wholesale_enabled": true,
+    "wholesale_enabled": false,
     "cart_timer_enabled": true,
     "cart_timer_minutes": 15,
     "sections": {
