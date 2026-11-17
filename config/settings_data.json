@@ -89,6 +89,7 @@
     "social_proof_interval": 300,
     "social_proof_duration": 9,
     "wholesale_enabled": false,
+    "parcelas_max": 3,
     "cart_timer_enabled": true,
     "cart_timer_minutes": 15,
     "sections": {
