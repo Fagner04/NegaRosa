@@ -337,13 +337,21 @@ document.addEventListener('DOMContentLoaded', function () {
                         '<span>ou <strong>' + pixFormatted + '</strong> à vista no PIX (5% off)</span>';
     }
 
-    // Installments Calculations (6x sem juros)
+    // Installments Calculations (config global: Configurações do tema > Parcelamento)
     if (instEl) {
-      var maxParcelas = 6;
-      var parcelaVal = priceVal / maxParcelas;
-      var parcelaFormatted = money(parcelaVal);
-      instEl.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;vertical-align:middle;margin-right:6px;color:var(--color-text-light);"><rect x="2" y="6" width="20" height="13" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>' +
-                         '<span>ou até <strong>' + maxParcelas + 'x</strong> de <strong>' + parcelaFormatted + '</strong> <em>sem juros</em></span>';
+      var instCfg = window.NegaRosaParcelas || {};
+      var maxParcelas = parseInt(instCfg.max, 10);
+      if (isNaN(maxParcelas) || maxParcelas < 1) maxParcelas = 6;
+      if (instCfg.enabled === false) {
+        instEl.innerHTML = '';
+        instEl.style.display = 'none';
+      } else {
+        instEl.style.display = '';
+        var parcelaVal = priceVal / maxParcelas;
+        var parcelaFormatted = money(parcelaVal);
+        instEl.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;vertical-align:middle;margin-right:6px;color:var(--color-text-light);"><rect x="2" y="6" width="20" height="13" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>' +
+                           '<span>ou até <strong>' + maxParcelas + 'x</strong> de <strong>' + parcelaFormatted + '</strong> <em>sem juros</em></span>';
+      }
     }
   }
 

@@ -1017,6 +1017,31 @@
     ]
   },
   {
+    "name": "Parcelamento",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Vale para fora da página de produto: cards de produto (home, coleção, busca, relacionados) e compra rápida (modal/drawer). Na página de produto, ajuste em Configurações da seção > Parcelamento."
+      },
+      {
+        "type": "checkbox",
+        "id": "parcelas_ativo",
+        "label": "Mostrar parcelamento (cards e compra rápida)",
+        "info": "Desative para ocultar a linha de parcelamento fora da página de produto.",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "parcelas_max",
+        "label": "Número máximo de parcelas (fora da página de produto)",
+        "min": 1,
+        "max": 24,
+        "step": 1,
+        "default": 6
+      }
+    ]
+  },
+  {
     "name": "Carrinho",
     "settings": [
       {

@@ -17,7 +17,7 @@
         </div>
         <div class="payment-method__info">
           <h3>Cartão de Crédito</h3>
-          <p>Até <strong>6x sem juros</strong> no cartão de crédito</p>
+          <p>Até <strong>{{ settings.parcelas_max | default: 6 }}x sem juros</strong> no cartão de crédito</p>
           <span class="payment-method__badge">Parcele sua compra!</span>
         </div>
       </div>

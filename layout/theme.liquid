@@ -159,6 +159,8 @@
       quantityError: `{{ 'sections.cart.cart_quantity_error' | t: quantity: '[quantity]' }}`
     };
     window.freteMostrarPrazo = {{ settings.frete_mostrar_prazo | json }};
+    /* Parcelamento fora da página de produto (Configurações do tema > Parcelamento) */
+    window.NegaRosaParcelas = { enabled: {% if settings.parcelas_ativo == false %}false{% else %}true{% endif %}, max: {{ settings.parcelas_max | default: 6 | plus: 0 }} };
   </script>
 </head>
 

@@ -210,8 +210,12 @@
     {%- endif -%}
 
     <!-- Price block (Varejo / Atacado / PIX / Parcelamento) -->
+    {%- comment -%} Parcelamento parametrizado em Configurações do tema > Parcelamento (fora da página de produto) {%- endcomment -%}
     {%- assign pix_pct = 5 -%}
-    {%- assign max_parcelas = 6 -%}
+    {%- assign max_parcelas = settings.parcelas_max | default: 6 | plus: 0 -%}
+    {%- if max_parcelas < 1 -%}{%- assign max_parcelas = 6 -%}{%- endif -%}
+    {%- assign show_installments = true -%}
+    {%- if settings.parcelas_ativo == false -%}{%- assign show_installments = false -%}{%- endif -%}
     {%- assign pix_mult = 100 | minus: pix_pct -%}
     {%- assign pix_price = product.price | times: pix_mult | divided_by: 100 -%}
     {%- assign parcela = product.price | divided_by: max_parcelas -%}
@@ -241,10 +245,12 @@
 
       <div class="product-card__pix">ou {{ pix_price | money }} no PIX</div>
 
+      {%- if show_installments -%}
       <div class="product-card__installments">
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="13" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
         <span><strong>{{ max_parcelas }}x</strong> de <strong>{{ parcela | money }}</strong> <em>SEM JUROS</em></span>
       </div>
+      {%- endif -%}
     </div>
   </div>
 </div>
