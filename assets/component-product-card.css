@@ -82,6 +82,34 @@
   pointer-events: none;
 }
 
+/* Selo de desconto circular (ex.: -46% / OFF) */
+.product-card__badges .badge-discount {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border-radius: 50%;
+  background-color: #111111;
+  color: #FFFFFF;
+  text-align: center;
+  line-height: 1.05;
+}
+
+.product-card__badges .badge-discount .badge-discount__pct {
+  font-size: 14px;
+  font-weight: var(--font-weight-extrabold);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.product-card__badges .badge-discount .badge-discount__off {
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
 /* Wishlist Button */
 .product-card__wishlist {
   position: absolute;

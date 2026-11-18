@@ -574,6 +574,19 @@
     left: 8px;
   }
 
+  .product-card__badges .badge-discount {
+    width: 46px;
+    height: 46px;
+  }
+
+  .product-card__badges .badge-discount .badge-discount__pct {
+    font-size: 12px;
+  }
+
+  .product-card__badges .badge-discount .badge-discount__off {
+    font-size: 9px;
+  }
+
   .reels__card {
     flex: 0 0 75%;
   }

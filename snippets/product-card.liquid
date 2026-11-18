@@ -115,7 +115,10 @@
 
         {%- if product.compare_at_price > product.price -%}
           {%- assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price -%}
-          <span class="badge badge-sale">-{{ discount }}%</span>
+          <span class="badge badge-sale badge-discount">
+            <span class="badge-discount__pct">-{{ discount }}%</span>
+            <span class="badge-discount__off">OFF</span>
+          </span>
         {%- endif -%}
 
         {%- if product.tags contains 'exclusivo' -%}
