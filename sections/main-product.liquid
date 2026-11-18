@@ -335,9 +335,16 @@
   }
   .pp-price-line .product-info__price-wrapper { margin-top: 0; }
   .product-info__price-wrapper .price {
-    color: #7F1D1D;
+    color: #000000;
     font-size: 30px;
     font-weight: 800;
+  }
+  /* Cores da linha de preço: valor preto, preço riscado cinza, selo de desconto com texto branco */
+  .product-info__price-wrapper .price--compare {
+    color: var(--color-text-light);
+  }
+  .product-info__price-wrapper .price--discount {
+    color: #FFFFFF;
   }
   .pp-pix-inline {
     display: inline-flex;
