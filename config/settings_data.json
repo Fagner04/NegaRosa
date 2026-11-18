@@ -73,7 +73,7 @@
     "vendor2_online": true,
     "vendor4_online": false,
     "vendor5_online": false,
-    "coupon_enabled": true,
+    "coupon_enabled": false,
     "coupon_code": "NEGAROSA10",
     "coupon_discount_label": "10%Off",
     "coupon_headline": "Primeira compra",
