@@ -1,0 +1,123 @@
+{%- comment -%}
+  Snippet: black-friday-widget (Black Friday)
+  Mini-card lateral fixo no canto esquerdo (estilo aba vertical do cupom)
+  que direciona para a categoria/link escolhido em
+  Configurações do tema > Black Friday.
+
+  Uso:
+    {% render 'black-friday-widget' %}
+{%- endcomment -%}
+
+{%- if settings.bf_enabled -%}
+  {%- liquid
+    assign bf_resource = settings.bf_collection
+    if bf_resource != blank and bf_resource.url == blank
+      assign bf_resource = collections[bf_resource]
+    endif
+    assign bf_url = bf_resource.url | default: settings.bf_link | default: routes.all_products_collection_url
+  -%}
+
+  <style>
+    /* ── Keyframes ─────────────────────────────────────────── */
+    @keyframes bf-slide-in {
+      from { transform: translateY(-50%) translateX(-110%); opacity: 0; }
+      to   { transform: translateY(-50%) translateX(0);     opacity: 1; }
+    }
+
+    @keyframes bf-pulse-tab {
+      0%, 100% { box-shadow: 6px 0 18px rgba(0, 0, 0, 0.25); }
+      50%      { box-shadow: 6px 0 28px rgba(0, 0, 0, 0.45); }
+    }
+
+    @keyframes bf-bounce-tab {
+      0%, 100% { transform: translateY(-50%) translateX(0); }
+      40%      { transform: translateY(-50%) translateX(-6px); }
+      70%      { transform: translateY(-50%) translateX(-2px); }
+    }
+
+    /* ── Tab (mini-card lateral esquerdo) ──────────────────── */
+    .bf-tab {
+      position: fixed;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 9000;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      background: {{ settings.bf_bg_color }};
+      color: {{ settings.bf_text_color }};
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 20px 10px;
+      border-radius: 0 10px 10px 0;
+      cursor: pointer;
+      border: none;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      line-height: 1;
+      box-shadow: 6px 0 18px rgba(0, 0, 0, 0.25);
+      animation: bf-slide-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both,
+                 bf-pulse-tab 3s ease-in-out 1.5s infinite;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .bf-tab:hover {
+      background: {{ settings.bf_bg_color | color_darken: 12 }};
+      animation: bf-bounce-tab 0.5s ease both,
+                 bf-pulse-tab 3s ease-in-out 0.5s infinite;
+    }
+
+    .bf-tab:focus-visible {
+      outline: 2px solid {{ settings.bf_accent_color }};
+      outline-offset: -4px;
+    }
+
+    .bf-tab__icon {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      transform: rotate(90deg);
+      fill: {{ settings.bf_accent_color }};
+    }
+
+    .bf-tab__sublabel {
+      color: {{ settings.bf_accent_color }};
+      font-size: 11px;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── Responsivo ────────────────────────────────────────── */
+    @media (max-width: 480px) {
+      .bf-tab {
+        font-size: 11px;
+        padding: 16px 8px;
+      }
+      .bf-tab__sublabel {
+        font-size: 9px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .bf-tab {
+        animation: none;
+      }
+    }
+  </style>
+
+  <a class="bf-tab"
+     href="{{ bf_url }}"
+     aria-label="{{ settings.bf_label | escape }}">
+    <svg class="bf-tab__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/>
+    </svg>
+    <span class="bf-tab__label">{{ settings.bf_label }}</span>
+    {%- if settings.bf_sublabel != blank -%}
+      <span class="bf-tab__sublabel">{{ settings.bf_sublabel }}</span>
+    {%- endif -%}
+  </a>
+{%- endif -%}

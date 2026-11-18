@@ -912,6 +912,59 @@
     ]
   },
   {
+    "name": "Black Friday",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "bf_enabled",
+        "label": "Ativar card Black Friday",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "bf_label",
+        "label": "Texto do card",
+        "default": "Black Friday"
+      },
+      {
+        "type": "text",
+        "id": "bf_sublabel",
+        "label": "Texto de destaque (opcional)",
+        "default": "Até 50% OFF"
+      },
+      {
+        "type": "collection",
+        "id": "bf_collection",
+        "label": "Categoria de destino",
+        "info": "Ao clicar no card, o cliente é direcionado para esta categoria."
+      },
+      {
+        "type": "url",
+        "id": "bf_link",
+        "label": "Link personalizado",
+        "info": "Usado somente se nenhuma categoria for selecionada."
+      },
+      {
+        "type": "color",
+        "id": "bf_bg_color",
+        "label": "Cor de fundo do card",
+        "default": "#111111"
+      },
+      {
+        "type": "color",
+        "id": "bf_text_color",
+        "label": "Cor do texto do card",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "bf_accent_color",
+        "label": "Cor de destaque (ícone e subtexto)",
+        "default": "#FF3B30"
+      }
+    ]
+  },
+  {
     "name": "Redes Sociais",
     "settings": [
       {
