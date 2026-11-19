@@ -823,11 +823,24 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       return;
     }
-    if (e.target.closest('[data-qa-sg-close]')) { closeQaSizeGuide(); return; }
+    if (e.target.closest('[data-qa-sg-close]')) { closeQaSizeGuide(false); return; }
     var sgBtn = e.target.closest('[data-qa-size-guide]');
     if (sgBtn) { openQaSizeGuide(); return; }
     var btn = e.target.closest('.qa-add-btn');
     if (btn && !btn.disabled) handleAddToCart(btn);
+  });
+
+  /* Popup mora no <body> (fora do drawer) — fecha/abre por delegação global */
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('[data-qa-sg-close]')) {
+      e.stopPropagation();
+      closeQaSizeGuide();
+      return;
+    }
+    if (e.target.closest('.qa-sg__overlay')) {
+      e.stopPropagation();
+      closeQaSizeGuide();
+    }
   });
 
   /* ---------- Clicks OUTSIDE — document listener ---------- */
@@ -874,7 +887,7 @@ document.addEventListener('DOMContentLoaded', function () {
   /* Escape (fecha popup do guia antes do drawer) */
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
-    var sg = drawer.querySelector('[data-qa-sg]');
+    var sg = getQaSg();
     if (sg && sg.classList.contains('open')) { closeQaSizeGuide(); return; }
     if (isOpen) closeQuickAdd();
   });
@@ -882,11 +895,25 @@ document.addEventListener('DOMContentLoaded', function () {
   /* ---------- Tabela de Medidas (popup dentro do drawer) ---------- */
   var qaSgCache = {};
 
+  /* O drawer tem overflow-y + transform: o popup absolute dentro dele abre
+     fora da tela. Move p/ o <body> (position: fixed cobre a viewport). */
+  var qaSgEl = drawer.querySelector('[data-qa-sg]');
+  if (qaSgEl && qaSgEl.parentElement !== document.body) {
+    document.body.appendChild(qaSgEl);
+  }
+  function getQaSg() {
+    if (!qaSgEl || !qaSgEl.isConnected) {
+      qaSgEl = document.querySelector('[data-qa-sg]');
+    }
+    return qaSgEl;
+  }
+
   function openQaSizeGuide() {
-    var wrap = drawer.querySelector('[data-qa-sg]');
-    var body = drawer.querySelector('[data-qa-sg-body]');
+    var wrap = getQaSg();
+    var body = wrap && wrap.querySelector('[data-qa-sg-body]');
     if (!wrap || !body || !qaHandle) return;
     if (wrap.classList.contains('open')) return;
+    wrap.classList.remove('closing');
     wrap.classList.add('open');
     wrap.setAttribute('aria-hidden', 'false');
     if (qaSgCache[qaHandle] !== undefined) { renderQaSizeGuide(qaSgCache[qaHandle]); return; }
@@ -898,7 +925,8 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function renderQaSizeGuide(raw) {
-    var body = drawer.querySelector('[data-qa-sg-body]');
+    var wrap = getQaSg();
+    var body = wrap && wrap.querySelector('[data-qa-sg-body]');
     if (!body) return;
     if (typeof raw === 'string') {
       raw = raw.trim();
@@ -916,6 +944,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       raw.categories.forEach(function (cat, ci) {
         html += '<div class="sg-table-wrap' + (ci === 0 ? ' active' : '') + '" data-qa-sg-table="' + ci + '">';
+        html += '<div class="sg-table-scroll">';
         html += '<table class="sg-table">';
         if (cat.headers && cat.headers.length) {
           html += '<thead><tr>';
@@ -932,6 +961,7 @@ document.addEventListener('DOMContentLoaded', function () {
           html += '</tbody>';
         }
         html += '</table>';
+        html += '</div>';
         if (cat.footnote) html += '<p class="sg-footnote">' + esc(cat.footnote) + '</p>';
         html += '</div>';
       });
@@ -956,18 +986,47 @@ document.addEventListener('DOMContentLoaded', function () {
     body.innerHTML = '<div class="qa-sg__empty"><p>Este produto ainda não possui tabela de medidas.</p></div>';
   }
 
-  function closeQaSizeGuide() {
-    var wrap = drawer.querySelector('[data-qa-sg]');
+  function closeQaSizeGuide(animated) {
+    var wrap = getQaSg();
     if (!wrap) return;
-    wrap.classList.remove('open');
-    wrap.setAttribute('aria-hidden', 'true');
+    if (!wrap.classList.contains('open')) {
+      wrap.classList.remove('closing');
+      wrap.setAttribute('aria-hidden', 'true');
+      return;
+    }
+    if (animated === false || wrap.classList.contains('closing')) {
+      wrap.classList.remove('open', 'closing');
+      wrap.setAttribute('aria-hidden', 'true');
+      return;
+    }
+    /* Vetor do centro do painel até o botão Tabela de Medidas (entra no botão) */
+    try {
+      var panel = wrap.querySelector('.qa-sg__panel');
+      var btn = drawer.querySelector('[data-qa-size-guide]');
+      if (panel && btn) {
+        var pr = panel.getBoundingClientRect();
+        var br = btn.getBoundingClientRect();
+        var dx = (br.left + br.width / 2) - (pr.left + pr.width / 2);
+        var dy = (br.top + br.height / 2) - (pr.top + pr.height / 2);
+        var sc = Math.min(0.18, Math.max(0.03, Math.min(br.width / pr.width, br.height / pr.height)));
+        if (!isFinite(sc) || sc <= 0) sc = 0.06;
+        panel.style.setProperty('--qa-dx', dx.toFixed(1) + 'px');
+        panel.style.setProperty('--qa-dy', dy.toFixed(1) + 'px');
+        panel.style.setProperty('--qa-scale', sc.toFixed(3));
+      }
+    } catch (e) {}
+    wrap.classList.add('closing');
+    setTimeout(function () {
+      wrap.classList.remove('open', 'closing');
+      wrap.setAttribute('aria-hidden', 'true');
+    }, 360);
   }
 
   /* Bottom-sheet: segue o dedo ao puxar p/ baixo (fecha) ou solta e volta */
   var dragStartY = 0, dragStartX = 0, dragDy = 0, draggingSheet = false;
   var dragLastY = 0, dragLastT = 0, dragVel = 0;
   function qaSheetDragBlocked() {
-    var sg = drawer.querySelector('[data-qa-sg]');
+    var sg = getQaSg();
     return !!(sg && sg.classList.contains('open'));
   }
   drawer.addEventListener('touchstart', function (e) {

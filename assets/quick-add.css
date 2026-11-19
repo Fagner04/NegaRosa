@@ -520,11 +520,12 @@
   text-underline-offset: 3px;
 }
 
-/* Popup Tabela de Medidas (dentro do drawer) */
+/* Popup Tabela de Medidas — fixed na viewport (o JS move p/ o <body>,
+   senão o drawer com overflow-y prende o overlay e ele abre fora da tela) */
 .qa-sg {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  z-index: 20;
+  z-index: 10062; /* acima do quick-add-drawer (10061) */
   visibility: hidden;
   pointer-events: none;
 }
@@ -539,11 +540,14 @@
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
   opacity: 0;
-  transition: opacity 0.25s ease;
 }
 
 .qa-sg.open .qa-sg__overlay {
-  opacity: 1;
+  animation: qaSgOverlayIn 0.3s ease both;
+}
+@keyframes qaSgOverlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .qa-sg__panel {
@@ -558,12 +562,63 @@
   border-radius: 20px 20px 0 0;
   padding: 8px 20px calc(20px + env(safe-area-inset-bottom, 0px));
   transform: translateY(100%);
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
 }
 
 .qa-sg.open .qa-sg__panel {
-  transform: translateY(0);
+  animation: qaSgRise 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes qaSgRise {
+  from { transform: translateY(100%); }
+  60% { transform: translateY(-8px); }
+  100% { transform: translateY(0); }
+}
+
+/* Conteúdo interno entra em cascata */
+.qa-sg.open .qa-sg__header {
+  animation: qaSgDropIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+}
+.qa-sg.open .qa-sg__body {
+  animation: qaSgFadeUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.14s both;
+}
+@keyframes qaSgDropIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes qaSgFadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Fechamento: o painel "entra" de volta no botão Tabela de Medidas */
+.qa-sg.closing .qa-sg__overlay {
+  animation: qaSgOverlayOut 0.36s ease both;
+}
+@keyframes qaSgOverlayOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+.qa-sg.closing .qa-sg__panel {
+  animation: qaSgSuckIn 0.36s cubic-bezier(0.5, 0, 0.75, 0) both;
+  transform-origin: center center;
+}
+@keyframes qaSgSuckIn {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); border-radius: 20px 20px 0 0; }
+  35% { opacity: 1; }
+  100% {
+    opacity: 0;
+    transform: translate(var(--qa-dx, 0px), var(--qa-dy, 60px)) scale(var(--qa-scale, 0.06));
+    border-radius: 999px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qa-sg.open .qa-sg__overlay { animation: none; opacity: 1; }
+  .qa-sg.open .qa-sg__panel { animation: none; opacity: 1; transform: translateY(0); }
+  .qa-sg.open .qa-sg__header,
+  .qa-sg.open .qa-sg__body { animation: none; opacity: 1; transform: none; }
+  .qa-sg.closing .qa-sg__overlay { animation: none; opacity: 0; }
+  .qa-sg.closing .qa-sg__panel { animation: none; opacity: 0; }
 }
 
 .qa-sg__handle {
