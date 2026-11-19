@@ -965,6 +965,18 @@
     ]
   },
   {
+    "name": "Guia de Tamanhos",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "size_guide_image_enabled",
+        "label": "Mostrar foto principal do produto na tabela de medidas",
+        "info": "Exibida apenas em telas de desktop (a partir de 750px). Pode ser desligado também na seção do produto.",
+        "default": true
+      }
+    ]
+  },
+  {
     "name": "Redes Sociais",
     "settings": [
       {

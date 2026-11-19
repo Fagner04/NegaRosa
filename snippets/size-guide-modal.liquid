@@ -1,7 +1,12 @@
 {%- comment -%}
-  Size Guide Modal
-  Reads product metafield (namespace: "size_guide", key: "table") as JSON
-  and renders a tabbed table inside a modal.
+  Size Guide Modal — copia do SiteMyrian
+  Lê o metafield do produto (namespace: "size_guide", key: "table") como JSON
+  e renderiza tabela(s) com abas dentro de um modal.
+  Fallbacks aceitos: custom.size_guide_table, custom.size_guide, custom.tabela_medidas
+  Formato JSON esperado:
+  { "categories": [ { "name": "Feminino", "headers": ["Tamanho","Busto",...], "rows": [["P","..."]], "footnote": "..." } ] }
+  Toggle da foto: Configurações do tema > Guia de Tamanhos (global)
+                  e seção do produto > Mostrar foto principal do produto.
 {%- endcomment -%}
 
 {%- liquid
@@ -21,20 +26,42 @@
   {%- assign sg_has_data = true -%}
 {%- endif -%}
 
+{%- comment -%} Foto do produto: configuração da seção > global > padrão (ligado) {%- endcomment -%}
+{%- liquid
+  assign sg_show_image = true
+  if settings.size_guide_image_enabled == false
+    assign sg_show_image = false
+  endif
+  if section.settings.size_guide_show_image == false
+    assign sg_show_image = false
+  endif
+-%}
+
 <size-guide-modal>
   <button type="button" class="size-guide-trigger" data-sg-open aria-label="Abrir tabela de medidas">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true">
       <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
     </svg>
     Tabela de Medidas
   </button>
 
   <div class="size-guide-overlay" data-sg-overlay aria-hidden="true">
-    <div class="size-guide-modal" role="dialog" aria-modal="true" aria-label="Tabela de Medidas">
+    <div class="size-guide-modal{% if sg_show_image and product.featured_image != blank %} size-guide-modal--with-photo{% endif %}" role="dialog" aria-modal="true" aria-label="Tabela de Medidas">
+      {%- if sg_show_image and product.featured_image != blank -%}
+        <figure class="size-guide-modal__photo">
+          <img
+            src="{{ product.featured_image | image_url: width: 500 }}"
+            alt="{{ product.title | escape }}"
+            loading="lazy"
+            width="500"
+            height="667">
+        </figure>
+      {%- endif -%}
+      <div class="size-guide-modal__content">
       <div class="size-guide-modal__header">
         <h2 class="size-guide-modal__title">Guia de Medidas</h2>
         <button type="button" class="size-guide-modal__close" data-sg-close aria-label="Fechar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="20" height="20">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="20" height="20" aria-hidden="true">
             <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
         </button>
@@ -50,9 +77,330 @@
           </div>
         {%- endif -%}
       </div>
+      </div>
     </div>
   </div>
 </size-guide-modal>
+
+<style>
+  /* Trigger — mesmo padrão Nega Rosa */
+  size-guide-modal .size-guide-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: inherit;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px 0;
+    margin: 0 0 0.5rem;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  size-guide-modal .size-guide-trigger:hover { opacity: 0.7; }
+  size-guide-modal .size-guide-trigger svg { flex-shrink: 0; }
+
+  /* Overlay + modal — efeito de surgimento */
+  size-guide-modal .size-guide-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 10060;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    background: rgba(0,0,0,0.5);
+  }
+  size-guide-modal .size-guide-overlay.open {
+    display: flex;
+    animation: sgOverlayIn 0.3s ease both;
+  }
+  @keyframes sgOverlayIn {
+    from { background: rgba(0,0,0,0); backdrop-filter: blur(0); }
+    to { background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); }
+  }
+  size-guide-modal .size-guide-modal {
+    background: #fff;
+    color: #111;
+    border-radius: 16px;
+    width: 100%;
+    max-width: min(520px, calc(100vw - 32px));
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+    opacity: 0;
+    transform: translateY(28px) scale(0.92);
+    transform-origin: center top;
+    overflow: hidden;
+    will-change: transform, opacity;
+  }
+  size-guide-modal .size-guide-overlay.open .size-guide-modal {
+    animation: sgPopIn 0.45s cubic-bezier(0.22,1.2,0.36,1) both;
+  }
+  @keyframes sgPopIn {
+    0% { opacity: 0; transform: translateY(28px) scale(0.92); }
+    60% { opacity: 1; transform: translateY(-4px) scale(1.01); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  /* Conteúdo interno entra em cascata */
+  size-guide-modal .size-guide-overlay.open .size-guide-modal__header {
+    animation: sgDropIn 0.4s cubic-bezier(0.22,1,0.36,1) 0.08s both;
+  }
+  size-guide-modal .size-guide-overlay.open .size-guide-modal__body {
+    animation: sgRiseIn 0.4s cubic-bezier(0.22,1,0.36,1) 0.14s both;
+  }
+  @keyframes sgDropIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes sgRiseIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    size-guide-modal .size-guide-overlay.open,
+    size-guide-modal .size-guide-overlay.open .size-guide-modal,
+    size-guide-modal .size-guide-overlay.open .size-guide-modal__header,
+    size-guide-modal .size-guide-overlay.open .size-guide-modal__body {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+    size-guide-modal .size-guide-overlay.closing,
+    size-guide-modal .size-guide-overlay.closing .size-guide-modal {
+      animation: none;
+      opacity: 0;
+    }
+  }
+  /* Fechamento: o popup "entra" de volta no botão Tabela de Medidas */
+  size-guide-modal .size-guide-overlay.closing {
+    animation: sgOverlayOut 0.4s ease both;
+  }
+  @keyframes sgOverlayOut {
+    from { background: rgba(0,0,0,0.5); }
+    to { background: rgba(0,0,0,0); }
+  }
+  size-guide-modal .size-guide-overlay.closing .size-guide-modal {
+    animation: sgSuckIn 0.4s cubic-bezier(0.5,0,0.75,0) both;
+    transform-origin: center center;
+  }
+  @keyframes sgSuckIn {
+    0% { opacity: 1; transform: translate(0,0) scale(1); border-radius: 16px; }
+    35% { opacity: 1; }
+    100% { opacity: 0; transform: translate(var(--sg-dx,0px), var(--sg-dy,60px)) scale(var(--sg-scale,0.06)); border-radius: 999px; }
+  }
+  size-guide-modal .size-guide-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e5e7eb;
+    flex-shrink: 0;
+  }
+  size-guide-modal .size-guide-modal__title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin: 0;
+  }
+  size-guide-modal .size-guide-modal__close {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #111;
+  }
+  size-guide-modal .size-guide-modal__close:hover { background: #f3f4f6; }
+  size-guide-modal .size-guide-modal__body {
+    padding: 24px;
+    overflow-y: auto;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+  size-guide-modal .size-guide-modal__empty {
+    text-align: center;
+    padding: 40px 0;
+    color: #6b7280;
+  }
+  size-guide-modal .size-guide-modal__empty-hint {
+    font-size: 0.75rem;
+    margin-top: 8px;
+  }
+  size-guide-modal .size-guide-modal__empty-hint code {
+    background: #f3f4f6;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+  }
+  size-guide-modal .size-guide-modal__loading {
+    text-align: center;
+    padding: 24px;
+    color: #6b7280;
+  }
+
+  /* Foto do produto ao lado da tabela (desktop) */
+  size-guide-modal .size-guide-modal--with-photo {
+    max-width: min(780px, calc(100vw - 32px));
+    flex-direction: row;
+    align-items: stretch;
+  }
+  size-guide-modal .size-guide-modal__photo {
+    display: block;
+    flex: 0 0 270px;
+    margin: 0;
+    padding: 7px;
+    box-sizing: border-box;
+    min-height: 320px;
+    background: #fff;
+  }
+  size-guide-modal .size-guide-modal__photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    border-radius: 10px;
+  }
+  size-guide-modal .size-guide-modal__content {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  /* Abas + tabelas */
+  size-guide-modal .sg-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 12px;
+  }
+  size-guide-modal .sg-tab {
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    background: #f3f4f6;
+    color: #6b7280;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  size-guide-modal .sg-tab:hover { background: #e5e7eb; color: #111; }
+  size-guide-modal .sg-tab.active {
+    background: #111;
+    color: #fff;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12);
+  }
+  size-guide-modal .sg-table-wrap { display: none; animation: sgFadeIn 0.25s ease; }
+  size-guide-modal .sg-table-wrap.active { display: block; }
+  @keyframes sgFadeIn { from { opacity: 0; } to { opacity: 1; } }
+  /* Rolagem horizontal quando a tabela tem mais colunas que a tela */
+  size-guide-modal .sg-table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+  size-guide-modal .sg-table-scroll::-webkit-scrollbar { height: 6px; }
+  size-guide-modal .sg-table-scroll::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 999px;
+  }
+  size-guide-modal .sg-table {
+    width: 100%;
+    min-width: max-content;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  size-guide-modal .sg-table th {
+    background: #f9fafb;
+    font-weight: 700;
+    text-align: center;
+    padding: 10px 8px;
+    border-bottom: 2px solid #e5e7eb;
+    white-space: nowrap;
+    font-size: 12px;
+  }
+  size-guide-modal .sg-table td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 12px;
+    text-align: center;
+  }
+  size-guide-modal .sg-table tbody tr:nth-child(even) { background: rgba(0,0,0,0.02); }
+  size-guide-modal .sg-footnote {
+    margin-top: 12px;
+    font-size: 12px;
+    color: #6b7280;
+    font-style: italic;
+  }
+
+  @media (max-width: 640px) {
+    size-guide-modal .size-guide-modal__photo { display: none; }
+    size-guide-modal .size-guide-modal--with-photo { flex-direction: column; }
+    /* Drawer: sobe de baixo, encostado na borda inferior */
+    size-guide-modal .size-guide-overlay {
+      padding: 0;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    size-guide-modal .size-guide-modal {
+      width: 100%;
+      max-width: 100%;
+      max-height: 88vh;
+      border-radius: 20px 20px 0 0;
+      opacity: 0;
+      transform: translateY(100%);
+      box-shadow: 0 -16px 48px rgba(0,0,0,0.28);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    size-guide-modal .size-guide-overlay.open .size-guide-modal {
+      animation: sgSheetIn 0.42s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    @keyframes sgSheetIn {
+      from { opacity: 0; transform: translateY(100%); }
+      60% { opacity: 1; transform: translateY(-6px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    size-guide-modal .size-guide-overlay.closing .size-guide-modal {
+      animation: sgSheetOut 0.32s cubic-bezier(0.5,0,0.75,0) both;
+      transform-origin: center bottom;
+    }
+    @keyframes sgSheetOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(100%); }
+    }
+    /* Pega do drawer */
+    size-guide-modal .size-guide-modal__header {
+      position: relative;
+      padding: 22px 16px 14px;
+    }
+    size-guide-modal .size-guide-modal__header::before {
+      content: "";
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 4px;
+      border-radius: 999px;
+      background: #e5e7eb;
+    }
+    size-guide-modal .size-guide-modal__body { padding: 16px; }
+    size-guide-modal .sg-table th,
+    size-guide-modal .sg-table td { padding: 8px 6px; font-size: 11px; }
+  }
+</style>
 
 <script>
   (function() {
@@ -66,99 +414,131 @@
       var body = root.querySelector('[data-sg-body]');
       if (!overlay || !openBtn) return;
 
-    function open() {
-      overlay.classList.remove('closing');
-      overlay.classList.add('open');
-      overlay.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
-    }
-    function close() {
-      overlay.classList.add('closing');
-      setTimeout(function() {
-        overlay.classList.remove('open');
+      // Ancestrais com transform (reveal: .product-info.reveal-right) prendem o
+      // position:fixed dentro deles — move o overlay para o <body> para o
+      // popup centralizar na viewport, igual ao Musas.
+      root.__sgOverlay = overlay;
+      overlay.__sgRoot = root;
+      if (overlay.parentElement !== document.body) {
+        var sgHost = document.getElementById('sg-overlay-host');
+        if (!sgHost) {
+          sgHost = document.createElement('size-guide-modal');
+          sgHost.id = 'sg-overlay-host';
+          document.body.appendChild(sgHost);
+        }
+        sgHost.__sgRoot = root;
+        sgHost.appendChild(overlay);
+      }
+
+      function open() {
         overlay.classList.remove('closing');
-        overlay.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
-      }, 160);
-    }
+        overlay.classList.add('open');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+      function close() {
+        if (!overlay.classList.contains('open') || overlay.classList.contains('closing')) return;
+        // Vetor do centro do modal até o centro do botão (efeito "entrar no botão")
+        try {
+          var modal = overlay.querySelector('.size-guide-modal');
+          var mr = modal.getBoundingClientRect();
+          var br = openBtn.getBoundingClientRect();
+          var dx = (br.left + br.width / 2) - (mr.left + mr.width / 2);
+          var dy = (br.top + br.height / 2) - (mr.top + mr.height / 2);
+          var scale = Math.min(0.18, Math.max(0.03, Math.min(br.width / mr.width, br.height / mr.height)));
+          if (!isFinite(scale) || scale <= 0) scale = 0.06;
+          modal.style.setProperty('--sg-dx', dx.toFixed(1) + 'px');
+          modal.style.setProperty('--sg-dy', dy.toFixed(1) + 'px');
+          modal.style.setProperty('--sg-scale', scale.toFixed(3));
+        } catch (e) {}
+        overlay.classList.add('closing');
+        setTimeout(function() {
+          overlay.classList.remove('open');
+          overlay.classList.remove('closing');
+          overlay.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+        }, 400);
+      }
 
-    openBtn && openBtn.addEventListener('click', open);
-    closeBtn && closeBtn.addEventListener('click', close);
-    overlay && overlay.addEventListener('click', function(e) {
-      if (e.target === overlay) close();
-    });
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && overlay.classList.contains('open')) close();
-    });
+      if (openBtn) openBtn.addEventListener('click', open);
+      if (closeBtn) closeBtn.addEventListener('click', close);
+      if (overlay) overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) close();
+      });
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('open')) close();
+      });
 
-    {%- if sg_has_data -%}
-    var raw = {{ sg_raw.value | default: sg_raw | json }};
-    // Metafield pode vir como JSON real, string JSON ou texto multilinha.
-    if (typeof raw === 'string') {
-      raw = raw.trim();
-      try { raw = JSON.parse(raw); } catch (err) {
-        body.innerHTML = '<div class="size-guide-modal__empty"><p>Erro ao ler a tabela de medidas.</p><p class="size-guide-modal__empty-hint">Verifique se o metafield é do tipo JSON válido.</p></div>';
+      {%- if sg_has_data -%}
+      var raw = {{ sg_raw.value | default: sg_raw | json }};
+      // Metafield pode vir como JSON real, string JSON ou texto multilinha.
+      if (typeof raw === 'string') {
+        raw = raw.trim();
+        try { raw = JSON.parse(raw); } catch (err) {
+          body.innerHTML = '<div class="size-guide-modal__empty"><p>Erro ao ler a tabela de medidas.</p><p class="size-guide-modal__empty-hint">Verifique se o metafield é do tipo JSON válido.</p></div>';
+          return;
+        }
+      }
+      if (raw && Array.isArray(raw)) {
+        raw = { categories: raw };
+      }
+      if (!raw || !raw.categories || !raw.categories.length) {
+        body.innerHTML = '<div class="size-guide-modal__empty"><p>Tabela de medidas vazia.</p><p class="size-guide-modal__empty-hint">O JSON precisa ter <code>categories</code> com pelo menos uma tabela.</p></div>';
         return;
       }
-    }
-    if (raw && Array.isArray(raw)) {
-      raw = { categories: raw };
-    }
-    if (!raw || !raw.categories || !raw.categories.length) {
-      body.innerHTML = '<div class="size-guide-modal__empty"><p>Tabela de medidas vazia.</p><p class="size-guide-modal__empty-hint">O JSON precisa ter <code>categories</code> com pelo menos uma tabela.</p></div>';
-      return;
-    }
 
-    function escapeHtml(str) {
-      var d = document.createElement('div');
-      d.textContent = (str == null ? '' : String(str));
-      return d.innerHTML;
-    }
-
-    var html = '';
-    if (raw.categories.length > 1) {
-      html += '<div class="sg-tabs">';
-      raw.categories.forEach(function(cat, i) {
-        html += '<button type="button" class="sg-tab' + (i === 0 ? ' active' : '') + '" data-sg-tab="' + i + '">' + escapeHtml(cat.name) + '</button>';
-      });
-      html += '</div>';
-    }
-    raw.categories.forEach(function(cat, ci) {
-      html += '<div class="sg-table-wrap' + (ci === 0 ? ' active' : '') + '" data-sg-table="' + ci + '">';
-      html += '<table class="sg-table">';
-      if (cat.headers && cat.headers.length) {
-        html += '<thead><tr>';
-        cat.headers.forEach(function(h) { html += '<th>' + escapeHtml(h) + '</th>'; });
-        html += '</tr></thead>';
+      function escapeHtml(str) {
+        var d = document.createElement('div');
+        d.textContent = (str == null ? '' : String(str));
+        return d.innerHTML;
       }
-      if (cat.rows && cat.rows.length) {
-        html += '<tbody>';
-        cat.rows.forEach(function(row) {
-          html += '<tr>';
-          row.forEach(function(cell) { html += '<td>' + escapeHtml(cell) + '</td>'; });
-          html += '</tr>';
+
+      var html = '';
+      if (raw.categories.length > 1) {
+        html += '<div class="sg-tabs">';
+        raw.categories.forEach(function(cat, i) {
+          html += '<button type="button" class="sg-tab' + (i === 0 ? ' active' : '') + '" data-sg-tab="' + i + '">' + escapeHtml(cat.name) + '</button>';
         });
-        html += '</tbody>';
+        html += '</div>';
       }
-      html += '</table>';
-      if (cat.footnote) html += '<p class="sg-footnote">' + escapeHtml(cat.footnote) + '</p>';
-      html += '</div>';
-    });
-
-    body.innerHTML = html;
-
-    body.querySelectorAll('[data-sg-tab]').forEach(function(tab) {
-      tab.addEventListener('click', function() {
-        var idx = tab.dataset.sgTab;
-        body.querySelectorAll('[data-sg-tab]').forEach(function(t) { t.classList.remove('active'); });
-        body.querySelectorAll('[data-sg-table]').forEach(function(t) { t.classList.remove('active'); });
-        tab.classList.add('active');
-        var table = body.querySelector('[data-sg-table="' + idx + '"]');
-        if (table) table.classList.add('active');
+      raw.categories.forEach(function(cat, ci) {
+        html += '<div class="sg-table-wrap' + (ci === 0 ? ' active' : '') + '" data-sg-table="' + ci + '">';
+        html += '<div class="sg-table-scroll">';
+        html += '<table class="sg-table">';
+        if (cat.headers && cat.headers.length) {
+          html += '<thead><tr>';
+          cat.headers.forEach(function(h) { html += '<th>' + escapeHtml(h) + '</th>'; });
+          html += '</tr></thead>';
+        }
+        if (cat.rows && cat.rows.length) {
+          html += '<tbody>';
+          cat.rows.forEach(function(row) {
+            html += '<tr>';
+            row.forEach(function(cell) { html += '<td>' + escapeHtml(cell) + '</td>'; });
+            html += '</tr>';
+          });
+          html += '</tbody>';
+        }
+        html += '</table>';
+        html += '</div>';
+        if (cat.footnote) html += '<p class="sg-footnote">' + escapeHtml(cat.footnote) + '</p>';
+        html += '</div>';
       });
-    });
-    {%- endif -%}
-    } // end bindRoot
+
+      body.innerHTML = html;
+
+      body.querySelectorAll('[data-sg-tab]').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+          var idx = tab.dataset.sgTab;
+          body.querySelectorAll('[data-sg-tab]').forEach(function(t) { t.classList.remove('active'); });
+          body.querySelectorAll('[data-sg-table]').forEach(function(t) { t.classList.remove('active'); });
+          tab.classList.add('active');
+          var table = body.querySelector('[data-sg-table="' + idx + '"]');
+          if (table) table.classList.add('active');
+        });
+      });
+      {%- endif -%}
+    }
 
     function bindAll() {
       document.querySelectorAll('size-guide-modal').forEach(bindRoot);
@@ -172,10 +552,11 @@
       document.addEventListener('click', function(e) {
         var t = e.target && e.target.closest ? e.target.closest('[data-sg-open],[data-sg-close]') : null;
         if (!t) return;
-        var r = t.closest('size-guide-modal');
+        var ov0 = t.closest('.size-guide-overlay');
+        var r = (ov0 && ov0.__sgRoot) || t.closest('size-guide-modal');
         if (!r) return;
         bindRoot(r);
-        var ov = r.querySelector('[data-sg-overlay]');
+        var ov = r.__sgOverlay || r.querySelector('[data-sg-overlay]');
         if (!ov) return;
         if (t.hasAttribute('data-sg-open')) {
           ov.classList.remove('closing');
@@ -183,26 +564,29 @@
           ov.setAttribute('aria-hidden', 'false');
           document.body.style.overflow = 'hidden';
         } else {
+          if (ov.classList.contains('open') && !ov.classList.contains('closing')) {
+            try {
+              var cModal = ov.querySelector('.size-guide-modal');
+              var cBtn = r.querySelector('[data-sg-open]');
+              var cmr = cModal.getBoundingClientRect();
+              var cbr = cBtn.getBoundingClientRect();
+              var cdx = (cbr.left + cbr.width / 2) - (cmr.left + cmr.width / 2);
+              var cdy = (cbr.top + cbr.height / 2) - (cmr.top + cmr.height / 2);
+              var cs = Math.min(0.18, Math.max(0.03, Math.min(cbr.width / cmr.width, cbr.height / cmr.height)));
+              if (!isFinite(cs) || cs <= 0) cs = 0.06;
+              cModal.style.setProperty('--sg-dx', cdx.toFixed(1) + 'px');
+              cModal.style.setProperty('--sg-dy', cdy.toFixed(1) + 'px');
+              cModal.style.setProperty('--sg-scale', cs.toFixed(3));
+            } catch (err) {}
+          }
           ov.classList.add('closing');
           setTimeout(function() {
             ov.classList.remove('open', 'closing');
             ov.setAttribute('aria-hidden', 'true');
             document.body.style.overflow = '';
-          }, 160);
+          }, 400);
         }
       });
     }
   })();
 </script>
-
-<style>
-  .sg-tabs { display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid var(--color-border); }
-  .sg-tab { padding: 8px 14px; font-size: 13px; font-weight: 600; color: var(--color-text-muted); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color .2s, border-color .2s; }
-  .sg-tab.active { color: var(--color-text); border-bottom-color: var(--color-text); background: var(--color-bg-secondary, #f7f7f7); box-shadow: inset 0 0 0 1px var(--color-border, rgba(0,0,0,0.12)); }
-  .sg-table-wrap { display: none; }
-  .sg-table-wrap.active { display: block; }
-  .sg-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  .sg-table th, .sg-table td { padding: 10px 8px; text-align: center; border-bottom: 1px solid var(--color-border); }
-  .sg-table th { font-weight: 700; background: var(--color-bg-secondary); }
-  .sg-footnote { margin-top: 12px; font-size: 12px; color: var(--color-text-muted); font-style: italic; }
-</style>
