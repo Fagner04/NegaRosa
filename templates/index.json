@@ -116,8 +116,23 @@
     "announcement_bar_dD4ndD": {
       "type": "announcement-bar",
       "blocks": {
+        "announcement_LTXA3q": {
+          "type": "announcement",
+          "settings": {
+            "text": "BLACK FRIDAY",
+            "link": ""
+          }
+        },
+        "announcement_TQdgLX": {
+          "type": "announcement",
+          "settings": {
+            "text": "SITE TODO COM ATÉ 30% OFF",
+            "link": ""
+          }
+        },
         "announcement_FGAeKi": {
           "type": "announcement",
+          "disabled": true,
           "settings": {
             "text": "cupom 10% off  primeira compra > BRINDE",
             "link": ""
@@ -126,22 +141,16 @@
         "announcement_ikemzd": {
           "type": "announcement",
           "settings": {
-            "text": "Parcele em até 6x sem juros",
-            "link": ""
-          }
-        },
-        "announcement_RDPeTE": {
-          "type": "announcement",
-          "settings": {
-            "text": "Atacado acima de 10 peças",
+            "text": "Parcele em até 3x sem juros",
             "link": ""
           }
         }
       },
       "block_order": [
+        "announcement_LTXA3q",
+        "announcement_TQdgLX",
         "announcement_FGAeKi",
-        "announcement_ikemzd",
-        "announcement_RDPeTE"
+        "announcement_ikemzd"
       ],
       "name": "Barra de Anúncios",
       "settings": {
@@ -162,7 +171,7 @@
             "image_2": "shopify://shop_images/Banner_site_oficial_9.svg",
             "link": "shopify://collections/masculino",
             "cta_text": "Ver mais",
-            "btn_bg": "#E5E4E4",
+            "btn_bg": "#e5e4e4",
             "btn_text_color": "#111111",
             "placeholder_color": "1a1a2e",
             "placeholder_color_2": "16213e"
@@ -176,7 +185,7 @@
             "image": "shopify://shop_images/CAPA_BANNER_SITE_7.png",
             "link": "shopify://collections/shorts",
             "cta_text": "Comprar",
-            "btn_bg": "#E5E4E4",
+            "btn_bg": "#e5e4e4",
             "btn_text_color": "#111111",
             "placeholder_color": "2d2d2d",
             "placeholder_color_2": "4a4a4a"
@@ -190,7 +199,7 @@
             "image": "shopify://shop_images/CAPA_BANNER_SITE_8.png",
             "link": "shopify://collections/fitness",
             "cta_text": "Ver mais",
-            "btn_bg": "#E5E4E4",
+            "btn_bg": "#e5e4e4",
             "btn_text_color": "#111111",
             "placeholder_color": "3d1a1a",
             "placeholder_color_2": "5a2d2d"
