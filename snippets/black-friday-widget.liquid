@@ -8,7 +8,7 @@
     {% render 'black-friday-widget' %}
 {%- endcomment -%}
 
-{%- if settings.bf_enabled -%}
+{%- if settings.bf_enabled and template.name == 'index' -%}
   {%- liquid
     assign bf_resource = settings.bf_collection
     if bf_resource != blank and bf_resource.url == blank
