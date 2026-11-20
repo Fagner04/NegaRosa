@@ -41,7 +41,7 @@
       left: 0;
       top: 50%;
       transform: translateY(-50%);
-      z-index: 10000 !important;
+      z-index: 9000;
       writing-mode: vertical-rl;
       text-orientation: mixed;
       background: {{ settings.bf_bg_color }};
@@ -108,9 +108,9 @@
       }
     }
 
-    /* Mantém o widget acima do drawer mobile */
+    /* Fica abaixo do drawer mobile quando aberto */
     body.menu-open .bf-tab {
-      z-index: 10000 !important;
+      z-index: 250 !important;
     }
   </style>
 
