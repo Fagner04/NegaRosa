@@ -116,6 +116,13 @@
     "announcement_bar_dD4ndD": {
       "type": "announcement-bar",
       "blocks": {
+        "announcement_7nNRxJ": {
+          "type": "announcement",
+          "settings": {
+            "text": "Desconto no Pix 7%off",
+            "link": ""
+          }
+        },
         "announcement_LTXA3q": {
           "type": "announcement",
           "settings": {
@@ -147,6 +154,7 @@
         }
       },
       "block_order": [
+        "announcement_7nNRxJ",
         "announcement_LTXA3q",
         "announcement_TQdgLX",
         "announcement_FGAeKi",
