@@ -21,7 +21,7 @@
         "installments_no_interest": true,
         "installments_text": "ou até [parcelas]x de [valor] [juros] no cartão",
         "pix_discount_enabled": true,
-        "pix_discount_percent": 5,
+        "pix_discount_percent": 7,
         "pix_discount_text": "ou [valor] à vista no PIX ([desconto]% off)",
         "pix_discount_color": "#f287b5",
         "pages_display_mode": "all",
