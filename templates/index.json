@@ -15,10 +15,10 @@
         "slide-1": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Banner_2400x1125_1.svg",
+            "image": "shopify://shop_images/CAPA_BANNER_SITE_4.svg",
             "image_mobile": "shopify://shop_images/MOBILE_900_x_1650_px_1.svg",
-            "tag": "",
-            "title": "",
+            "tag": "LANCAMENTE",
+            "title": "COLEÇÃO LIFE URBAN",
             "subtitle": "",
             "button_text": "Comprar Agora",
             "button_url": "shopify://collections/colecao-life-urban",
